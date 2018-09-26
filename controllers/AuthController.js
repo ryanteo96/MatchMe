@@ -8,9 +8,6 @@ var userController = {};
 userController.index = function(req, res) {
   res.render('index', { user : req.user });
 };
-userController.home = function(req, res) {
-  res.render('home', { user : req.user });
-};
 // Go to registration page
 userController.register = function(req, res) {
   res.render('register');
@@ -48,3 +45,4 @@ userController.logout = function(req, res) {
 };
 
 module.exports = userController;
+
