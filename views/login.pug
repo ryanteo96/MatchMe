@@ -21,14 +21,19 @@ html(lang='en')
               form.form-signin(role='form', action='/login', method='post')
                 label.sr-only(for='inputEmail') Email address
                 .form-group
-                  label Email address
+                  label Email Address
                   input#inputEmail.form-control(type='text', name='username', placeholder='Username', required='required',   autofocus='autofocus')
                 .form-group
                   label Password
-                  input#inputPassword.form-control(type='password', name='password', placeholder='Password')
+                  input#inputPassword.form-control(type='password', name='password', placeholder='Password', required='required')
                 .form-group
                   button.btn.btn-primary.btn-block(type='submit')  Login  
             .border-top.card-body.text-center
               a(href='/register') Register
+      -if(messages)
+         .alert.alert-danger
+             div#note #{messages}        
+            
     script(src='/javascripts/jquery.min.js')
     script(src='/javascripts/bootstrap.min.js')
+    script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')

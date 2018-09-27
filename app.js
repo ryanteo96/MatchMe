@@ -7,11 +7,14 @@ var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
+var flash = require('connect-flash');
 var User = require('./models/User');
-
 var app = express();
+app.use(flash());
 
-mongoose.connect('mongodb://matchers:matchme1!@ds113703.mlab.com:13703/match-me')
+mongoose.connect('mongodb://matchers:matchme1!@ds113703.mlab.com:13703/match-me', {
+        useNewUrlParser: true
+    })
     .then(() => console.log('connection succesful'))
     .catch((err) => console.error(err));
 
@@ -54,8 +57,10 @@ app.post("/register", function (req, res) {
         name: req.body.name
     }), req.body.password, function (err, user) {
         if (err) {
-            console.log(err);
-            return res.render('register');
+            req.flash('regWarn', "Please Use Different Email Address");
+            return res.render('register', {
+                messages: req.flash('regWarn')
+            });
         }
         passport.authenticate("local")(req, res, function () {
             res.redirect("/index");
@@ -67,12 +72,26 @@ app.get("/login", function (req, res) {
     res.render("login");
 })
 
-app.post("/login", passport.authenticate("local", {
-    successRedirect: "/index",
-    failureRedirect: "/login"
-}), function (req, res) {
-    res.send("User is " + req.user.id);
-});
+app.post("/login", function (req, res, next) {
+    passport.authenticate("local", function (err, user, info) {
+        if (err) {
+            return next(err);
+        }
+        if (!user) {
+            req.flash('logWarn', "Invalid Username or Password");
+            return res.render('login', {
+                messages: req.flash('logWarn')
+            });
+        }
+        req.logIn(user, function (err) {
+            if (err) {
+                return next(err);
+            }
+            return res.redirect("index");
+        })
+    })(req, res, next)
+})
+
 app.get("/logout", function (req, res) {
     req.logout();
     res.redirect('/');
