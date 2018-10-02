@@ -9,6 +9,7 @@ var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 var flash = require('connect-flash');
 var User = require('./models/User');
+var authEmail = require('./public/javascripts/authEmail');
 var app = express();
 app.use(flash());
 
@@ -54,7 +55,8 @@ app.get("/register", function (req, res) {
 app.post("/register", function (req, res) {
     User.register(new User({
         username: req.body.username,
-        name: req.body.name
+        name: req.body.name,
+		needResetPW: false
     }), req.body.password, function (err, user) {
         if (err) {
             req.flash('regWarn', "Please Use Different Email Address");
@@ -63,7 +65,7 @@ app.post("/register", function (req, res) {
             });
         }
         passport.authenticate("local")(req, res, function () {
-			console.log("test here");
+			authEmail(req.body.username);
             res.redirect("/index");
         });
     });
@@ -88,8 +90,10 @@ app.post("/login", function (req, res, next) {
             if (err) {
                 return next(err);
             }
-			return res.redirect("index");
-
+			if(user.needResetPW){
+				//direct to reset password page
+			} // else direct to 'index'
+			return res.redirect('index');
         })
     })(req, res, next)
 })
