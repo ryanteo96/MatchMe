@@ -12,3 +12,5 @@ models/User.js - contains user information like email and password<br/>
 public/javascripts or public/stylesheets - contains the js files for particular js functions and design of pages <br/>
 views - contains all the pages<br/>
 app.js - contains all the routing for the pages and authentication of user
+
+https://pughtml.com/ - Pug to HTML
