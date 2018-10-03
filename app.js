@@ -95,7 +95,15 @@ app.post("/login", function(req, res, next) {
 			return res.render("login", {
 				messages: req.flash("logWarn"),
 			});
-		}
+        }
+        console.log(user.status);
+        if(user.status < 0 ) {
+            req.flash('logWarn', "You are Banned. Contact a System Administrator for help.");
+            return res.render('login', {
+                messages: req.flash('logWarn')
+            });
+        }
+
 		req.logIn(user, function(err) {
 			if (err) {
 				return next(err);
@@ -104,6 +112,7 @@ app.post("/login", function(req, res, next) {
 		});
 	})(req, res, next);
 });
+
 
 app.get("/logout", function(req, res) {
 	req.logout();
@@ -212,56 +221,6 @@ app.post("/profile/update", function(req, res, next) {
 });
 
 
-app.post("/register", function (req, res) {
-    User.register(new User({
-        username: req.body.username,
-        name: req.body.name,
-        admin: false,
-        status: 0,
-    }), req.body.password, function (err, user) {
-        if (err) {
-            req.flash('regWarn', "Please Use Different Email Address");
-            return res.render('register', {
-                messages: req.flash('regWarn')
-            });
-        }
-        passport.authenticate("local")(req, res, function () {
-            res.redirect("/index");
-        });
-    });
-});
-
-app.get("/login", function (req, res) {
-    res.render("login");
-})
-
-app.post("/login", function (req, res, next) {
-    passport.authenticate("local", function (err, user, info) {
-        if (err) {
-            return next(err);
-        }
-        if (!user) {
-            req.flash('logWarn', "Invalid Username or Password");
-            return res.render('login', {
-                messages: req.flash('logWarn')
-            });
-        }
-        if(user.status < 0 ) {
-            req.flash('logWarn', "You Are Banned. Contact a System Administrator for help.");
-            return res.render('login', {
-                messages: req.flash('logWarn')
-            });
-        }
-
-        req.logIn(user, function (err) {
-            if (err) {
-                return next(err);
-            }
-            return res.redirect("index");
-        })
-    })(req, res, next)
-})
-
 app.get("/admin", isAdmin,  function (req, res) {
    User.find({}).exec(function (err, users) {
        if(err) throw err;
@@ -270,10 +229,6 @@ app.get("/admin", isAdmin,  function (req, res) {
    })
 })
 
-app.get("/logout", function (req, res) {
-    req.logout();
-    res.redirect('/');
-})
 
 app.post("/profile/delete", function(req, res, next) {
 	User.remove(
