@@ -50,7 +50,10 @@ passport.deserializeUser(User.deserializeUser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", function(req, res) {
-	res.render("login");
+	if(!req.user) {
+        res.render("login");
+    }
+	res.redirect('/index');
 });
 
 app.get("/index", isLoggedIn, function(req, res) {
@@ -82,7 +85,10 @@ app.post("/register", function(req, res) {
 });
 
 app.get("/login", function(req, res) {
-	res.render("login");
+    if(!req.user) {
+        res.render("login");
+    }
+	res.redirect('/index');
 });
 
 app.post("/login", function(req, res, next) {
