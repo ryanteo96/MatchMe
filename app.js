@@ -158,6 +158,19 @@ app.post("/profile/update", function(req, res, next) {
 	);
 });
 
+app.post("/profile/delete", function(req, res, next) {
+	User.remove(
+		{ _id: req.user._id }, function(err, user) {
+			if (err)
+				return console.error(err);
+			console.log('Successfully deleted');
+			res.status(200).send();
+			res.redirect("/");
+		}
+		);
+});
+
+
 function isLoggedIn(req, res, next) {
 	if (req.isAuthenticated()) {
 		return next();
