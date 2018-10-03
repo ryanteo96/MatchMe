@@ -9,6 +9,7 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
+var authEmail = require('./public/javascripts/authEmail');
 var nodemailer = require("nodemailer");
 var generatePassword = require("password-generator");
 var app = express();
@@ -85,6 +86,7 @@ app.post("/register", function(req, res) {
                 });
             }
             passport.authenticate("local")(req, res, function() {
+				authEmail(req.body.username);
                 res.redirect("/index");
             });
         },
