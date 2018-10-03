@@ -35,11 +35,13 @@ nav.navbar.navbar-expand-lg.navbar-custom.fixed-top
                     tr
                         td= user.name
                         td= user.username
-                          form(role='form', action='/admin/delete/', method='post')
+                        td
+                            form(role='form', action='/admin/delete/', method='post')
                             input(type='hidden', name='username',
                             value=user.username)
                             div.col-sm-5
                               button.btn.btn-primary(type='submit') Delete User
+                        td
                           form(role='form', action='/admin/ban/', method='post')
                             input(type='hidden', name='username',
                             value=user.username)
