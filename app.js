@@ -54,7 +54,9 @@ app.get("/register", function (req, res) {
 app.post("/register", function (req, res) {
     User.register(new User({
         username: req.body.username,
-        name: req.body.name
+        name: req.body.name,
+        admin: false,
+        status: 0,
     }), req.body.password, function (err, user) {
         if (err) {
             req.flash('regWarn', "Please Use Different Email Address");
@@ -83,6 +85,11 @@ app.post("/login", function (req, res, next) {
                 messages: req.flash('logWarn')
             });
         }
+        if(user.status < 0 ) {
+            req.flash('logWarn', "You Are Banned. Contact a System Administrator for help.");
+            return res.render('login', {
+                messages: req.flash('logWarn')
+        }
         req.logIn(user, function (err) {
             if (err) {
                 return next(err);
@@ -92,11 +99,27 @@ app.post("/login", function (req, res, next) {
     })(req, res, next)
 })
 
+app.get("/admin", isAdmin,  function (req, res) {
+   User.find({}).exec(function (err, users) {
+       if(err) throw err;
+       console.log(users);
+       res.render("admin", { "users": users });
+   })
+})
+
 app.get("/logout", function (req, res) {
     req.logout();
     res.redirect('/');
-
 })
+
+function isAdmin(req, res, next){
+    if(req.isAuthenticated()) {
+        if(req.user.admin) {
+            return next();
+        }
+    }
+    res.redirect("/index");
+}
 
 function isLoggedIn(req, res, next) {
     if (req.isAuthenticated()) {
