@@ -60,7 +60,9 @@ html(lang='en')
                     .col-sm-3
                     div.col-sm-5
                       button.btn.btn-primary(type='submit') Save changes
-
+              form(role='form', action='/profile/delete', method='post')
+                div.col-sm-5
+                  button.btn.btn-primary(type='submit') Delete Account
     footer.footer
       .container
         copyright @MatchMe
