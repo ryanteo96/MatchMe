@@ -128,16 +128,7 @@ app.post("/login", function(req, res, next) {
 			} // else direct to 'index'
 			return res.redirect('index');
         })
-    })(req, res, next)
-})
-
-		req.logIn(user, function(err) {
-			if (err) {
-				return next(err);
-			}
-			return res.redirect("index");
-		});
-	})(req, res, next);
+    })(req, res, next);
 });
 
 
