@@ -53,7 +53,9 @@ app.get("/", function(req, res) {
 	if(!req.user) {
         res.render("login");
     }
-    res.redirect('/index');
+    else {
+        res.redirect('/index');
+    }
 });
 
 app.get("/index", isLoggedIn, function(req, res) {
@@ -63,7 +65,9 @@ app.get("/register", function(req, res) {
     if(!req.user) {
         res.render("register");
     }
-    res.redirect('/index');
+    else {
+        res.redirect('/index');
+    }
 });
 
 app.post("/register", function(req, res) {
@@ -91,7 +95,9 @@ app.get("/login", function(req, res) {
     if(!req.user) {
         res.render("login");
     }
-	res.redirect('/index');
+    else {
+        res.redirect('/index');
+    }
 });
 
 app.post("/login", function(req, res, next) {
@@ -246,7 +252,7 @@ app.post("/profile/delete", function(req, res, next) {
 				return console.error(err);
 			console.log('Successfully deleted');
 			res.status(200).send();
-            res.redirect('/login');
+            res.redirect('/');
 		}
 		);
 });
