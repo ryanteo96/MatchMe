@@ -250,7 +250,9 @@ app.post("/login", function (req, res, next) {
             req.flash('logWarn', "You Are Banned. Contact a System Administrator for help.");
             return res.render('login', {
                 messages: req.flash('logWarn')
+            });
         }
+
         req.logIn(user, function (err) {
             if (err) {
                 return next(err);
