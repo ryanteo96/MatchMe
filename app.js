@@ -76,6 +76,9 @@ app.post("/register", function(req, res) {
         new User({
             username: req.body.username,
             name: req.body.name,
+			needResetPW: false,
+			admin: false,
+			status: 1,
         }),
         req.body.password,
         function(err, user) {
@@ -128,16 +131,7 @@ app.post("/login", function(req, res, next) {
 			} // else direct to 'index'
 			return res.redirect('index');
         })
-    })(req, res, next)
-})
-
-		req.logIn(user, function(err) {
-			if (err) {
-				return next(err);
-			}
-			return res.redirect("index");
-		});
-	})(req, res, next);
+    })(req, res, next);
 });
 
 
