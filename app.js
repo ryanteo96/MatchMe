@@ -53,35 +53,38 @@ app.get("/", function(req, res) {
 	if(!req.user) {
         res.render("login");
     }
-	res.redirect('/index');
+    res.redirect('/index');
 });
 
 app.get("/index", isLoggedIn, function(req, res) {
 	res.render("index");
 });
 app.get("/register", function(req, res) {
-	res.render("register");
+    if(!req.user) {
+        res.render("register");
+    }
+    res.redirect('/index');
 });
 
 app.post("/register", function(req, res) {
-	User.register(
-		new User({
-			username: req.body.username,
-			name: req.body.name,
-		}),
-		req.body.password,
-		function(err, user) {
-			if (err) {
-				req.flash("regWarn", "Please Use Different Email Address");
-				return res.render("register", {
-					messages: req.flash("regWarn"),
-				});
-			}
-			passport.authenticate("local")(req, res, function() {
-				res.redirect("/index");
-			});
-		},
-	);
+    User.register(
+        new User({
+            username: req.body.username,
+            name: req.body.name,
+        }),
+        req.body.password,
+        function(err, user) {
+            if (err) {
+                req.flash("regWarn", "Please Use Different Email Address");
+                return res.render("register", {
+                    messages: req.flash("regWarn"),
+                });
+            }
+            passport.authenticate("local")(req, res, function() {
+                res.redirect("/index");
+            });
+        },
+    );
 });
 
 app.get("/login", function(req, res) {
@@ -102,7 +105,6 @@ app.post("/login", function(req, res, next) {
 				messages: req.flash("logWarn"),
 			});
         }
-        console.log(user.status);
         if(user.status < 0 ) {
             req.flash('logWarn', "You are Banned. Contact a System Administrator for help.");
             return res.render('login', {
@@ -121,8 +123,9 @@ app.post("/login", function(req, res, next) {
 
 
 app.get("/logout", function(req, res) {
-	req.logout();
-	res.redirect("/");
+	req.session.destroy(function (err) {
+        res.redirect('/login');
+    });
 });
 
 app.get("/forgotPassword", function(req, res) {
@@ -243,7 +246,7 @@ app.post("/profile/delete", function(req, res, next) {
 				return console.error(err);
 			console.log('Successfully deleted');
 			res.status(200).send();
-			res.redirect("/");
+            res.redirect('/login');
 		}
 		);
 });
