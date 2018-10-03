@@ -264,6 +264,18 @@ app.post("/profile/delete", function(req, res, next) {
 		);
 });
 
+app.post("/admin/delete/", function(req, res, next) {
+	var username = req.body.username;
+	User.remove(
+		{ username: username }, function(err, user) {
+			if(err)
+				return console.error(err);
+			console.log('Successfully deleted by admin');
+			res.redirect('/admin');
+		}
+		);
+	console.log(username);
+});
 
 function isAdmin(req, res, next){
     if(req.isAuthenticated()) {
