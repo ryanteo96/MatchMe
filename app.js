@@ -277,6 +277,29 @@ app.post("/admin/delete/", function(req, res, next) {
 	console.log(username);
 });
 
+app.post("/admin/ban/", function(req, res, next) {
+	var username = req.body.username;
+	User.updateOne(
+		{ username: username },
+		{
+			status: -1,
+		},
+		function(err, user) {
+			if (err) {
+				req.flash(
+					"BanWarn",
+					"Failed to Ban",
+				);
+			}
+			res.redirect("/admin");
+			User.findOne({ username: username }, function(err, user) {
+				if (err) return next(err);
+			});
+		},
+
+	);
+});
+
 function isAdmin(req, res, next){
     if(req.isAuthenticated()) {
         if(req.user.admin) {
