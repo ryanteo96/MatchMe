@@ -59,7 +59,7 @@ app.get("/", function(req, res) {
 });
 
 app.get("/index", isLoggedIn, function(req, res) {
-	res.render("index");
+	res.render("index",{ "user": req.user });
 });
 app.get("/register", function(req, res) {
     if(!req.user) {

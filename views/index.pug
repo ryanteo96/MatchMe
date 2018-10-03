@@ -17,6 +17,9 @@ nav.navbar.navbar-expand-lg.navbar-custom.fixed-top
         a.nav-link(href='/index') Home
       li.nav-item
         a.nav-link(href='/profile') Profile
+      if(user.admin)
+        li.nav-item
+          a.nav-link(href='/admin') Admin
       li.nav-item
         a.nav-link(href='/logout') Logout
 // BETWEEN NAV AND FOOTER
