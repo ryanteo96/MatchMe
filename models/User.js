@@ -6,7 +6,8 @@ var UserSchema = new Schema({
     username: String,
     password: String,
     name: String,
-	needResetPW: Boolean
+    admin: Boolean,
+    status: Number, /** 0 > for normal user, < 0 for banned */
 });
 
 UserSchema.plugin(passportLocalMongoose);

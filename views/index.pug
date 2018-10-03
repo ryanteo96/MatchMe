@@ -1,29 +1,56 @@
-html
-  head
-    meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    meta(name='description', content='')
-    meta(name='author', content='')
-    title MatchMe
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    nav.navbar.navbar-expand-lg.navbar-light.bg-light
-      a.navbar-brand(href='#') MatchMe
-      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
-        span.navbar-toggler-icon
-      #navbarSupportedContent.collapse.navbar-collapse
-        ul.navbar-nav.mr-auto
-          li.nav-item
-            a.nav-link(href='#') Home
-          li.nav-item
-            a.nav-link(href='#') Profile
-          li.nav-item
-            a.nav-link(href='/logout') Logout
-    footer.footer
-      .container
-        copyright @MatchMe
-    script(src='/javascripts/jquery.min.js')
-    script(src='/javascripts/bootstrap.min.js')
-    script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')
+head
+  meta(charset='utf-8')
+  meta(http-equiv='X-UA-Compatible', content='IE=edge')
+  meta(name='viewport', content='width=device-width, initial-scale=1')
+  meta(name='description', content='')
+  meta(name='author', content='')
+  title MatchMe
+  link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+  link(rel='stylesheet', href='/stylesheets/style.css')
+nav.navbar.navbar-expand-lg.navbar-custom.fixed-top
+  a.navbar-brand(href='#') MatchMe
+  button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+    span.navbar-toggler-icon
+  #navbarSupportedContent.collapse.navbar-collapse
+    ul.navbar-nav.mr-auto
+      li.nav-item
+        a.nav-link(href='/index') Home
+      li.nav-item
+        a.nav-link(href='/profile') Profile
+      if(user.admin)
+        li.nav-item
+          a.nav-link(href='/admin') Admin
+      li.nav-item
+        a.nav-link(href='/logout') Logout
+// BETWEEN NAV AND FOOTER
+.main
+  .feedbox
+    .card
+      img.card-img-top(src='../images/meeting.jpg', alt='alt test')
+      .card-body
+        | Temp text
+  br
+  .feedbox
+    .card
+      img.card-img-top(src='../images/meeting.jpg', alt='alt test')
+      .card-body
+        | Temp text
+  br
+  .feedbox
+    .card
+      img.card-img-top(src='../images/meeting.jpg', alt='alt test')
+      .card-body
+        | Temp text
+  br
+  .feedbox
+    .card
+      img.card-img-top(src='../images/meeting.jpg', alt='alt test')
+      .card-body
+        | Temp text
+// BETWEEN NAV AND FOOTER
+footer.footer
+  .container
+    copyright @MatchMe
+script(src='/javascripts/jquery.min.js')
+script(src='/javascripts/bootstrap.min.js')
+script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')
