@@ -76,6 +76,9 @@ app.post("/register", function(req, res) {
         new User({
             username: req.body.username,
             name: req.body.name,
+			needResetPW: false,
+			admin: false,
+			status: 1,
         }),
         req.body.password,
         function(err, user) {
@@ -261,6 +264,41 @@ app.post("/profile/delete", function(req, res, next) {
 		);
 });
 
+app.post("/admin/delete/", function(req, res, next) {
+	var username = req.body.username;
+	User.remove(
+		{ username: username }, function(err, user) {
+			if(err)
+				return console.error(err);
+			console.log('Successfully deleted by admin');
+			res.redirect('/admin');
+		}
+		);
+	console.log(username);
+});
+
+app.post("/admin/ban/", function(req, res, next) {
+	var username = req.body.username;
+	User.updateOne(
+		{ username: username },
+		{
+			status: -1,
+		},
+		function(err, user) {
+			if (err) {
+				req.flash(
+					"BanWarn",
+					"Failed to Ban",
+				);
+			}
+			res.redirect("/admin");
+			User.findOne({ username: username }, function(err, user) {
+				if (err) return next(err);
+			});
+		},
+
+	);
+});
 
 function isAdmin(req, res, next){
     if(req.isAuthenticated()) {

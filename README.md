@@ -2,6 +2,7 @@ To Run MatchMe<br/>
 git clone https://gitlab.com/patel445/MatchMe.git<br/>
 sudo npm install<br/>
 npm install nodemailer<br/>
+npm install password-generator<br/>
 npm start<br/>
 <br/>
 view at http://localhost:3000/
