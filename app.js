@@ -117,6 +117,17 @@ app.post("/login", function(req, res, next) {
                 messages: req.flash('logWarn')
             });
         }
+        req.logIn(user, function (err) {
+            if (err) {
+                return next(err);
+            }
+			if(user.needResetPW){
+				//direct to reset password page
+			} // else direct to 'index'
+			return res.redirect('index');
+        })
+    })(req, res, next)
+})
 
 		req.logIn(user, function(err) {
 			if (err) {
