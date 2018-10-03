@@ -9,7 +9,8 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
-var async = require("async");
+var nodemailer = require("nodemailer");
+var generatePassword = require("password-generator");
 var app = express();
 app.use(flash());
 
@@ -107,6 +108,58 @@ app.post("/login", function(req, res, next) {
 app.get("/logout", function(req, res) {
 	req.logout();
 	res.redirect("/");
+});
+
+app.get("/forgotPassword", function(req, res) {
+	res.render("forgotPassword");
+});
+
+app.post("/forgotPassword", function(req, res) {
+	User.findOne({ username: req.body.username }, function(err, user) {
+		if (!user) {
+			req.flash("forgotPwWarn", "User does not exist.");
+			return res.render("forgotPassword", {
+				messages: req.flash("forgotPwWarn"),
+			});
+		}
+
+		if (user) {
+			var newPassword = generatePassword();
+
+			User.findOne({ username: req.body.username }, function(err, user) {
+				if (err) return next(err);
+
+				user.setPassword(newPassword, function() {
+					user.save();
+				});
+			});
+
+			var transporter = nodemailer.createTransport({
+				service: "gmail",
+				auth: {
+					user: "MatchMe.CS407@gmail.com",
+					pass: "matchme1!",
+				},
+			});
+
+			var mailOptions = {
+				from: "MatchMe.CS407@gmail.com",
+				to: user.username,
+				subject: "MatchMe - Reset Password",
+				text: "New Password: " + newPassword,
+			};
+
+			transporter.sendMail(mailOptions, function(error, info) {
+				if (error) {
+					console.log(error);
+				} else {
+					console.log("Email sent: " + info.response);
+				}
+			});
+
+			res.redirect("login");
+		}
+	});
 });
 
 app.get("/profile", isLoggedIn, function(req, res) {
