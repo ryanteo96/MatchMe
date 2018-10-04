@@ -264,8 +264,8 @@ app.post("/profile/delete", function(req, res, next) {
 		);
 });
 
-app.post("/admin/delete/", function(req, res, next) {
-	var username = req.body.username;
+app.post("/admin/delete", function(req, res, next) {
+	var username = req.username;
 	User.remove(
 		{ username: username }, function(err, user) {
 			if(err)
@@ -277,7 +277,7 @@ app.post("/admin/delete/", function(req, res, next) {
 	console.log(username);
 });
 
-app.post("/admin/ban/", function(req, res, next) {
+app.post("/admin/ban", function(req, res, next) {
 	var username = req.body.username;
 	User.updateOne(
 		{ username: username },

@@ -36,14 +36,14 @@ nav.navbar.navbar-expand-lg.navbar-custom.fixed-top
                         td= user.name
                         td= user.username
                         td
-                            form(role='form', action='/admin/delete/', method='post')
-                            input(type='hidden', name='username',
+                            form(role='form', action='/admin/delete', method='post')
+                            input(type='hidden', name=user.name,
                             value=user.username)
                             div.col-sm-5
                               button.btn.btn-primary(type='submit') Delete User
                         td
-                          form(role='form', action='/admin/ban/', method='post')
-                            input(type='hidden', name='username',
+                          form(role='form', action='/admin/ban', method='post')
+                            input(type='hidden', name=user.name,
                             value=user.username)
                             div.col-sm-5
                               button.btn.btn-primary(type='submit') Ban User

@@ -21,6 +21,9 @@ html(lang='en')
             a.nav-link(href='/index') Home
           li.nav-item
             a.nav-link(href='/profile') Profile
+          if(user.admin)
+            li.nav-item
+              a.nav-link(href='/admin') Admin
           li.nav-item
             a.nav-link(href='/logout') Logout
     .container-fluid
