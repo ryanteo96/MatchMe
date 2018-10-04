@@ -3,7 +3,7 @@ let nodemailer = require('nodemailer');
 let senderAddress = 'matchme.cs407@gmail.com';
 let senderPassword = 'matchme1!';
 
-let authEmail = function(receiver){
+let authEmail = function(receiver, token){
 	let transporter = nodemailer.createTransport({
 		service: 'Gmail',
 		auth:{
@@ -12,11 +12,12 @@ let authEmail = function(receiver){
 		}
 	});
 
+	const url = 'http://localhost:3000/confirmation/' + token;
 	let mailOptions = {
 	  from: senderAddress,
 	  to: receiver,
 	  subject: 'MatchMe Email Confirmation',
-	  html: '<h1>Welcome to MatchMe!</h1>&nbsp<p>Thanks for registering.<br/>MatchMe</p>'
+	  html: `Please click this email to confirm your email: <a href="${url}">${url}</a>`,
 	};
 
 	transporter.sendMail(mailOptions, function(error, info){

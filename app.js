@@ -10,6 +10,7 @@ var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
 var authEmail = require('./public/javascripts/authEmail');
+var resetPwEmail = require('./public/javascripts/resetPwEmail');
 var nodemailer = require("nodemailer");
 var generatePassword = require("password-generator");
 var app = express();
@@ -60,8 +61,38 @@ app.get("/", function(req, res) {
 });
 
 app.get("/index", isLoggedIn, function(req, res) {
-	res.render("index",{ "user": req.user });
+	if(!req.user.verified){
+		res.redirect('/needVerification');
+	} else if(req.user.needResetPW){
+		//redirect to reset password page
+	} else {
+		res.render("index",{ "user": req.user });
+	}
 });
+
+app.get("/needVerification", function(req, res) {
+	if(req.user){
+		if(!req.user.verified) {
+			req.session.destroy(function (err) {
+				res.render("needVerification");
+			});
+		}
+	} else {
+        res.redirect('/index');
+    }
+});
+
+app.get('/confirmation/:token', function (req, res) {
+	User.findOne({ _id: req.params.token }, function(err, user) {
+		user.verified = true;
+		user.save();
+		req.flash("verifySuccess", "Verified, please login");
+		return res.render('login', {
+                messages: req.flash('verifySuccess')
+        });
+	});
+});
+
 app.get("/register", function(req, res) {
     if(!req.user) {
         res.render("register");
@@ -77,6 +108,7 @@ app.post("/register", function(req, res) {
             username: req.body.username,
             name: req.body.name,
 			needResetPW: false,
+			verified: false,
 			admin: false,
 			status: 1,
         }),
@@ -89,7 +121,7 @@ app.post("/register", function(req, res) {
                 });
             }
             passport.authenticate("local")(req, res, function() {
-				authEmail(req.body.username);
+				authEmail(user.username, user._id);
                 res.redirect("/index");
             });
         },
@@ -126,9 +158,6 @@ app.post("/login", function(req, res, next) {
             if (err) {
                 return next(err);
             }
-			if(user.needResetPW){
-				//direct to reset password page
-			} // else direct to 'index'
 			return res.redirect('index');
         })
     })(req, res, next);
@@ -165,30 +194,10 @@ app.post("/forgotPassword", function(req, res) {
 				});
 			});
 
-			var transporter = nodemailer.createTransport({
-				service: "gmail",
-				auth: {
-					user: "MatchMe.CS407@gmail.com",
-					pass: "matchme1!",
-				},
-			});
-
-			var mailOptions = {
-				from: "MatchMe.CS407@gmail.com",
-				to: user.username,
-				subject: "MatchMe - Reset Password",
-				text: "New Password: " + newPassword,
-			};
-
-			transporter.sendMail(mailOptions, function(error, info) {
-				if (error) {
-					console.log(error);
-				} else {
-					console.log("Email sent: " + info.response);
-				}
-			});
+			resetPwEmail(user.username, newPassword);
 
 			res.redirect("login");
+
 		}
 	});
 });
@@ -299,6 +308,29 @@ app.post("/admin/ban", function(req, res, next) {
 		},
 
 	);
+});
+
+app.post("/admin/resetAllPw", function(req, res, next){
+	User.find({}).exec(function (err, users) {
+       if(err) throw err;
+       users.forEach(function(user){
+			if(!user.admin){
+				var newPassword = generatePassword();
+
+				User.findOne({ username: user.username }, function(err, user) {
+					if (err) return next(err);
+
+					user.setPassword(newPassword, function() {
+						user.save();
+					});
+				});
+
+				resetPwEmail(user.username, newPassword);
+			}
+	   });
+	   
+	   res.redirect("/admin");
+   })
 });
 
 function isAdmin(req, res, next){

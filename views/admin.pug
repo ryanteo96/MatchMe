@@ -31,6 +31,9 @@ body
           header.card-header
             h4.card-title.mt-2 Admin Page
           .card-body
+            form(role='form', action='/admin/resetAllPw', method='post')
+                button.btn.btn-primary(type='submit') Reset All Password
+          .card-body
             table
               for user in users
                       tr
