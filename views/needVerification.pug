@@ -1,0 +1,28 @@
+doctype html
+html(lang='en')
+  head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    title MatchMe-Need Verification
+    link(href='/stylesheets/bootstrap.min.css', rel='stylesheet')
+    link(href='/stylesheets/style.css', rel='stylesheet')
+    link(href='/stylesheets/font-awesome.css', rel='stylesheet')
+  body
+    .container
+      .row.justify-content-center
+        .col-lg-8
+          .card.my-7
+            .card-body
+              h4.card-title.mt-2 Go verify your account at your email!  
+            .border-top.card-body.text-center
+              a(href='/index') Return
+      -if(messages)
+         .alert.alert-danger
+             div#note #{messages}        
+            
+    script(src='/javascripts/jquery.min.js')
+    script(src='/javascripts/bootstrap.min.js')
+    script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')
