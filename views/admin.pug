@@ -5,50 +5,51 @@ head
   meta(name='viewport', content='width=device-width, initial-scale=1')
   meta(name='description', content='')
   meta(name='author', content='')
-  title MatchMe-Login
+  title MatchMe - Admin
   link(href='/stylesheets/bootstrap.min.css', rel='stylesheet')
   link(href='/stylesheets/style.css', rel='stylesheet')
   link(href='/stylesheets/font-awesome.css', rel='stylesheet')
-nav.navbar.navbar-expand-lg.navbar-custom.fixed-top
-  a.navbar-brand(href='#') MatchMe
-  button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
-    span.navbar-toggler-icon
-  #navbarSupportedContent.collapse.navbar-collapse
-    ul.navbar-nav.mr-auto
-      li.nav-item
-        a.nav-link(href='/index') Home
-      li.nav-item
-        a.nav-link(href='/profile') Profile
-      li.nav-item
-        a.nav-link(href='/admin') Admin
-      li.nav-item
-        a.nav-link(href='/logout') Logout
-.container
-  .row.justify-content-center
-    .col-lg-8
-      .card.my-7
-        header.card-header
-          h4.card-title.mt-2 Admin Page
-        .card-body
-          table
-            for user in users
-                    tr
-                        td= user.name
-                        td= user.username
-                        td
-                            form(role='form', action='/admin/delete', method='post')
-                            input(type='hidden', name=user.name,
-                            value=user.username)
-                            div.col-sm-5
-                              button.btn.btn-primary(type='submit') Delete User
-                        td
-                          form(role='form', action='/admin/ban', method='post')
-                            input(type='hidden', name=user.name,
-                            value=user.username)
-                            div.col-sm-5
-                              button.btn.btn-primary(type='submit') Ban User
-        .border-top.card-body.text-center
-          a(href='/index') Return
-script(src='/javascripts/jquery.min.js')
-script(src='/javascripts/bootstrap.min.js')
-script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')
+body
+  nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
+    a.navbar-brand(href='#') MatchMe
+    button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+      span.navbar-toggler-icon
+    #navbarSupportedContent.collapse.navbar-collapse
+      ul.navbar-nav.mr-auto
+        li.nav-item
+          a.nav-link(href='/index') Home
+        li.nav-item
+          a.nav-link(href='/profile') Profile
+        li.nav-item
+          a.nav-link(href='/admin') Admin
+        li.nav-item
+          a.nav-link(href='/logout') Logout
+  .container
+    .row.justify-content-center
+      .col-lg-8
+        .card.my-7
+          header.card-header
+            h4.card-title.mt-2 Admin Page
+          .card-body
+            table
+              for user in users
+                      tr
+                          td= user.name
+                          td= user.username
+                          td
+                              form(role='form', action='/admin/delete', method='post')
+                              input(type='hidden', name='username',
+                              value=user.username)
+                              div.col-sm-5
+                                button.btn.btn-primary(type='submit') Delete User
+                          td
+                            form(role='form', action='/admin/ban', method='post')
+                              input(type='hidden', name='username',
+                              value=user.username)
+                              div.col-sm-5
+                                button.btn.btn-primary(type='submit') Ban User
+          .border-top.card-body.text-center
+            a(href='/index') Return
+  script(src='/javascripts/jquery.min.js')
+  script(src='/javascripts/bootstrap.min.js')
+  script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')

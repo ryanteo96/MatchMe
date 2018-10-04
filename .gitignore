@@ -3,4 +3,4 @@ idea/
 node_modules/
 /.sourcemaps/
 /.idea/
-
+.DS_Store
