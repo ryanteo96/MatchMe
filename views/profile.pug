@@ -11,7 +11,7 @@ html(lang='en')
     script(src='javascripts/jquery.min.js')
     script(src='javascripts/profile.js')
   body
-    nav.navbar.navbar-expand-lg.navbar-light.bg-light.sticky-top
+    nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
       a.navbar-brand(href='/index') MatchMe
       button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
         span.navbar-toggler-icon
@@ -21,6 +21,9 @@ html(lang='en')
             a.nav-link(href='/index') Home
           li.nav-item
             a.nav-link(href='/profile') Profile
+          if(user.admin)
+            li.nav-item
+              a.nav-link(href='/admin') Admin
           li.nav-item
             a.nav-link(href='/logout') Logout
     .container-fluid
@@ -61,8 +64,8 @@ html(lang='en')
                     div.col-sm-5
                       button.btn.btn-primary(type='submit') Save changes
               form(role='form', action='/profile/delete', method='post')
-                div.col-sm-5
-                  button.btn.btn-primary(type='submit') Delete Account
+                div.col
+                  button.btn.btn-danger(type='submit') Delete Account
     footer.footer
       .container
         copyright @MatchMe
