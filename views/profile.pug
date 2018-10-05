@@ -29,10 +29,10 @@ html(lang='en')
     .container-fluid
       .row.justify-content-center
         .col.p-2
-          -if(error)
+          -if(error.length)
             .alert.alert-danger
               div#note #{error}
-          -if(success)
+          -if(success.length)
             .alert.alert-success
               div#note #{success}
           .card
@@ -46,9 +46,13 @@ html(lang='en')
                     div.col-sm-5
                       input.form-control(type='text' name='name' value=user.name)
                   .form-group.row.d-flex.justify-content-center
-                    label.col-sm-3.col-form-label Email
+                    label.col-sm-3.col-form-label New Email
                     div.col-sm-5
-                      input.form-control(type='email' name='username' value=user.username)
+                      input#username.form-control(type='email' name='username')
+                  .form-group.row.d-flex.justify-content-center
+                    label.col-sm-3.col-form-label Confirm Email
+                    div.col-sm-5
+                      input#confirmUsername.form-control(type='email' name='confirmUsername')
                 li.list-group-item
                   h5 Security
                   .form-group.row.d-flex.justify-content-center

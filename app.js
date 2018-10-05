@@ -9,8 +9,8 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
-var authEmail = require('./public/javascripts/authEmail');
-var resetPwEmail = require('./public/javascripts/resetPwEmail');
+var authEmail = require("./public/javascripts/authEmail");
+var resetPwEmail = require("./public/javascripts/resetPwEmail");
 var nodemailer = require("nodemailer");
 var generatePassword = require("password-generator");
 var app = express();
@@ -52,89 +52,86 @@ passport.deserializeUser(User.deserializeUser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.get("/", function(req, res) {
-	if(!req.user) {
-        res.render("login");
-    }
-    else {
-        res.redirect('/index');
-    }
+	if (!req.user) {
+		res.render("login");
+	} else {
+		res.redirect("/index");
+	}
 });
 
 app.get("/index", isLoggedIn, function(req, res) {
-	if(!req.user.verified){
-		res.redirect('/needVerification');
-	} else if(req.user.needResetPW){
+	if (!req.user.verified) {
+		res.redirect("/needVerification");
+	} else if (req.user.needResetPW) {
 		//redirect to reset password page
 	} else {
-		res.render("index",{ "user": req.user });
+		res.render("index", { user: req.user });
 	}
 });
 
 app.get("/needVerification", function(req, res) {
-	if(req.user){
-		if(!req.user.verified) {
-			req.session.destroy(function (err) {
+	if (req.user) {
+		if (!req.user.verified) {
+			req.session.destroy(function(err) {
 				res.render("needVerification");
 			});
 		}
 	} else {
-        res.redirect('/index');
-    }
+		res.redirect("/index");
+	}
 });
 
-app.get('/confirmation/:token', function (req, res) {
+app.get("/confirmation/:token", function(req, res) {
 	User.findOne({ _id: req.params.token }, function(err, user) {
 		user.verified = true;
 		user.save();
 		req.flash("verifySuccess", "Verified, please login");
-		return res.render('login', {
-                messages: req.flash('verifySuccess')
-        });
+		return res.render("login", {
+			messages: req.flash("verifySuccess"),
+		});
 	});
 });
 
 app.get("/register", function(req, res) {
-    if(!req.user) {
-        res.render("register");
-    }
-    else {
-        res.redirect('/index');
-    }
+	if (!req.user) {
+		res.render("register");
+	} else {
+		res.redirect("/index");
+	}
 });
 
 app.post("/register", function(req, res) {
-    User.register(
-        new User({
-            username: req.body.username,
-            name: req.body.name,
+	User.register(
+		new User({
+			username: req.body.username,
+			name: req.body.name,
 			needResetPW: false,
 			verified: false,
 			admin: false,
 			status: 1,
-        }),
-        req.body.password,
-        function(err, user) {
-            if (err) {
-                req.flash("regWarn", "Please Use Different Email Address");
-                return res.render("register", {
-                    messages: req.flash("regWarn"),
-                });
-            }
-            passport.authenticate("local")(req, res, function() {
+		}),
+		req.body.password,
+		function(err, user) {
+			if (err) {
+				req.flash("regWarn", "Please Use Different Email Address");
+				return res.render("register", {
+					messages: req.flash("regWarn"),
+				});
+			}
+			passport.authenticate("local")(req, res, function() {
 				authEmail(user.username, user._id);
-                res.redirect("/index");
-            });
-        },
-    );
+				res.redirect("/index");
+			});
+		},
+	);
 });
 
 app.get("/login", function(req, res) {
-    if(!req.user) {
-        res.render("login");
-    }
-    else {
-        res.redirect('/index');
-    }
+	if (!req.user) {
+		res.render("login");
+	} else {
+		res.redirect("/index");
+	}
 });
 
 app.post("/login", function(req, res, next) {
@@ -147,27 +144,29 @@ app.post("/login", function(req, res, next) {
 			return res.render("login", {
 				messages: req.flash("logWarn"),
 			});
-        }
-        if(user.status < 0 ) {
-            req.flash('logWarn', "You are Banned. Contact a System Administrator for help.");
-            return res.render('login', {
-                messages: req.flash('logWarn')
-            });
-        }
-        req.logIn(user, function (err) {
-            if (err) {
-                return next(err);
-            }
-			return res.redirect('index');
-        })
-    })(req, res, next);
+		}
+		if (user.status < 0) {
+			req.flash(
+				"logWarn",
+				"You are Banned. Contact a System Administrator for help.",
+			);
+			return res.render("login", {
+				messages: req.flash("logWarn"),
+			});
+		}
+		req.logIn(user, function(err) {
+			if (err) {
+				return next(err);
+			}
+			return res.redirect("index");
+		});
+	})(req, res, next);
 });
 
-
 app.get("/logout", function(req, res) {
-	req.session.destroy(function (err) {
-        res.redirect('/login');
-    });
+	req.session.destroy(function(err) {
+		res.redirect("/login");
+	});
 });
 
 app.get("/forgotPassword", function(req, res) {
@@ -197,16 +196,27 @@ app.post("/forgotPassword", function(req, res) {
 			resetPwEmail(user.username, newPassword);
 
 			res.redirect("login");
-
 		}
 	});
 });
 
 app.get("/profile", isLoggedIn, function(req, res) {
-	res.render("profile", { user: req.user });
+	res.render("profile", {
+		user: req.user,
+		error: req.flash("profileSaveErrorWarn"),
+		success: req.flash("profileSaveSuccessWarn"),
+	});
 });
 
 app.post("/profile/update", function(req, res, next) {
+	if (!req.body.name) {
+		req.body.name = req.user.name;
+	}
+
+	if (!req.body.username) {
+		req.body.username = req.user.username;
+	}
+
 	User.updateOne(
 		{ _id: req.user._id },
 		{
@@ -219,10 +229,7 @@ app.post("/profile/update", function(req, res, next) {
 					"profileSaveErrorWarn",
 					"Email has been taken. Please enter a  different email address.",
 				);
-				return res.render("profile", {
-					error: req.flash("profileSaveErrorWarn"),
-					user: req.user,
-				});
+				return res.redirect("/profile");
 			}
 
 			User.findOne({ _id: req.user._id }, function(err, user) {
@@ -241,49 +248,39 @@ app.post("/profile/update", function(req, res, next) {
 					if (err) {
 						return next(err);
 					}
-					return res.render("profile", {
-						success: req.flash("profileSaveSuccessWarn"),
-						user: user,
-					});
+					return res.redirect("/profile");
 				});
 			});
 		},
 	);
 });
 
-
-app.get("/admin", isAdmin,  function (req, res) {
-   User.find({}).exec(function (err, users) {
-       if(err) throw err;
-       console.log(users);
-       res.render("admin", { "users": users });
-   })
-})
-
+app.get("/admin", isAdmin, function(req, res) {
+	User.find({}).exec(function(err, users) {
+		if (err) throw err;
+		console.log(users);
+		res.render("admin", { users: users });
+	});
+});
 
 app.post("/profile/delete", function(req, res, next) {
-	User.remove(
-		{ _id: req.user._id }, function(err, user) {
-			if (err)
-				return console.error(err);
-			console.log('Successfully deleted');
-			res.status(200).send();
-            res.redirect('/');
-		}
-		);
+	User.remove({ _id: req.user._id }, function(err, user) {
+		if (err) return console.error(err);
+		console.log("Successfully deleted");
+		res.status(200).send();
+		res.redirect("/");
+	});
 });
 
 app.post("/admin/delete", function(req, res, next) {
 	var username = req.body.username;
-	User.deleteOne(
-		{ username: username }, function(err, user) {
-			if(err){
-                return console.error(err);
-            }
-			console.log('Successfully deleted by admin');
-			res.redirect('/admin');
+	User.deleteOne({ username: username }, function(err, user) {
+		if (err) {
+			return console.error(err);
 		}
-		);
+		console.log("Successfully deleted by admin");
+		res.redirect("/admin");
+	});
 	console.log(username);
 });
 
@@ -296,25 +293,21 @@ app.post("/admin/ban", function(req, res, next) {
 		},
 		function(err, user) {
 			if (err) {
-				req.flash(
-					"BanWarn",
-					"Failed to Ban",
-				);
+				req.flash("BanWarn", "Failed to Ban");
 			}
 			res.redirect("/admin");
 			User.findOne({ username: username }, function(err, user) {
 				if (err) return next(err);
 			});
 		},
-
 	);
 });
 
-app.post("/admin/resetAllPw", function(req, res, next){
-	User.find({}).exec(function (err, users) {
-       if(err) throw err;
-       users.forEach(function(user){
-			if(!user.admin){
+app.post("/admin/resetAllPw", function(req, res, next) {
+	User.find({}).exec(function(err, users) {
+		if (err) throw err;
+		users.forEach(function(user) {
+			if (!user.admin) {
 				var newPassword = generatePassword();
 
 				User.findOne({ username: user.username }, function(err, user) {
@@ -327,19 +320,19 @@ app.post("/admin/resetAllPw", function(req, res, next){
 
 				resetPwEmail(user.username, newPassword);
 			}
-	   });
-	   
-	   res.redirect("/admin");
-   })
+		});
+
+		res.redirect("/admin");
+	});
 });
 
-function isAdmin(req, res, next){
-    if(req.isAuthenticated()) {
-        if(req.user.admin) {
-            return next();
-        }
-    }
-    res.redirect("/index");
+function isAdmin(req, res, next) {
+	if (req.isAuthenticated()) {
+		if (req.user.admin) {
+			return next();
+		}
+	}
+	res.redirect("/index");
 }
 
 function isLoggedIn(req, res, next) {
