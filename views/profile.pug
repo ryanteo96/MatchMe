@@ -1,77 +1,79 @@
 html(lang='en')
-  head
-    meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    meta(name='description', content='')
-    meta(name='author', content='')
-    title MatchMe - Profile
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/profile.css')
-    script(src='javascripts/jquery.min.js')
-    script(src='javascripts/profile.js')
-  body
-    nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
-      a.navbar-brand(href='/index') MatchMe
-      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
-        span.navbar-toggler-icon
-      #navbarSupportedContent.collapse.navbar-collapse
-        ul.navbar-nav.mr-auto
-          li.nav-item
-            a.nav-link(href='/index') Home
-          li.nav-item
-            a.nav-link(href='/profile') Profile
-          if(user.admin)
-            li.nav-item
-              a.nav-link(href='/admin') Admin
-          li.nav-item
-            a.nav-link(href='/logout') Logout
-    .container-fluid
-      .row.justify-content-center
-        .col.p-2
-          -if(error.length)
-            .alert.alert-danger
-              div#note #{error}
-          -if(success.length)
-            .alert.alert-success
-              div#note #{success}
-          .card
-            .card-header 
-              h5 Account
-            ul.list-group
-              form(role='form', action='/profile/update', method='post')
-                li.list-group-item
-                  .form-group.row.d-flex.justify-content-center
-                    label.col-sm-3.col-form-label Name
-                    div.col-sm-5
-                      input.form-control(type='text' name='name' value=user.name)
-                  .form-group.row.d-flex.justify-content-center
-                    label.col-sm-3.col-form-label New Email
-                    div.col-sm-5
-                      input#username.form-control(type='email' name='username')
-                  .form-group.row.d-flex.justify-content-center
-                    label.col-sm-3.col-form-label Confirm Email
-                    div.col-sm-5
-                      input#confirmUsername.form-control(type='email' name='confirmUsername')
-                li.list-group-item
-                  h5 Security
-                  .form-group.row.d-flex.justify-content-center
-                    label.col-sm-3.col-form-label New Password
-                    div.col-sm-5
-                      input#password.form-control(type='password' name='password')
-                  .form-group.row.d-flex.justify-content-center
-                    label.col-sm-3.col-form-label Confirm Password
-                    div.col-sm-5
-                      input#confirmPassword.form-control(type='password')
-                  .form-group.row.d-flex.justify-content-center
-                    .col-sm-3
-                    div.col-sm-5
-                      button.btn.btn-primary(type='submit') Save changes
-              form(role='form', action='/profile/delete', method='post')
-                div.col
-                  button.btn.btn-danger(type='submit') Delete Account
-    footer.footer
-      .container
-        copyright @MatchMe
-    script(src='/javascripts/jquery.min.js')
-    script(src='/javascripts/bootstrap.min.js')
+    head
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        meta(name='description', content='')
+        meta(name='author', content='')
+        title MatchMe - Profile
+        link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/profile.css')
+        script(src='javascripts/jquery.min.js')
+        script(src='javascripts/profile.js')
+    body
+        nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
+            a.navbar-brand(href='/index') MatchMe
+            button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+                span.navbar-toggler-icon
+            #navbarSupportedContent.collapse.navbar-collapse
+                ul.navbar-nav.mr-auto
+                    li.nav-item
+                        a.nav-link(href='/index') Home
+                    li.nav-item
+                        a.nav-link(href='/create') Create
+                    li.nav-item
+                        a.nav-link(href='/profile') Profile
+                    if(user.admin)
+                        li.nav-item
+                            a.nav-link(href='/admin') Admin
+                    li.nav-item
+                        a.nav-link(href='/logout') Logout
+        .container-fluid
+            .row.justify-content-center
+                .col.p-2
+                    -if(error.length)
+                        .alert.alert-danger
+                            div#note #{error}
+                    -if(success.length)
+                        .alert.alert-success
+                            div#note #{success}
+                    .card
+                        .card-header 
+                            h5 Account
+                        ul.list-group
+                            form(role='form', action='/profile/update', method='post')
+                                li.list-group-item
+                                    .form-group.row.d-flex.justify-content-center
+                                        label.col-sm-3.col-form-label Name
+                                        div.col-sm-5
+                                            input.form-control(type='text' name='name' value=user.name)
+                                    .form-group.row.d-flex.justify-content-center
+                                        label.col-sm-3.col-form-label New Email
+                                        div.col-sm-5
+                                            input#username.form-control(type='email' name='username')
+                                    .form-group.row.d-flex.justify-content-center
+                                        label.col-sm-3.col-form-label Confirm Email
+                                        div.col-sm-5
+                                            input#confirmUsername.form-control(type='email' name='confirmUsername')
+                                li.list-group-item
+                                    h5 Security
+                                    .form-group.row.d-flex.justify-content-center
+                                        label.col-sm-3.col-form-label New Password
+                                        div.col-sm-5
+                                            input#password.form-control(type='password' name='password')
+                                    .form-group.row.d-flex.justify-content-center
+                                        label.col-sm-3.col-form-label Confirm Password
+                                        div.col-sm-5
+                                            input#confirmPassword.form-control(type='password')
+                                    .form-group.row.d-flex.justify-content-center
+                                        .col-sm-3
+                                        div.col-sm-5
+                                            button.btn.btn-primary(type='submit') Save changes
+                            form(role='form', action='/profile/delete', method='post')
+                                div.col
+                                    button.btn.btn-danger(type='submit') Delete Account
+        footer.footer
+            .container
+                copyright @MatchMe
+        script(src='/javascripts/jquery.min.js')
+        script(src='/javascripts/bootstrap.min.js')

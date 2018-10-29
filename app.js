@@ -9,10 +9,12 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
+var Activity = require("./models/Activity");
 var authEmail = require("./public/javascripts/authEmail");
 var resetPwEmail = require("./public/javascripts/resetPwEmail");
 var nodemailer = require("nodemailer");
 var generatePassword = require("password-generator");
+var moment = require("moment");
 var app = express();
 app.use(flash());
 
@@ -324,6 +326,35 @@ app.post("/admin/resetAllPw", function(req, res, next) {
 
 		res.redirect("/admin");
 	});
+});
+
+app.get("/create", isLoggedIn, function(req, res) {
+	res.render("create", {
+		user: req.user,
+		success: req.flash("createActivitySuccessWarn"),
+	});
+});
+
+app.post("/create", function(req, res, next) {
+	Activity.create(
+		{
+			name: req.body.name,
+			createdBy: req.user.username,
+			datentime: moment(req.body.date + " " + req.body.time),
+			venue: req.body.venue,
+			description: req.body.description,
+		},
+		function(err) {
+			if (err) throw err;
+
+			req.flash(
+				"createActivitySuccessWarn",
+				"Activity has been created successfully.",
+			);
+
+			return res.redirect("/create");
+		},
+	);
 });
 
 function isAdmin(req, res, next) {
