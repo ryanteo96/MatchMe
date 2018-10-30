@@ -336,13 +336,19 @@ app.get("/create", isLoggedIn, function(req, res) {
 });
 
 app.post("/create", function(req, res, next) {
+	console.log(req.body.keywords);
+
 	Activity.create(
 		{
-			name: req.body.name,
-			createdBy: req.user.username,
+			host: req.user.username,
+			host_id: req.user._id,
+			activityName: req.body.name,
+			activityDescription: req.body.description,
+			activityKeywords: req.body.keywords.split(","),
 			datentime: moment(req.body.date + " " + req.body.time),
-			venue: req.body.venue,
-			description: req.body.description,
+			location: req.body.location,
+			maxMembers: req.body.members,
+			currentMaxMembers: req.body.members,
 		},
 		function(err) {
 			if (err) throw err;

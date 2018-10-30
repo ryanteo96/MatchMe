@@ -9,6 +9,7 @@ html(lang='en')
         link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/create.css')
         script(src='javascripts/jquery.min.js')
+        script(src='javascripts/tagsinput.js')
         //- script(src='javascripts/create.js')
     body
         nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
@@ -55,13 +56,22 @@ html(lang='en')
                                         div.col-sm-3
                                             input.form-control(type='time' name='time' required='required')
                                     .form-group.row.d-flex.justify-content-center
-                                        label.col-sm-2.col-form-label Venue
+                                        label.col-sm-2.col-form-label Location
                                         div.col-sm-7
-                                            input.form-control(type='text' name='venue' required='required')
+                                            input.form-control(type='text' name='location' required='required')
+                                    .form-group.row.d-flex.justify-content-center
+                                        label.col-sm-2.col-form-label Members
+                                        div.col-sm-7
+                                            input.form-control(type='number' name='members' required='required' min=0)
                                     .form-group.row.d-flex.justify-content-center
                                         label.col-sm-2.col-form-label Description
                                         div.col-sm-7
                                             textarea.form-control(name='description' rows="4" required='required')
+                                    .form-group.row.d-flex.justify-content-center
+                                        label.col-sm-2.col-form-label Keywords
+                                        div.col-sm-7
+                                            input(type='text' name='keywords' data-role='tagsinput') 
+                                            small.form-text.text-muted Press Enter to create a new activity keyword, Backspace or Delete to remove the last one.
                                 div.col.d-flex.justify-content-end
                                     button.btn.btn-primary(type='submit') Create                                
         footer.footer
