@@ -1,0 +1,71 @@
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        meta(name='description', content='')
+        meta(name='author', content='')
+        title MatchMe - Create
+        link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/create.css')
+        script(src='javascripts/jquery.min.js')
+        //- script(src='javascripts/create.js')
+    body
+        nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
+            a.navbar-brand(href='/index') MatchMe
+            button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+                span.navbar-toggler-icon
+            #navbarSupportedContent.collapse.navbar-collapse
+                ul.navbar-nav.mr-auto
+                    li.nav-item
+                        a.nav-link(href='/index') Home
+                    li.nav-item
+                        a.nav-link(href='/create') Create
+                    li.nav-item
+                        a.nav-link(href='/profile') Profile
+                    if(user.admin)
+                        li.nav-item
+                            a.nav-link(href='/admin') Admin
+                    li.nav-item
+                        a.nav-link(href='/logout') Logout
+        .container-fluid
+            .row.justify-content-center
+                .col.p-2
+                    //- -if(error.length)
+                    //-     .alert.alert-danger
+                    //-         div#note #{error}
+                    -if(success.length)
+                        .alert.alert-success
+                            div#note #{success}
+                    .card
+                        .card-header 
+                            h5.mb-0 Create Activity
+                        ul.list-group
+                            form(role='form', action='/create', method='post')
+                                li.list-group-item.border-0
+                                    .form-group.row.d-flex.justify-content-center
+                                        label.col-sm-2.col-form-label Name
+                                        div.col-sm-7
+                                            input.form-control(type='text' name='name' required='required')
+                                    .form-group.row.d-flex.justify-content-center
+                                        label.col-sm-2.col-form-label Date
+                                        div.col-sm-3
+                                            input.form-control(type='date' name='date' required='required')
+                                        label.col-sm-1.col-form-label Time
+                                        div.col-sm-3
+                                            input.form-control(type='time' name='time' required='required')
+                                    .form-group.row.d-flex.justify-content-center
+                                        label.col-sm-2.col-form-label Venue
+                                        div.col-sm-7
+                                            input.form-control(type='text' name='venue' required='required')
+                                    .form-group.row.d-flex.justify-content-center
+                                        label.col-sm-2.col-form-label Description
+                                        div.col-sm-7
+                                            textarea.form-control(name='description' rows="4" required='required')
+                                div.col.d-flex.justify-content-end
+                                    button.btn.btn-primary(type='submit') Create                                
+        footer.footer
+            .container
+                copyright @MatchMe
+        script(src='/javascripts/jquery.min.js')
+        script(src='/javascripts/bootstrap.min.js')

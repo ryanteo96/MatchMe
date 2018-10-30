@@ -9,10 +9,12 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
+var Activity = require("./models/Activity");
 var authEmail = require("./public/javascripts/authEmail");
 var resetPwEmail = require("./public/javascripts/resetPwEmail");
 var nodemailer = require("nodemailer");
 var generatePassword = require("password-generator");
+var moment = require("moment");
 var app = express();
 app.use(flash());
 
@@ -200,15 +202,15 @@ app.post("/forgotPassword", function(req, res) {
 	});
 });
 
-app.get("/profile", isLoggedIn, function(req, res) {
-	res.render("profile", {
+app.get("/settings", isLoggedIn, function(req, res) {
+	res.render("settings", {
 		user: req.user,
-		error: req.flash("profileSaveErrorWarn"),
-		success: req.flash("profileSaveSuccessWarn"),
+		error: req.flash("settingsSaveErrorWarn"),
+		success: req.flash("settingsSaveSuccessWarn"),
 	});
 });
 
-app.post("/profile/update", function(req, res, next) {
+app.post("/settings/update", function(req, res, next) {
 	if (!req.body.name) {
 		req.body.name = req.user.name;
 	}
@@ -226,10 +228,10 @@ app.post("/profile/update", function(req, res, next) {
 		function(err, user) {
 			if (err) {
 				req.flash(
-					"profileSaveErrorWarn",
+					"settingsSaveErrorWarn",
 					"Email has been taken. Please enter a  different email address.",
 				);
-				return res.redirect("/profile");
+				return res.redirect("/settings");
 			}
 
 			User.findOne({ _id: req.user._id }, function(err, user) {
@@ -240,7 +242,7 @@ app.post("/profile/update", function(req, res, next) {
 				});
 
 				req.flash(
-					"profileSaveSuccessWarn",
+					"settingsSaveSuccessWarn",
 					"User information has been successfully saved.",
 				);
 
@@ -248,7 +250,7 @@ app.post("/profile/update", function(req, res, next) {
 					if (err) {
 						return next(err);
 					}
-					return res.redirect("/profile");
+					return res.redirect("/settings");
 				});
 			});
 		},
@@ -263,7 +265,7 @@ app.get("/admin", isAdmin, function(req, res) {
 	});
 });
 
-app.post("/profile/delete", function(req, res, next) {
+app.post("/settings/delete", function(req, res, next) {
 	User.remove({ _id: req.user._id }, function(err, user) {
 		if (err) return console.error(err);
 		console.log("Successfully deleted");
@@ -323,6 +325,41 @@ app.post("/admin/resetAllPw", function(req, res, next) {
 		});
 
 		res.redirect("/admin");
+	});
+});
+
+app.get("/create", isLoggedIn, function(req, res) {
+	res.render("create", {
+		user: req.user,
+		success: req.flash("createActivitySuccessWarn"),
+	});
+});
+
+app.post("/create", function(req, res, next) {
+	Activity.create(
+		{
+			name: req.body.name,
+			createdBy: req.user.username,
+			datentime: moment(req.body.date + " " + req.body.time),
+			venue: req.body.venue,
+			description: req.body.description,
+		},
+		function(err) {
+			if (err) throw err;
+
+			req.flash(
+				"createActivitySuccessWarn",
+				"Activity has been created successfully.",
+			);
+
+			return res.redirect("/create");
+		},
+	);
+});
+
+app.get("/profile", isLoggedIn, function(req, res) {
+	res.render("profile", {
+		user: req.user,
 	});
 });
 
