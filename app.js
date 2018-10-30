@@ -202,15 +202,15 @@ app.post("/forgotPassword", function(req, res) {
 	});
 });
 
-app.get("/profile", isLoggedIn, function(req, res) {
-	res.render("profile", {
+app.get("/settings", isLoggedIn, function(req, res) {
+	res.render("settings", {
 		user: req.user,
-		error: req.flash("profileSaveErrorWarn"),
-		success: req.flash("profileSaveSuccessWarn"),
+		error: req.flash("settingsSaveErrorWarn"),
+		success: req.flash("settingsSaveSuccessWarn"),
 	});
 });
 
-app.post("/profile/update", function(req, res, next) {
+app.post("/settings/update", function(req, res, next) {
 	if (!req.body.name) {
 		req.body.name = req.user.name;
 	}
@@ -228,10 +228,10 @@ app.post("/profile/update", function(req, res, next) {
 		function(err, user) {
 			if (err) {
 				req.flash(
-					"profileSaveErrorWarn",
+					"settingsSaveErrorWarn",
 					"Email has been taken. Please enter a  different email address.",
 				);
-				return res.redirect("/profile");
+				return res.redirect("/settings");
 			}
 
 			User.findOne({ _id: req.user._id }, function(err, user) {
@@ -242,7 +242,7 @@ app.post("/profile/update", function(req, res, next) {
 				});
 
 				req.flash(
-					"profileSaveSuccessWarn",
+					"settingsSaveSuccessWarn",
 					"User information has been successfully saved.",
 				);
 
@@ -250,7 +250,7 @@ app.post("/profile/update", function(req, res, next) {
 					if (err) {
 						return next(err);
 					}
-					return res.redirect("/profile");
+					return res.redirect("/settings");
 				});
 			});
 		},
@@ -265,7 +265,7 @@ app.get("/admin", isAdmin, function(req, res) {
 	});
 });
 
-app.post("/profile/delete", function(req, res, next) {
+app.post("/settings/delete", function(req, res, next) {
 	User.remove({ _id: req.user._id }, function(err, user) {
 		if (err) return console.error(err);
 		console.log("Successfully deleted");
@@ -355,6 +355,12 @@ app.post("/create", function(req, res, next) {
 			return res.redirect("/create");
 		},
 	);
+});
+
+app.get("/profile", isLoggedIn, function(req, res) {
+	res.render("profile", {
+		user: req.user,
+	});
 });
 
 function isAdmin(req, res, next) {

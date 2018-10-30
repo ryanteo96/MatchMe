@@ -31,47 +31,25 @@ html(lang='en')
         .container-fluid
             .row.justify-content-center
                 .col.p-2
-                    -if(error.length)
-                        .alert.alert-danger
-                            div#note #{error}
-                    -if(success.length)
-                        .alert.alert-success
-                            div#note #{success}
+                    //- -if(error.length)
+                    //-     .alert.alert-danger
+                    //-         div#note #{error}
+                    //- -if(success.length)
+                    //-     .alert.alert-success
+                    //-         div#note #{success}
                     .card
-                        .card-header 
-                            h5 Account
-                        ul.list-group
-                            form(role='form', action='/profile/update', method='post')
-                                li.list-group-item
-                                    .form-group.row.d-flex.justify-content-center
-                                        label.col-sm-3.col-form-label Name
-                                        div.col-sm-5
-                                            input.form-control(type='text' name='name' value=user.name)
-                                    .form-group.row.d-flex.justify-content-center
-                                        label.col-sm-3.col-form-label New Email
-                                        div.col-sm-5
-                                            input#username.form-control(type='email' name='username')
-                                    .form-group.row.d-flex.justify-content-center
-                                        label.col-sm-3.col-form-label Confirm Email
-                                        div.col-sm-5
-                                            input#confirmUsername.form-control(type='email' name='confirmUsername')
-                                li.list-group-item
-                                    h5 Security
-                                    .form-group.row.d-flex.justify-content-center
-                                        label.col-sm-3.col-form-label New Password
-                                        div.col-sm-5
-                                            input#password.form-control(type='password' name='password')
-                                    .form-group.row.d-flex.justify-content-center
-                                        label.col-sm-3.col-form-label Confirm Password
-                                        div.col-sm-5
-                                            input#confirmPassword.form-control(type='password')
-                                    .form-group.row.d-flex.justify-content-center
-                                        .col-sm-3
-                                        div.col-sm-5
-                                            button.btn.btn-primary(type='submit') Save changes
-                            form(role='form', action='/profile/delete', method='post')
-                                div.col
-                                    button.btn.btn-danger(type='submit') Delete Account
+                        .card-header
+                            nav.navbar.navbar-expand-sm.navbar-light.p-0
+                                ul.navbar-nav
+                                    li.nav-item.active
+                                        a.nav-link(href='/profile') My Activities
+                                    li.nav-item
+                                        a.nav-link(href='/settings') Settings
+                        //- ul
+                        //-     each val in values
+                        //-         li= val
+                        //-     else
+                        //-         li There are no values
         footer.footer
             .container
                 copyright @MatchMe
