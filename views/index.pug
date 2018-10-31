@@ -8,52 +8,78 @@ head
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
 body
-    nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
-        a.navbar-brand(href='#') MatchMe
-        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
-            span.navbar-toggler-icon
-        #navbarSupportedContent.collapse.navbar-collapse
-            ul.navbar-nav.mr-auto
-                li.nav-item
-                    a.nav-link(href='/index') Home
-                li.nav-item
-                    a.nav-link(href='/create') Create
-                li.nav-item
-                    a.nav-link(href='/profile') Profile
-                if(user.admin)
-                    li.nav-item
-                        a.nav-link(href='/admin') Admin
-                li.nav-item
-                    a.nav-link(href='/logout') Logout
-    // BETWEEN NAV AND FOOTER
-    .main
-        .feedbox
-            .card
-                img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-                .card-body
-                    | Temp text
-        br
-        .feedbox
-            .card
-                img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-                .card-body
-                    | Temp text
-        br
-        .feedbox
-            .card
-                img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-                .card-body
-                    | Temp text
-        br
-        .feedbox
-            .card
-                img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-                .card-body
-                    | Temp text
-    // BETWEEN NAV AND FOOTER
-    footer.footer
-        .container
-            copyright @MatchMe
-    script(src='/javascripts/jquery.min.js')
-    script(src='/javascripts/bootstrap.min.js')
-    script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')
+  nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
+    a.navbar-brand(href='#') MatchMe
+    button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+      span.navbar-toggler-icon
+    #navbarSupportedContent.collapse.navbar-collapse
+      ul.navbar-nav.mr-auto
+        li.nav-item
+          a.nav-link(href='/index') Home
+        li.nav-item
+          a.nav-link(href='/profile') Profile
+        if(user.admin)
+          li.nav-item
+            a.nav-link(href='/admin') Admin
+        li.nav-item
+          a.nav-link(href='/logout') Logout
+  // BETWEEN NAV AND FOOTER
+  .main
+    form(name='filterForm', method='GET', action='/')
+      .searchBox
+        .row
+          .col-sm-8
+            input.searchField(name='search', placeholder='Search')
+          .col-sm-4 
+            button.btn.waves-effect.waves-light(type='submit') Search
+        .row
+          .col-sm-2 Group/Activity
+            br
+            select(name='group')
+              option(value='both') Both
+              option(value='group') Group
+              option(value='activity') Activity
+          .col-sm-2 Type 
+            br
+            select(name='type')
+              option(value='any') Any
+              option(value='academic') Academic
+              option(value='sports') Sports
+              option(value='social') Social
+          .col-sm-2 Distance 
+            br
+            select(name='distance')
+              option(value='all') All
+              option(value='close') < 1km
+              option(value='mid') 1 - 5km
+              option(value='far') > 5km
+    .feedbox
+      .card
+        img.card-img-top(src='../images/meeting.jpg', alt='alt test')
+        .card-body
+          | Temp text
+    br
+    .feedbox
+      .card
+        img.card-img-top(src='../images/meeting.jpg', alt='alt test')
+        .card-body
+          | Temp text
+    br
+    .feedbox
+      .card
+        img.card-img-top(src='../images/meeting.jpg', alt='alt test')
+        .card-body
+          | Temp text
+    br
+    .feedbox
+      .card
+        img.card-img-top(src='../images/meeting.jpg', alt='alt test')
+        .card-body
+          | Temp text
+  // BETWEEN NAV AND FOOTER
+  footer.footer
+    .container
+      copyright @MatchMe
+  script(src='/javascripts/jquery.min.js')
+  script(src='/javascripts/bootstrap.min.js')
+  script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')
