@@ -336,8 +336,6 @@ app.get("/create", isLoggedIn, function(req, res) {
 });
 
 app.post("/create", function(req, res, next) {
-	console.log(req.body.keywords);
-
 	Activity.create(
 		{
 			host: req.user.username,
@@ -364,8 +362,12 @@ app.post("/create", function(req, res, next) {
 });
 
 app.get("/profile", isLoggedIn, function(req, res) {
-	res.render("profile", {
-		user: req.user,
+	Activity.find({ host_id: req.user._id }, function(err, activities) {
+		res.render("profile", {
+			user: req.user,
+			activities: activities,
+			moment: require("moment"),
+		});
 	});
 });
 
