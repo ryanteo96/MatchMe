@@ -60,7 +60,7 @@ html(lang='en')
                                         .form-group.row.d-flex.justify-content-center
                                             label.col-sm-2.col-form-label Date
                                             div.col-sm-3
-                                                input.form-control(type='date' name='date' value=moment(activity.datentime).toDate() required='required')
+                                                input.form-control(type='date' name='date' value=moment(activity.datentime).toDate('L') required='required')
                                             label.col-sm-1.col-form-label Time
                                             div.col-sm-3
                                                 input.form-control(type='time' name='time' value=moment(activity.datentime).format('LTS') required='required')
