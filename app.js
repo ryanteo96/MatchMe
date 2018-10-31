@@ -313,11 +313,11 @@ app.post("/admin/unban", function(req, res, next) {
 			status: 1,
 		},
 		function(err, user) {
-			if(err) {
+			if (err) {
 				req.flash("UnbanWarn", "Failed to UnBan");
 			}
 			res.redirect("/admin");
-			User.findOne({username: username }, function(err, user) {
+			User.findOne({ username: username }, function(err, user) {
 				if (err) return next(err);
 			});
 		},
@@ -364,9 +364,9 @@ app.get("/editGroup", isLoggedIn, function(req, res) {
 });
 
 app.post("/editGroup/edit", function(req, res, next) {
-		console.log(req.body);
+	console.log(req.body);
 	Activity.updateOne(
-		{ _id: req.body._id},
+		{ _id: req.body._id },
 		{
 			activityName: req.body.name,
 			activityDescription: req.body.description,
