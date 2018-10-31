@@ -61,6 +61,8 @@ html(lang='en')
                                     .row
                                         .col-sm
                                             p.text-muted= activity.activityDescription
+                                        div.col.d-flex.justify-content-end
+                                            a.nav-link(href='/editGroup') Edit
                                     .row.pl-3
                                         each keyword in activity.activityKeywords
                                             span.badge.badge-primary.mr-2= keyword

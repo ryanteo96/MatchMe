@@ -305,6 +305,24 @@ app.post("/admin/ban", function(req, res, next) {
 	);
 });
 
+app.post("/admin/unban", function(req, res, next) {
+	var username = req.body.username;
+	User.updateOne(
+		{ username: username },
+		{
+			status: 1,
+		},
+		function(err, user) {
+			if(err) {
+				req.flash("UnbanWarn", "Failed to UnBan");
+			}
+			res.redirect("/admin");
+			User.findOne({username: username }, function(err, user) {
+				if (err) return next(err);
+			});
+		},
+	);
+});
 app.post("/admin/resetAllPw", function(req, res, next) {
 	User.find({}).exec(function(err, users) {
 		if (err) throw err;
@@ -333,6 +351,35 @@ app.get("/create", isLoggedIn, function(req, res) {
 		user: req.user,
 		success: req.flash("createActivitySuccessWarn"),
 	});
+});
+
+app.get("/editGroup", isLoggedIn, function(req, res) {
+	Activity.find({ host_id: req.user._id }, function(err, activities) {
+		res.render("editGroup", {
+			user: req.user,
+			activities: activities,
+			moment: require("moment"),
+		});
+	});
+});
+
+app.post("/editGroup/edit", function(req, res, next) {
+		console.log(req.body);
+	Activity.updateOne(
+		{ _id: req.body._id},
+		{
+			activityName: req.body.name,
+			activityDescription: req.body.description,
+			maxMembers: req.body.members,
+			activityKeywords: req.body.keywords.split(","),
+			location: req.body.location,
+			datentime: moment(req.body.date + " " + req.body.time),
+			currentMaxMembers: req.body.members,
+		},
+		function(err, user) {
+			res.redirect("/profile");
+		},
+	);
 });
 
 app.post("/create", function(req, res, next) {
