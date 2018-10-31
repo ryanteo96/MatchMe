@@ -9,7 +9,6 @@ html(lang='en')
         link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/profile.css')
         script(src='javascripts/jquery.min.js')
-        script(src='javascripts/profile.js')
     body
         nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
             a.navbar-brand(href='/index') MatchMe
@@ -45,11 +44,29 @@ html(lang='en')
                                         a.nav-link(href='/profile') My Activities
                                     li.nav-item
                                         a.nav-link(href='/settings') Settings
-                        //- ul
-                        //-     each val in values
-                        //-         li= val
-                        //-     else
-                        //-         li There are no values
+                        ul.list-group.list-group-flush.p-0.m-0
+                            each activity in activities
+                                li.list-group-item
+                                    .row
+                                        .col-sm
+                                            p= activity.activityName
+                                        .col-sm.text-right
+                                            p= moment(activity.datentime).format('hh:mm A MMM D, YYYY') 
+                                    .row 
+                                        .col-sm
+                                            p.d-inline Location: 
+                                            p.d-inline.pl-2= activity.location
+                                        .col-sm.text-right
+                                            p Number of Members: #{activity.maxMembers}
+                                    .row
+                                        .col-sm
+                                            p.text-muted= activity.activityDescription
+                                    .row.pl-3
+                                        each keyword in activity.activityKeywords
+                                            span.badge.badge-primary.mr-2= keyword
+                            else
+                                p.text-center.mb-0.p-4 There are no activities. Create one today!
+
         footer.footer
             .container
                 copyright @MatchMe
