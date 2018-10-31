@@ -60,10 +60,10 @@ html(lang='en')
                                         .form-group.row.d-flex.justify-content-center
                                             label.col-sm-2.col-form-label Date
                                             div.col-sm-3
-                                                input.form-control(type='date' name='date' value=moment(activity.datentime).toDate() required='required')
+                                                input.form-control(type='date' name='date' value= moment(activity.datentime).format('YYYY-MM-DD') required='required')
                                             label.col-sm-1.col-form-label Time
                                             div.col-sm-3
-                                                input.form-control(type='time' name='time' value=moment(activity.datentime).format('LTS') required='required')
+                                                input.form-control(type='time' name='time' value=moment(activity.datentime).format('HH:mm') required='required')
                                         .form-group.row.d-flex.justify-content-center
                                             label.col-sm-2.col-form-label Location
                                             div.col-sm-7
@@ -79,7 +79,7 @@ html(lang='en')
                                         .form-group.row.d-flex.justify-content-center
                                             label.col-sm-2.col-form-label Keywords
                                             div.col-sm-7
-                                                input(type='text' name='keywords' value=activity.activityKeywords data-role='tagsinput') 
+                                                input(type='text' name='keywords' value=activity.activityKeywords.toString() data-role='tagsinput') 
                                     div.col.d-flex.justify-content-end
                                         button.btn.btn-primary(type='submit') Update
 
