@@ -48,13 +48,20 @@ body
               option(value='academic') Academic
               option(value='sports') Sports
               option(value='social') Social
-        //-   .col-sm-2 Distance 
-        //-     br
-        //-     select(name='distance')
-        //-       option(value='all') All
-        //-       option(value='close') < 1km
-        //-       option(value='mid') 1 - 5km
-        //-       option(value='far') > 5km
+    div
+      h5.p-3 All Activities
+      ul.list-group.ml-3.mr-3.mb-3
+          each activity in activities
+              li.list-group-item
+                  input(type="hidden" id="activityId" name="id" value= activity._id)
+                  .row.align-items-center
+                      .col-sm.pb-1.pt-1
+                          p.m-0= activity.activityName
+                      .col-sm.text-sm-right.pb-1.pt-1
+                          span.badge.badge-secondary.mr-2= moment(activity.datentime).format('hh:mm A')
+                          span.badge.badge-secondary= moment(activity.datentime).format('MMM D, YYYY')
+                      .col-sm-2.d-flex.justify-content-end
+                          button.btn.btn-sm.btn-primary More Info
   // BETWEEN NAV AND FOOTER
   footer.footer
     .container

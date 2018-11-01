@@ -86,14 +86,32 @@ app.get("/join", isLoggedIn, function(req, res) {
 	let group = req.query.group;
 	let type = req.query.type;
 	if(search || group || type) {
-		Activity.find({}).exec(function(err, activities) {
-			if (err) throw err;
-			console.log(activities);
-			res.render("join", { user: req.user , groups: activities});
-		}); 
+		console.log(search,group,type)
+		Activity.find({})
+            .sort({ datentime: 1 })
+            .exec(function(err, activities) {
+                if (err) throw err;
+				activities = activities.filter(word => word.activityName.includes(search))
+                return res.render("join", {
+                    user: req.user,
+                    activities: activities,
+                    moment: require("moment"),
+                });
+            });
 	}
-	else
-	res.render("join", { user: req.user , groups: null});
+	else{
+		Activity.find({})
+	            .sort({ datentime: 1 })
+	            .exec(function(err, activities) {
+	                if (err) throw err;
+
+	                return res.render("join", {
+	                    user: req.user,
+	                    activities: activities,
+	                    moment: require("moment"),
+	                });
+	            });
+	}
 });
 
 app.get("/needVerification", function(req, res) {
