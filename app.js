@@ -71,6 +71,21 @@ app.get("/index", isLoggedIn, function(req, res) {
 	}
 });
 
+app.get("/join", isLoggedIn, function(req, res) {
+	let search = req.query.search;
+	let group = req.query.group;
+	let type = req.query.type;
+	if(search || group || type) {
+		Activity.find({}).exec(function(err, activities) {
+			if (err) throw err;
+			console.log(activities);
+			res.render("join", { user: req.user , groups: activities});
+		}); 
+	}
+	else
+	res.render("join", { user: req.user , groups: null});
+});
+
 app.get("/needVerification", function(req, res) {
 	if (req.user) {
 		if (!req.user.verified) {

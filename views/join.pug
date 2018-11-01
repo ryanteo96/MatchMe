@@ -1,12 +1,12 @@
 head
-    meta(charset='utf-8')
-    meta(http-equiv='X-UA-Compatible', content='IE=edge')
-    meta(name='viewport', content='width=device-width, initial-scale=1')
-    meta(name='description', content='')
-    meta(name='author', content='')
-    title MatchMe - Home
-    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
-    link(rel='stylesheet', href='/stylesheets/style.css')
+  meta(charset='utf-8')
+  meta(http-equiv='X-UA-Compatible', content='IE=edge')
+  meta(name='viewport', content='width=device-width, initial-scale=1')
+  meta(name='description', content='')
+  meta(name='author', content='')
+  title MatchMe - Home
+  link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+  link(rel='stylesheet', href='/stylesheets/style.css')
 body
   nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
     a.navbar-brand(href='#') MatchMe
@@ -27,7 +27,7 @@ body
           a.nav-link(href='/logout') Logout
   // BETWEEN NAV AND FOOTER
   .main
-    form(name='filterForm', method='GET', action='/')
+    form(name='filterForm', method='GET', action='/join')
       .searchBox
         .row
           .col-sm-8
@@ -48,36 +48,13 @@ body
               option(value='academic') Academic
               option(value='sports') Sports
               option(value='social') Social
-          .col-sm-2 Distance 
-            br
-            select(name='distance')
-              option(value='all') All
-              option(value='close') < 1km
-              option(value='mid') 1 - 5km
-              option(value='far') > 5km
-    .feedbox
-      .card
-        img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-        .card-body
-          | Temp text
-    br
-    .feedbox
-      .card
-        img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-        .card-body
-          | Temp text
-    br
-    .feedbox
-      .card
-        img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-        .card-body
-          | Temp text
-    br
-    .feedbox
-      .card
-        img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-        .card-body
-          | Temp text
+        //-   .col-sm-2 Distance 
+        //-     br
+        //-     select(name='distance')
+        //-       option(value='all') All
+        //-       option(value='close') < 1km
+        //-       option(value='mid') 1 - 5km
+        //-       option(value='far') > 5km
   // BETWEEN NAV AND FOOTER
   footer.footer
     .container
