@@ -410,7 +410,6 @@ app.get("/editGroup", isLoggedIn, function(req, res) {
 });
 
 app.post("/editGroup/edit", function(req, res, next) {
-	console.log(req.body);
 	Activity.updateOne(
 		{ _id: req.body._id },
 		{
@@ -423,6 +422,18 @@ app.post("/editGroup/edit", function(req, res, next) {
 			currentMaxMembers: req.body.members,
 		},
 		function(err, user) {
+			res.redirect("/profile");
+		},
+	);
+});
+
+app.post("/delete", function(req, res, next) {
+	Activity.deleteOne(
+		{
+			_id: req.body.id,
+		},
+		function(err) {
+			if (err) return handleError(err);
 			res.redirect("/profile");
 		},
 	);
