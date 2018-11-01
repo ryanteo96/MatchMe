@@ -25,32 +25,37 @@ body
                         a.nav-link(href='/admin') Admin
                 li.nav-item
                     a.nav-link(href='/logout') Logout
-    // BETWEEN NAV AND FOOTER
     .main
-        .feedbox
-            .card
-                img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-                .card-body
-                    | Temp text
-        br
-        .feedbox
-            .card
-                img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-                .card-body
-                    | Temp text
-        br
-        .feedbox
-            .card
-                img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-                .card-body
-                    | Temp text
-        br
-        .feedbox
-            .card
-                img.card-img-top(src='../images/meeting.jpg', alt='alt test')
-                .card-body
-                    | Temp text
-    // BETWEEN NAV AND FOOTER
+        div
+            h5.p-3 All Activities
+            ul.list-group.ml-3.mr-3.mb-3
+                each activity in activities
+                    li.list-group-item
+                        input(type="hidden" id="activityId" name="id" value= activity._id)
+                        .row.align-items-center
+                            .col-sm.pb-1.pt-1
+                                p.m-0= activity.activityName
+                            .col-sm.text-sm-right.pb-1.pt-1
+                                span.badge.badge-secondary.mr-2= moment(activity.datentime).format('hh:mm A')
+                                span.badge.badge-secondary= moment(activity.datentime).format('MMM D, YYYY')
+                            .col-sm-2.d-flex.justify-content-end
+                                button.btn.btn-sm.btn-primary More Info
+                        //- .row
+                        //-     .col-sm.mb-3
+                        //-         //- span.badge.badge-info.ml-2 Location: 
+                        //-         p.m-0.d-inline Location: 
+                        //-         span.badge.badge-info= activity.location
+                        //-         //- p.d-inline.pl-2= activity.location
+                        //-     .col-sm.text-sm-right.mb-3
+                        //-         p.m-0.d-inline.mr-2 Number of Members:
+                        //-         //-  #{activity.maxMembers}
+                        //-         span.badge.badge-info= activity.maxMembers
+                        //- .row
+                        //-     .col-sm
+                        //-         p.text-muted= activity.activityDescription
+                        //- .row.pl-3
+                        //-     each keyword in activity.activityKeywords
+                        //-         span.badge.badge-primary.mr-2= keyword
     footer.footer
         .container
             copyright @MatchMe

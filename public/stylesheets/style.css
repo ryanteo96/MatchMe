@@ -6,6 +6,7 @@ body {
 	max-width: 100%;
 	overflow-y: auto;
 	overflow-x: hidden;
+	background-color: #d2d4bc;
 }
 
 .footer {
@@ -28,9 +29,8 @@ body {
 	text-shadow: -2px 0 #160b5b, 0 2px #160b5b, 2px 0 #160b5b, 0 -2px #160b5b;
 }
 
-.main {
-	background-color: #d2d4bc;
-}
+/* .main {
+} */
 
 .feedbox {
 	position: relative;

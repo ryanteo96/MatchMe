@@ -67,7 +67,17 @@ app.get("/index", isLoggedIn, function(req, res) {
 	} else if (req.user.needResetPW) {
 		//redirect to reset password page
 	} else {
-		res.render("index", { user: req.user });
+		Activity.find({})
+			.sort({ datentime: 1 })
+			.exec(function(err, activities) {
+				if (err) throw err;
+
+				return res.render("index", {
+					user: req.user,
+					activities: activities,
+					moment: require("moment"),
+				});
+			});
 	}
 });
 
