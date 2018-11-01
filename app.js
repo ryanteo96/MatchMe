@@ -350,39 +350,20 @@ app.get("/create", isLoggedIn, function(req, res) {
 	res.render("create", {
 		user: req.user,
 		success: req.flash("createActivitySuccessWarn"),
+		error: req.flash("createActivityErrorWarn"),
 	});
-});
-
-app.get("/editGroup", isLoggedIn, function(req, res) {
-	Activity.find({ host_id: req.user._id }, function(err, activities) {
-		res.render("editGroup", {
-			user: req.user,
-			activities: activities,
-			moment: require("moment"),
-		});
-	});
-});
-
-app.post("/editGroup/edit", function(req, res, next) {
-	console.log(req.body);
-	Activity.updateOne(
-		{ _id: req.body._id },
-		{
-			activityName: req.body.name,
-			activityDescription: req.body.description,
-			maxMembers: req.body.members,
-			activityKeywords: req.body.keywords.split(","),
-			location: req.body.location,
-			datentime: moment(req.body.date + " " + req.body.time),
-			currentMaxMembers: req.body.members,
-		},
-		function(err, user) {
-			res.redirect("/profile");
-		},
-	);
 });
 
 app.post("/create", function(req, res, next) {
+	var today = new Date();
+	var datentime = moment(req.body.date + " " + req.body.time);
+
+	if (!datentime.isValid() || datentime.isBefore(today)) {
+		req.flash("createActivityErrorWarn", "Enter a valid date and time.");
+
+		return res.redirect("/create");
+	}
+
 	Activity.create(
 		{
 			host: req.user.username,
@@ -416,6 +397,35 @@ app.get("/profile", isLoggedIn, function(req, res) {
 			moment: require("moment"),
 		});
 	});
+});
+
+app.get("/editGroup", isLoggedIn, function(req, res) {
+	Activity.find({ host_id: req.user._id }, function(err, activities) {
+		res.render("editGroup", {
+			user: req.user,
+			activities: activities,
+			moment: require("moment"),
+		});
+	});
+});
+
+app.post("/editGroup/edit", function(req, res, next) {
+	console.log(req.body);
+	Activity.updateOne(
+		{ _id: req.body._id },
+		{
+			activityName: req.body.name,
+			activityDescription: req.body.description,
+			maxMembers: req.body.members,
+			activityKeywords: req.body.keywords.split(","),
+			location: req.body.location,
+			datentime: moment(req.body.date + " " + req.body.time),
+			currentMaxMembers: req.body.members,
+		},
+		function(err, user) {
+			res.redirect("/profile");
+		},
+	);
 });
 
 function isAdmin(req, res, next) {
