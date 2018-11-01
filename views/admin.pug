@@ -37,7 +37,7 @@ body
                             button.btn.btn-primary(type='submit') Reset All Password
                     .card-body
                         table
-                            for user in users
+                            each user in users
                                 tr
                                     td= user.name
                                     td= user.username
