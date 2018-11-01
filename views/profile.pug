@@ -47,26 +47,50 @@ html(lang='en')
                         ul.list-group.list-group-flush.p-0.m-0
                             each activity in activities
                                 li.list-group-item
-                                    .row
-                                        .col-sm
-                                            p= activity.activityName
-                                        .col-sm.text-right
-                                            p= moment(activity.datentime).format('hh:mm A MMM D, YYYY') 
-                                    .row 
-                                        .col-sm
-                                            p.d-inline Location: 
-                                            p.d-inline.pl-2= activity.location
-                                        .col-sm.text-right
-                                            p Number of Members: #{activity.maxMembers}
-                                    .row
-                                        .col-sm
-                                            p.text-muted= activity.activityDescription
-                                    .row.pl-3
-                                        each keyword in activity.activityKeywords
-                                            span.badge.badge-primary.mr-2= keyword
+                                    form.m-0(role='form', action='/delete', method='post')
+                                        input(type="hidden" id="activityId" name="id" value= activity._id)
+                                        .row
+                                            .col-sm.mb-3
+                                                p.m-0= activity.activityName
+                                            .col-sm.text-sm-right.mb-3
+                                                span.badge.badge-secondary.mr-2= moment(activity.datentime).format('hh:mm A')
+                                                span.badge.badge-secondary= moment(activity.datentime).format('MMM D, YYYY')
+                                        .row
+                                            .col-sm.mb-3
+                                                //- span.badge.badge-info.ml-2 Location: 
+                                                p.m-0.d-inline Location: 
+                                                span.badge.badge-info= activity.location
+                                                //- p.d-inline.pl-2= activity.location
+                                            .col-sm.text-sm-right.mb-3
+                                                p.m-0.d-inline.mr-2 Number of Members:
+                                                //-  #{activity.maxMembers}
+                                                span.badge.badge-info= activity.maxMembers
+                                        .row
+                                            .col-sm
+                                                p.text-muted= activity.activityDescription
+                                        .row.pl-3
+                                            each keyword in activity.activityKeywords
+                                                span.badge.badge-primary.mr-2= keyword
+                                        .row
+                                            div.col.d-flex.justify-content-end
+                                                button.btn.btn-sm.btn-danger.mr-2(type='submit') Delete
+                                                //- button.btn.btn-sm.btn-danger.mr-2(type="button" data-toggle="modal" data-target="#confirmModal") Delete
+
+                                                //- div#confirmModal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true")
+                                                //-     div.modal-dialog
+                                                //-         .modal-content  
+                                                //-             .modal-header
+                                                //-                 h5#confirmModalLabel.modal-title Delete Confirmation
+                                                //-                 button.close(type="button" data-dismiss="modal" aria-label="Close")
+                                                //-                     span(aria-hidden="true") &times;
+                                                //-             .modal-body Are you sure to delete this group?
+                                                //-             .modal-footer
+                                                //-                 button.btn.btn-secondary(type="button" data-dismiss="modal") No
+                                                //-                 button.btn.btn-primary(type='submit') Yes
+
+                                                button.btn.btn-sm.btn-primary(href='/editGroup') Edit
                             else
                                 p.text-center.mb-0.p-4 There are no activities. Create one today!
-
         footer.footer
             .container
                 copyright @MatchMe

@@ -1,0 +1,90 @@
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        meta(name='description', content='')
+        meta(name='author', content='')
+        title MatchMe - Edit
+        link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/create.css')
+        link(rel='stylesheet', href='/stylesheets/profile.css')
+        script(src='javascripts/jquery.min.js')
+        script(src='javascripts/tagsinput.js')
+    body
+        nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
+            a.navbar-brand(href='/index') MatchMe
+            button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+                span.navbar-toggler-icon
+            #navbarSupportedContent.collapse.navbar-collapse
+                ul.navbar-nav.mr-auto
+                    li.nav-item
+                        a.nav-link(href='/index') Home
+                    li.nav-item
+                        a.nav-link(href='/create') Create
+                    li.nav-item
+                        a.nav-link(href='/profile') Profile
+                    if(user.admin)
+                        li.nav-item
+                            a.nav-link(href='/admin') Admin
+                    li.nav-item
+                        a.nav-link(href='/logout') Logout
+        .container-fluid
+            .row.justify-content-center
+                .col.p-2
+                    //-if(error.length)
+                    //    .alert.alert-danger
+                    //        div#note #{error}
+                    //-if(success.length)
+                    //    .alert.alert-success
+                    //        div#note #{success}
+                    .card
+                        .card-header 
+                            nav.navbar.navbar-expand-sm.navbar-light.p-0
+                                ul.navbar-nav
+                                    li.nav-item
+                                        a.nav-link(href='/profile') My Activities
+                                    li.nav-item
+                                        a.nav-link(href='/settings') Settings
+                                    li.nav-item.active
+                                        a.nav-link(href='/editGroup') Edit Group
+                        ul.list-group
+                            each activity in activities
+                                form(role='form', action='/editGroup/edit', method='post')
+                                    input(type='hidden', name='_id', value=activity._id)
+                                    li.list-group-item.border-0
+                                        .form-group.row.d-flex.justify-content-center
+                                            label.col-sm-2.col-form-label Name
+                                            div.col-sm-7
+                                                input.form-control(type='text' name='name' value=activity.activityName)
+                                        .form-group.row.d-flex.justify-content-center
+                                            label.col-sm-2.col-form-label Date
+                                            div.col-sm-3
+                                                input.form-control(type='date' name='date' value= moment(activity.datentime).format('YYYY-MM-DD') required='required')
+                                            label.col-sm-1.col-form-label Time
+                                            div.col-sm-3
+                                                input.form-control(type='time' name='time' value=moment(activity.datentime).format('HH:mm') required='required')
+                                        .form-group.row.d-flex.justify-content-center
+                                            label.col-sm-2.col-form-label Location
+                                            div.col-sm-7
+                                                input.form-control(type='text' name='location' value=activity.location)
+                                        .form-group.row.d-flex.justify-content-center
+                                            label.col-sm-2.col-form-label Members
+                                            div.col-sm-7
+                                                input.form-control(type='number' name='members' value=activity.maxMembers min=0)
+                                        .form-group.row.d-flex.justify-content-center
+                                            label.col-sm-2.col-form-label Description
+                                            div.col-sm-7
+                                                input.form-control(name='description' rows="4" value=activity.activityDescription)
+                                        .form-group.row.d-flex.justify-content-center
+                                            label.col-sm-2.col-form-label Keywords
+                                            div.col-sm-7
+                                                input(type='text' name='keywords' value=activity.activityKeywords.toString() data-role='tagsinput') 
+                                    div.col.d-flex.justify-content-end
+                                        button.btn.btn-primary(type='submit') Update
+
+        footer.footer
+            .container
+                copyright @MatchMe
+        script(src='/javascripts/jquery.min.js')
+        script(src='/javascripts/bootstrap.min.js')
