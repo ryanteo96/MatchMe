@@ -39,7 +39,35 @@ body
                                 span.badge.badge-secondary.mr-2= moment(activity.datentime).format('hh:mm A')
                                 span.badge.badge-secondary= moment(activity.datentime).format('MMM D, YYYY')
                             .col-sm-2.d-flex.justify-content-end
-                                button.btn.btn-sm.btn-primary More Info
+                                button.btn.btn-sm.btn-primary(type='button', data-toggle='modal', data-target='#myModal') More Info
+                                #myModal.modal.fade(role='dialog')
+                                  .modal-dialog
+                                    .modal-content
+                                      .modal-header
+                                        h4.modal-title(align='left') More Information
+                                        button.close(align='right', type='button', data-dismiss='modal') ×
+                                        
+                                      .modal-body
+                                        div(style='overflow: hidden;')
+                                          p(style='float: left;') Activity:
+                                          p(style='float: right;')= activity.activityName
+                                        div(style='overflow: hidden;')
+                                          p(style='float: left;') Description:
+                                          p(style='float: right;')= activity.activityDescription
+                                        div(style='overflow: hidden;')
+                                          p(style='float: left;') Location:
+                                          p(style='float: right;')= activity.location
+                                        div(style='overflow: hidden;')
+                                          p(style='float: left;') Time:
+                                          p(style='float: right;')= moment(activity.datentime).format('hh:mm A')
+                                        div(style='overflow: hidden;')
+                                          p(style='float: left;') Date:
+                                          p(style='float: right;')= moment(activity.datentime).format('MMM D, YYYY')
+                                        div(style='overflow: hidden;')
+                                          p(style='float: left;') Max Members:
+                                          p(style='float: right;')= activity.maxMembers
+                                
+                              
                         //- .row
                         //-     .col-sm.mb-3
                         //-         //- span.badge.badge-info.ml-2 Location: 

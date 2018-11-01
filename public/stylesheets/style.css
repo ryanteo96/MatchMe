@@ -17,7 +17,7 @@ body {
 	line-height: 60px;
 	background-color: white;
 }
-
+.list-group-item, .list-group-item:hover{ z-index: auto; }
 .containerTitle {
 	padding-top: 50px;
 	font-size: 100px;
