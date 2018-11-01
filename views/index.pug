@@ -32,42 +32,30 @@ body
             h5.p-3 All Activities
             ul.list-group.ml-3.mr-3.mb-3
                 each activity in activities
-                    li.list-group-item
-                        input(type="hidden" id="activityId" name="id" value= activity._id)
-                        .row.align-items-center
-                            .col-sm.pb-1.pt-1
-                                p.m-0= activity.activityName
-                            .col-sm.text-sm-right.pb-1.pt-1
-                                span.badge.badge-secondary.mr-2= moment(activity.datentime).format('hh:mm A')
-                                span.badge.badge-secondary= moment(activity.datentime).format('MMM D, YYYY')
-                            .col-sm-2.d-flex.justify-content-end
-                                button.btn.btn-sm.btn-primary(type='button', data-toggle='modal', data-target='#myModal') More Info
-                                #myModal.modal.fade(role='dialog')
-                                  .modal-dialog
-                                    .modal-content
-                                      .modal-header
-                                        h4.modal-title(align='left') More Information
-                                        button.close(align='right', type='button', data-dismiss='modal') ×
-                                        
-                                      .modal-body
-                                        div(style='overflow: hidden;')
-                                          p(style='float: left;') Activity:
-                                          p(style='float: right;')= activity.activityName
-                                        div(style='overflow: hidden;')
-                                          p(style='float: left;') Description:
-                                          p(style='float: right;')= activity.activityDescription
-                                        div(style='overflow: hidden;')
-                                          p(style='float: left;') Location:
-                                          p(style='float: right;')= activity.location
-                                        div(style='overflow: hidden;')
-                                          p(style='float: left;') Time:
-                                          p(style='float: right;')= moment(activity.datentime).format('hh:mm A')
-                                        div(style='overflow: hidden;')
-                                          p(style='float: left;') Date:
-                                          p(style='float: right;')= moment(activity.datentime).format('MMM D, YYYY')
-                                        div(style='overflow: hidden;')
-                                          p(style='float: left;') Max Members:
-                                          p(style='float: right;')= activity.maxMembers
+                  .card.text-center.mb-3
+                    .card-header
+                      
+                    .card-body
+                      div(style='overflow: hidden;')
+                        p(style='float: left;') Activity:
+                        p(style='float: right;')= activity.activityName
+                      div(style='overflow: hidden;')
+                        p(style='float: left;') Description:
+                        p(style='float: right;')= activity.activityDescription
+                      div(style='overflow: hidden;')
+                        p(style='float: left;') Location:
+                        p(style='float: right;')= activity.location
+                      div(style='overflow: hidden;')
+                        p(style='float: left;') Time:
+                        p(style='float: right;')= moment(activity.datentime).format('hh:mm A')
+                      div(style='overflow: hidden;')
+                        p(style='float: left;') Date:
+                        p(style='float: right;')= moment(activity.datentime).format('MMM D, YYYY')
+                      div(style='overflow: hidden;')
+                        p(style='float: left;') Max Members:
+                        p(style='float: right;')= activity.maxMembers
+                                    
+                   
                                 
                               
                         //- .row
@@ -89,6 +77,9 @@ body
     footer.footer
         .container
             copyright @MatchMe
+
+    
+    script(src='/javascripts/clear.js')
     script(src='/javascripts/jquery.min.js')
     script(src='/javascripts/bootstrap.min.js')
     script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')
