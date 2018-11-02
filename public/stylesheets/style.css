@@ -17,7 +17,10 @@ body {
 	line-height: 60px;
 	background-color: white;
 }
-.list-group-item, .list-group-item:hover{ z-index: auto; }
+.list-group-item,
+.list-group-item:hover {
+	z-index: auto;
+}
 .containerTitle {
 	padding-top: 50px;
 	font-size: 100px;
@@ -29,8 +32,8 @@ body {
 	text-shadow: -2px 0 #160b5b, 0 2px #160b5b, 2px 0 #160b5b, 0 -2px #160b5b;
 }
 
-/* .main {
-} */
+.main {
+}
 
 .feedbox {
 	position: relative;
@@ -63,4 +66,8 @@ body {
 	padding: 5px;
 	min-width: 100%;
 	margin: auto;
+}
+
+textarea {
+	resize: none;
 }

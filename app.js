@@ -81,36 +81,48 @@ app.get("/index", isLoggedIn, function(req, res) {
 	}
 });
 
+app.post("/index/getActivityDetails", function(req, res) {
+	Activity.findOne(
+		{
+			_id: req.body.id,
+		},
+		function(err, activity) {
+			res.send(activity);
+		},
+	);
+});
+
 app.get("/join", isLoggedIn, function(req, res) {
 	let search = req.query.search;
 	let group = req.query.group;
 	let type = req.query.type;
-	if(search || group || type) {
-		console.log(search,group,type)
+	if (search || group || type) {
+		console.log(search, group, type);
 		Activity.find({})
-            .sort({ datentime: 1 })
-            .exec(function(err, activities) {
-                if (err) throw err;
-				activities = activities.filter(word => word.activityName.includes(search))
-                return res.render("join", {
-                    user: req.user,
-                    activities: activities,
-                    moment: require("moment"),
-                });
-            });
-	}
-	else{
+			.sort({ datentime: 1 })
+			.exec(function(err, activities) {
+				if (err) throw err;
+				activities = activities.filter(word =>
+					word.activityName.includes(search),
+				);
+				return res.render("join", {
+					user: req.user,
+					activities: activities,
+					moment: require("moment"),
+				});
+			});
+	} else {
 		Activity.find({})
-	            .sort({ datentime: 1 })
-	            .exec(function(err, activities) {
-	                if (err) throw err;
+			.sort({ datentime: 1 })
+			.exec(function(err, activities) {
+				if (err) throw err;
 
-	                return res.render("join", {
-	                    user: req.user,
-	                    activities: activities,
-	                    moment: require("moment"),
-	                });
-	            });
+				return res.render("join", {
+					user: req.user,
+					activities: activities,
+					moment: require("moment"),
+				});
+			});
 	}
 });
 
