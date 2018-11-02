@@ -126,11 +126,11 @@ app.get("/search", isLoggedIn, function(req, res) {
 						}
 					}
 					activities = activities.filter(word =>
-						word.activityName.includes(search),
+						word.activityName.toUpperCase().includes(search.toUpperCase()),
 					);
 					if (type != "") {
 						activities = activities.filter(word =>
-							word.activityKeywords.includes(type),
+							word.activityKeywords.includes(type)
 						);
 					}
 					return res.render("search", {
