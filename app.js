@@ -61,7 +61,6 @@ app.get("/", function(req, res) {
 	}
 });
 
-
 app.get("/search", isLoggedIn, function(req, res) {
 	let search = req.query.search;
 	let sort = req.query.sort;
@@ -82,22 +81,29 @@ app.get("/search", isLoggedIn, function(req, res) {
 						) {
 							if (
 								!keywords.includes(
-									activities[i].activityKeywords[j].toLowerCase(),
+									activities[i].activityKeywords[
+										j
+									].toLowerCase(),
 								)
 							) {
 								keywords.push(
-									activities[i].activityKeywords[j].toLowerCase(),
+									activities[i].activityKeywords[
+										j
+									].toLowerCase(),
 								);
 							}
 						}
 					}
 					activities = activities.filter(word =>
-						word.activityName.toUpperCase().includes(search.toUpperCase()),
+						word.activityName
+							.toUpperCase()
+							.includes(search.toUpperCase()),
 					);
 					if (type != "") {
 						activities = activities.filter(word =>
-							word.activityKeywords.map(e => e.toLowerCase())
-								.includes(type)
+							word.activityKeywords
+								.map(e => e.toLowerCase())
+								.includes(type),
 						);
 					}
 					return res.render("search", {
@@ -122,22 +128,29 @@ app.get("/search", isLoggedIn, function(req, res) {
 						) {
 							if (
 								!keywords.includes(
-									activities[i].activityKeywords[j].toLowerCase(),
+									activities[i].activityKeywords[
+										j
+									].toLowerCase(),
 								)
 							) {
 								keywords.push(
-									activities[i].activityKeywords[j].toLowerCase(),
+									activities[i].activityKeywords[
+										j
+									].toLowerCase(),
 								);
 							}
 						}
 					}
 					activities = activities.filter(word =>
-						word.activityName.toUpperCase().includes(search.toUpperCase()),
+						word.activityName
+							.toUpperCase()
+							.includes(search.toUpperCase()),
 					);
 					if (type != "") {
 						activities = activities.filter(word =>
-							word.activityKeywords.map(e => e.toLowerCase())
-								.includes(type)
+							word.activityKeywords
+								.map(e => e.toLowerCase())
+								.includes(type),
 						);
 					}
 					return res.render("search", {
@@ -151,36 +164,51 @@ app.get("/search", isLoggedIn, function(req, res) {
 		}
 	} else {
 		Activity.find({})
-				.sort({ datentime: 1 })
-				.exec(function(err, activities) {
-					if (err) throw err;
-					keywords = [];
-					for (i = 0; i < activities.length; i++) {
-						for (
-							j = 0;
-							j < activities[i].activityKeywords.length;
-							j++
+			.sort({ datentime: 1 })
+			.exec(function(err, activities) {
+				if (err) throw err;
+				keywords = [];
+				for (i = 0; i < activities.length; i++) {
+					for (
+						j = 0;
+						j < activities[i].activityKeywords.length;
+						j++
+					) {
+						if (
+							!keywords.includes(
+								activities[i].activityKeywords[j].toLowerCase(),
+							)
 						) {
-							if (
-								!keywords.includes(
-									activities[i].activityKeywords[j].toLowerCase(),
-								)
-							) {
-								keywords.push(
-									activities[i].activityKeywords[j].toLowerCase(),
-								);
-							}
+							keywords.push(
+								activities[i].activityKeywords[j].toLowerCase(),
+							);
 						}
 					}
-					return res.render("search", {
-						user: req.user,
-						activities: activities,
-						keywords: keywords,
-						query: req.query,
-						moment: require("moment"),
-					});
+				}
+				return res.render("search", {
+					user: req.user,
+					activities: activities,
+					keywords: keywords,
+					query: req.query,
+					moment: require("moment"),
 				});
+			});
 	}
+});
+
+app.post("/search/getActivityDetails", function(req, res) {
+	Activity.findOne(
+		{
+			_id: req.body.id,
+		},
+		function(err, activity) {
+			object = {
+				user: req.user,
+				activity: activity,
+			};
+			res.send(object);
+		},
+	);
 });
 
 app.get("/needVerification", function(req, res) {

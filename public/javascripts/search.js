@@ -4,7 +4,7 @@ function showMoreInfo(item) {
 	var id = $(item).attr("activityid");
 
 	$.post(
-		"/index/getActivityDetails",
+		"/search/getActivityDetails",
 		{
 			id: id,
 		},
