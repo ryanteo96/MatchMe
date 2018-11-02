@@ -613,6 +613,9 @@ app.post("/delete", function(req, res, next) {
 });
 
 app.post("/join", function(req, res, next) {
+	console.log(req.user._id);
+	console.log(req.body.id);
+
 	User.findOne(
 		{
 			_id: req.user._id,
