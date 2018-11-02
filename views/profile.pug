@@ -12,7 +12,7 @@ html(lang='en')
         script(src='javascripts/profile.js')
     body
         nav.navbar.navbar-dark.bg-dark
-            a.navbar-brand(href='/index') MatchMe
+            a.navbar-brand(href='/search') MatchMe
             button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
                 span.navbar-toggler-icon
             #navbarSupportedContent.collapse.navbar-collapse
@@ -115,19 +115,20 @@ html(lang='en')
 
                                                     //- button.btn.btn-sm.btn-danger.mr-2(type="button" data-toggle="modal" data-target="#confirmModal") Delete
 
-                                                    //- div#confirmModal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true")
-                                                    //-     div.modal-dialog
-                                                    //-         .modal-content  
-                                                    //-             .modal-header
-                                                    //-                 h5#confirmModalLabel.modal-title Delete Confirmation
-                                                    //-                 button.close(type="button" data-dismiss="modal" aria-label="Close")
-                                                    //-                     span(aria-hidden="true") &times;
-                                                    //-             .modal-body Are you sure to delete this group?
-                                                    //-             .modal-footer
-                                                    //-                 button.btn.btn-secondary(type="button" data-dismiss="modal") No
-                                                    //-                 button.btn.btn-primary(type='submit') Yes
+
                                 else
                                     p.text-center.mb-0.p-4 There are no activities. Create one today!
+        div#confirmModal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true")
+            div.modal-dialog
+                .modal-content  
+                    .modal-header
+                        h5#confirmModalLabel.modal-title Delete Confirmation
+                        button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                    .modal-body Are you sure to delete this group?
+                    .modal-footer
+                        button.btn.btn-secondary(type="button" data-dismiss="modal") No
+                        button.btn.btn-primary(type='submit') Yes
         footer.footer
             .container
                 copyright @MatchMe
