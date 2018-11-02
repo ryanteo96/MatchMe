@@ -1,0 +1,73 @@
+head
+    meta(charset='utf-8')
+    meta(http-equiv='X-UA-Compatible', content='IE=edge')
+    meta(name='viewport', content='width=device-width, initial-scale=1')
+    meta(name='description', content='')
+    meta(name='author', content='')
+    title MatchMe - Search
+    link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+body
+    nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
+        a.navbar-brand(href='/index') MatchMe
+        button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+            span.navbar-toggler-icon
+        #navbarSupportedContent.collapse.navbar-collapse
+            ul.navbar-nav.mr-auto
+                li.nav-item
+                    a.nav-link(href='/index') Home
+                li.nav-item
+                    a.nav-link(href='/create') Create
+                li.nav-item
+                    a.nav-link(href='/search') Search
+                li.nav-item
+                    a.nav-link(href='/profile') Profile
+                if(user.admin)
+                    li.nav-item
+                        a.nav-link(href='/admin') Admin
+
+                li.nav-item
+                    a.nav-link(href='/logout') Logout
+    // BETWEEN NAV AND FOOTER
+    .main
+        form(name='filterForm', method='GET', action='/join')
+            .searchBox
+                .row
+                    .col-sm-8
+                        input.searchField(name='search', placeholder='Search')
+                    .col-sm-4 
+                        button.btn.waves-effect.waves-light(type='submit') Search
+                .row
+                    .col-sm-2 Group/Activity
+                        br
+                        select(name='group')
+                            option(value='both') Both
+                            option(value='group') Group
+                            option(value='activity') Activity
+                    .col-sm-2 Type 
+                        br
+                        select(name='type')
+                            option(value='') Any
+                            each keyword in keywords
+                                option(value=keyword) #{keyword}
+        div
+            h5.p-3 All Activities
+            ul.list-group.ml-3.mr-3.mb-3
+                each activity in activities
+                    li.list-group-item
+                        input(type="hidden" id="activityId" name="id" value= activity._id)
+                        .row.align-items-center
+                            .col-sm.pb-1.pt-1
+                                p.m-0= activity.activityName
+                            .col-sm.text-sm-right.pb-1.pt-1
+                                span.badge.badge-secondary.mr-2= moment(activity.datentime).format('hh:mm A')
+                                span.badge.badge-secondary= moment(activity.datentime).format('MMM D, YYYY')
+                            .col-sm-2.d-flex.justify-content-end
+                                button.btn.btn-sm.btn-primary Join
+    // BETWEEN NAV AND FOOTER
+    footer.footer
+        .container
+            copyright @MatchMe
+    script(src='/javascripts/jquery.min.js')
+    script(src='/javascripts/bootstrap.min.js')
+    script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')
