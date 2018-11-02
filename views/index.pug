@@ -34,7 +34,7 @@ body
                     a.nav-link(href='/logout') Logout
     .main
         div
-            h5.pl-3.pr-3.pt-2.pb-2.m-0 All Activities
+            h5.pl-3.pr-3.pt-3.pb-2.m-0 All Activities
 
             .row.pl-3.pr-3.pt-2.pb-2
                 each activity in activities
@@ -59,9 +59,10 @@ body
                             h5#confirmModalLabel.modal-title Activity Details
                             button.close(type="button" data-dismiss="modal" aria-label="Close")
                                 span(aria-hidden="true") &times;
-                        .modal-body 
-                            .form
+                        form(role='form', action='/join', method='post')
+                            .modal-body 
                                 .form-group.row
+                                    input#activityId(type="hidden" name="id")
                                     .label.col-sm-3.col-form-label Name
                                     .col-sm-9
                                         input#activtyName.form-control-plaintext(type="text" readonly="readonly")
@@ -86,9 +87,9 @@ body
                                     .label.col-sm-3.col-form-label Keywords
                                     .col-sm-9
                                         input#keywords.form-control-plaintext(type="text" readonly="readonly")
-                        .modal-footer
-                            button.btn.btn-secondary(type="button" data-dismiss="modal") Close
-                            button#joinBtn.btn.btn-primary(type='submit') Join
+                            .modal-footer
+                                button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+                                button#joinBtn.btn.btn-primary(type='submit') Join
                                 //- h6.card-subtitle.mb-2.text-muted Members
                                 //- p.card-text= activity.activityDescription
                                 //- ul.list-group.ml-3.mr-3.mb-3

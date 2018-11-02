@@ -9,6 +9,7 @@ html(lang='en')
         link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/profile.css')
         script(src='javascripts/jquery.min.js')
+        script(src='javascripts/profile.js')
     body
         nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
             a.navbar-brand(href='/index') MatchMe
@@ -83,12 +84,30 @@ html(lang='en')
                                                         ul.list-group.list-group-flush.p-0.m-0
                                                             each member in activity.memberList
                                                                 li.list-group-item
-                                                                    h6.text-muted member
+                                                                    h6.text-muted= member.name
                                                             else
-                                                                p.text-center.mb-0 No one has joined your activity yet.
+                                                                p.text-center.mb-3 No one has joined your activity yet.
+                                            .row.pl-3
+                                                .col
+                                                    .row.mb-1
+                                                        h6 Request List
+                                                    .row.pl-2.pr-2.mb-3
+                                                        ul.list-group.list-group-flush.w-100
+                                                            each member in activity.requestList
+                                                                li.list-group-item.p-0
+                                                                    .row
+                                                                        .col-sm
+                                                                            h6.text-muted.d-inline= member.name
+                                                                        .col-sm-2.d-flex.justify-content-end
+                                                                            button#denyBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id onclick='deny(this)') Deny
+                                                                            button#acceptBtn.btn.btn-sm.btn-primary.mr-2(type='button' activityId=activity._id memberId=member._id onclick='accept(this)') Accept
+                                                            else
+                                                                p.mb-3 No one has requested to join your activity yet.
                                             .row
                                                 div.col.d-flex.justify-content-end
                                                     button.btn.btn-sm.btn-danger.mr-2(type='submit') Delete
+                                                    a.btn.btn-sm.btn-primary(role='button' href='/editGroup') Edit
+
                                                     //- button.btn.btn-sm.btn-danger.mr-2(type="button" data-toggle="modal" data-target="#confirmModal") Delete
 
                                                     //- div#confirmModal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true")
@@ -102,8 +121,6 @@ html(lang='en')
                                                     //-             .modal-footer
                                                     //-                 button.btn.btn-secondary(type="button" data-dismiss="modal") No
                                                     //-                 button.btn.btn-primary(type='submit') Yes
-
-                                                    a.btn.btn-sm.btn-primary(role='button' href='/editGroup') Edit
                                 else
                                     p.text-center.mb-0.p-4 There are no activities. Create one today!
         footer.footer

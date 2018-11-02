@@ -539,6 +539,81 @@ app.post("/delete", function(req, res, next) {
 	);
 });
 
+app.post("/join", function(req, res, next) {
+	Activity.updateOne(
+		{
+			_id: req.body.id,
+		},
+		{
+			$push: { requestList: req.user },
+		},
+		function(err) {
+			if (err) throw err;
+
+			Activity.findOne({ _id: req.body.id }, function(err, activity) {
+				User.updateOne(
+					{
+						_id: req.user._id,
+					},
+					{
+						$push: { requested: activity },
+					},
+					function(err) {
+						if (err) throw err;
+					},
+				);
+			});
+		},
+	);
+});
+
+app.post("/deny", function(req, res, next) {
+	console.log(req.body.memberId);
+	console.log(req.body.activityId);
+
+	User.findOne(
+		{
+			_id: req.body.memberId,
+		},
+		function(err, user) {
+			User.updateOne(
+				{
+					_id: req.body.memberId,
+				},
+				{
+					requested: user.requested.filter(function(obj) {
+						return obj._id != req.body.activityId;
+					}),
+				},
+				function(err) {
+					if (err) throw err;
+				},
+			);
+		},
+	);
+
+	Activity.findOne(
+		{
+			_id: req.body.activityId,
+		},
+		function(err, activity) {
+			Activity.updateOne(
+				{
+					_id: req.body.activityId,
+				},
+				{
+					requestList: activity.requestList.filter(function(obj) {
+						return obj._id != req.body.memberId;
+					}),
+				},
+				function(err) {
+					if (err) throw err;
+				},
+			);
+		},
+	);
+});
+
 function isAdmin(req, res, next) {
 	if (req.isAuthenticated()) {
 		if (req.user.admin) {

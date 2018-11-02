@@ -19,6 +19,7 @@ function showMoreInfo(item) {
 			$("#createdBy").val(res.activity.host);
 			$("#description").val(res.activity.activityDescription);
 			$("#keywords").val(res.activity.activityKeywords.join(", "));
+			$("#activityId").val(res.activity._id);
 
 			if (res.activity.host_id == res.user._id) {
 				$("#joinBtn").prop("disabled", true);
