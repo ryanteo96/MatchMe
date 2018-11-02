@@ -607,7 +607,7 @@ app.post("/delete", function(req, res, next) {
 		},
 		function(err) {
 			if (err) return handleError(err);
-			res.redirect("/profile");
+			res.send("0");
 		},
 	);
 });
