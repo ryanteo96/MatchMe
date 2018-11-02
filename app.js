@@ -91,10 +91,23 @@ app.get("/join", isLoggedIn, function(req, res) {
             .sort({ datentime: 1 })
             .exec(function(err, activities) {
                 if (err) throw err;
+				keywords = [];
+				for ( i  = 0; i < activities.length; i++) {
+					console.log(activities[i].activityName)
+					for (j = 0; j < activities[i].activityKeywords.length; j++){
+						console.log(activities[i].activityKeywords[j])
+						if(!keywords.includes(activities[i].activityKeywords[j])){
+							keywords.push(activities[i].activityKeywords[j]);
+						}
+					}
+				}
 				activities = activities.filter(word => word.activityName.includes(search))
+				activities = activities.filter(word => word.activityKeywords.includes(type))
+
                 return res.render("join", {
                     user: req.user,
                     activities: activities,
+					keywords: keywords,
                     moment: require("moment"),
                 });
             });
@@ -104,10 +117,20 @@ app.get("/join", isLoggedIn, function(req, res) {
 	            .sort({ datentime: 1 })
 	            .exec(function(err, activities) {
 	                if (err) throw err;
-
+					keywords = [];
+					for ( i  = 0; i < activities.length; i++) {
+						console.log(activities[i].activityName)
+						for (j = 0; j < activities[i].activityKeywords.length; j++){
+							console.log(activities[i].activityKeywords[j])
+							if(!keywords.includes(activities[i].activityKeywords[j])){
+								keywords.push(activities[i].activityKeywords[j]);
+							}
+						}
+					}
 	                return res.render("join", {
 	                    user: req.user,
 	                    activities: activities,
+						keywords: keywords,
 	                    moment: require("moment"),
 	                });
 	            });

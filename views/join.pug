@@ -17,6 +17,8 @@ body
         li.nav-item
           a.nav-link(href='/index') Home
         li.nav-item
+          a.nav-link(href='/create') Create
+        li.nav-item
           a.nav-link(href='/profile') Profile
         if(user.admin)
           li.nav-item
@@ -44,10 +46,9 @@ body
           .col-sm-2 Type 
             br
             select(name='type')
-              option(value='any') Any
-              option(value='academic') Academic
-              option(value='sports') Sports
-              option(value='social') Social
+              option(value='') Any
+              each keyword in keywords
+                option(value=keyword) #{keyword}
     div
         h5.p-3 All Activities
         ul.list-group.ml-3.mr-3.mb-3
