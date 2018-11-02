@@ -57,44 +57,10 @@ app.get("/", function(req, res) {
 	if (!req.user) {
 		res.render("login");
 	} else {
-		res.redirect("/index");
+		res.redirect("/search");
 	}
 });
 
-app.get("/index", isLoggedIn, function(req, res) {
-	if (!req.user.verified) {
-		res.redirect("/needVerification");
-	} else if (req.user.needResetPW) {
-		//redirect to reset password page
-	} else {
-		Activity.find({})
-			.sort({ datentime: 1 })
-			.exec(function(err, activities) {
-				if (err) throw err;
-
-				return res.render("index", {
-					user: req.user,
-					activities: activities,
-					moment: require("moment"),
-				});
-			});
-	}
-});
-
-app.post("/index/getActivityDetails", function(req, res) {
-	Activity.findOne(
-		{
-			_id: req.body.id,
-		},
-		function(err, activity) {
-			object = {
-				user: req.user,
-				activity: activity,
-			};
-			res.send(object);
-		},
-	);
-});
 
 app.get("/search", isLoggedIn, function(req, res) {
 	let search = req.query.search;
@@ -225,7 +191,7 @@ app.get("/needVerification", function(req, res) {
 			});
 		}
 	} else {
-		res.redirect("/index");
+		res.redirect("/search");
 	}
 });
 
@@ -244,7 +210,7 @@ app.get("/register", function(req, res) {
 	if (!req.user) {
 		res.render("register");
 	} else {
-		res.redirect("/index");
+		res.redirect("/search");
 	}
 });
 
@@ -268,7 +234,7 @@ app.post("/register", function(req, res) {
 			}
 			passport.authenticate("local")(req, res, function() {
 				authEmail(user.username, user._id);
-				res.redirect("/index");
+				res.redirect("/search");
 			});
 		},
 	);
@@ -278,7 +244,7 @@ app.get("/login", function(req, res) {
 	if (!req.user) {
 		res.render("login");
 	} else {
-		res.redirect("/index");
+		res.redirect("/search");
 	}
 });
 
@@ -306,7 +272,7 @@ app.post("/login", function(req, res, next) {
 			if (err) {
 				return next(err);
 			}
-			return res.redirect("index");
+			return res.redirect("/search");
 		});
 	})(req, res, next);
 });
@@ -652,7 +618,7 @@ app.post("/join", function(req, res, next) {
 		);
 	});
 
-	res.redirect("/index");
+	res.redirect("/search");
 });
 
 app.post("/deny", function(req, res, next) {
@@ -763,7 +729,7 @@ function isAdmin(req, res, next) {
 			return next();
 		}
 	}
-	res.redirect("/index");
+	res.redirect("/search");
 }
 
 function isLoggedIn(req, res, next) {
