@@ -76,6 +76,9 @@ body
                                     .label.col-sm-3.col-form-label Number of Members
                                     .col-sm-9
                                         input#maxMembers.form-control-plaintext(type="text" readonly="readonly")
+                                    .label.col-sm-3.col-form-label Created By
+                                    .col-sm-9
+                                        input#createdBy.form-control-plaintext(type="text" readonly="readonly")
                                     .label.col-sm-3.col-form-label Description
                                     .col-sm-9
                                         textarea#description.form-control-plaintext(type="text" readonly="readonly")
@@ -84,7 +87,7 @@ body
                                         input#keywords.form-control-plaintext(type="text" readonly="readonly")
                         .modal-footer
                             button.btn.btn-secondary(type="button" data-dismiss="modal") Close
-                            button.btn.btn-primary(type='submit') Join
+                            button#joinBtn.btn.btn-primary(type='submit') Join
                                 //- h6.card-subtitle.mb-2.text-muted Members
                                 //- p.card-text= activity.activityDescription
                                 //- ul.list-group.ml-3.mr-3.mb-3

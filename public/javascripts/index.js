@@ -9,13 +9,22 @@ function showMoreInfo(item) {
 			id: id,
 		},
 		function(res) {
-			$("#activtyName").val(res.activityName);
-			$("#date").val(moment(res.datentime).format("MMM D, YYYY"));
-			$("#time").val(moment(res.datentime).format("hh:mm A"));
-			$("#location").val(res.location);
-			$("#maxMembers").val(res.maxMembers);
-			$("#description").val(res.activityDescription);
-			$("#keywords").val(res.activityKeywords.join(", "));
+			$("#activtyName").val(res.activity.activityName);
+			$("#date").val(
+				moment(res.activity.datentime).format("MMM D, YYYY"),
+			);
+			$("#time").val(moment(res.activity.datentime).format("hh:mm A"));
+			$("#location").val(res.activity.location);
+			$("#maxMembers").val(res.activity.maxMembers);
+			$("#createdBy").val(res.activity.host);
+			$("#description").val(res.activity.activityDescription);
+			$("#keywords").val(res.activity.activityKeywords.join(", "));
+
+			if (res.activity.host_id == res.user._id) {
+				$("#joinBtn").prop("disabled", true);
+			} else {
+				$("#joinBtn").prop("disabled", false);
+			}
 		},
 	);
 }

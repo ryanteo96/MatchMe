@@ -87,7 +87,11 @@ app.post("/index/getActivityDetails", function(req, res) {
 			_id: req.body.id,
 		},
 		function(err, activity) {
-			res.send(activity);
+			object = {
+				user: req.user,
+				activity: activity,
+			};
+			res.send(object);
 		},
 	);
 });
