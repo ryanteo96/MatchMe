@@ -36,21 +36,21 @@ body
             .searchBox
                 .row
                     .col-sm-8
-                        input.searchField(name='search', placeholder='Search')
+                        input.searchField(name='search', placeholder='Search', value = query.search)
                     .col-sm-4 
                         button.btn.waves-effect.waves-light(type='submit') Search
                 .row
                     .col-sm-2 Sort By
                         br
                         select(name='sort')
-                            option(value='time') Time
-                            option(value='alphabetical') Alphabetical
-                    .col-sm-2 Type 
+                            option(value='time' selected = query.sort == 'time' ) Time
+                            option(value='alphabetical' selected = query.sort == 'alphabetical') Alphabetical
+                    .col-sm-2 Tag 
                         br
                         select(name='type')
                             option(value='') Any
                             each keyword in keywords
-                                option(value=keyword) #{keyword}
+                                option(value=keyword selected = query.type == keyword) #{keyword}
         div
             h5.p-3 All Activities
             ul.list-group.ml-3.mr-3.mb-3

@@ -101,7 +101,7 @@ app.get("/search", isLoggedIn, function(req, res) {
 	let sort = req.query.sort;
 	let type = req.query.type;
 	if (search || sort || type) {
-		console.log(search, sort, type);
+		//console.log(search, sort, type);
 		if (sort == "time") {
 			Activity.find({})
 				.sort({ datentime: 1 })
@@ -116,11 +116,11 @@ app.get("/search", isLoggedIn, function(req, res) {
 						) {
 							if (
 								!keywords.includes(
-									activities[i].activityKeywords[j],
+									activities[i].activityKeywords[j].toLowerCase(),
 								)
 							) {
 								keywords.push(
-									activities[i].activityKeywords[j],
+									activities[i].activityKeywords[j].toLowerCase(),
 								);
 							}
 						}
@@ -130,13 +130,15 @@ app.get("/search", isLoggedIn, function(req, res) {
 					);
 					if (type != "") {
 						activities = activities.filter(word =>
-							word.activityKeywords.includes(type)
+							word.activityKeywords.map(e => e.toLowerCase())
+								.includes(type)
 						);
 					}
 					return res.render("search", {
 						user: req.user,
 						activities: activities,
 						keywords: keywords,
+						query: req.query,
 						moment: require("moment"),
 					});
 				});
@@ -154,34 +156,36 @@ app.get("/search", isLoggedIn, function(req, res) {
 						) {
 							if (
 								!keywords.includes(
-									activities[i].activityKeywords[j],
+									activities[i].activityKeywords[j].toLowerCase(),
 								)
 							) {
 								keywords.push(
-									activities[i].activityKeywords[j],
+									activities[i].activityKeywords[j].toLowerCase(),
 								);
 							}
 						}
 					}
 					activities = activities.filter(word =>
-						word.activityName.includes(search),
+						word.activityName.toUpperCase().includes(search.toUpperCase()),
 					);
 					if (type != "") {
 						activities = activities.filter(word =>
-							word.activityKeywords.includes(type),
+							word.activityKeywords.map(e => e.toLowerCase())
+								.includes(type)
 						);
 					}
-
 					return res.render("search", {
 						user: req.user,
 						activities: activities,
 						keywords: keywords,
+						query: req.query,
 						moment: require("moment"),
 					});
 				});
-		} else {
-			Activity.find({})
-				.sort({ location: "" })
+		}
+	} else {
+		Activity.find({})
+				.sort({ datentime: 1 })
 				.exec(function(err, activities) {
 					if (err) throw err;
 					keywords = [];
@@ -193,60 +197,23 @@ app.get("/search", isLoggedIn, function(req, res) {
 						) {
 							if (
 								!keywords.includes(
-									activities[i].activityKeywords[j],
+									activities[i].activityKeywords[j].toLowerCase(),
 								)
 							) {
 								keywords.push(
-									activities[i].activityKeywords[j],
+									activities[i].activityKeywords[j].toLowerCase(),
 								);
 							}
 						}
 					}
-					activities = activities.filter(word =>
-						word.activityName.includes(search),
-					);
-					activities = activities.filter(word =>
-						word.activityKeywords.includes(type),
-					);
-
 					return res.render("search", {
 						user: req.user,
 						activities: activities,
 						keywords: keywords,
+						query: req.query,
 						moment: require("moment"),
 					});
 				});
-		}
-	} else {
-		Activity.find({})
-			.sort({ datentime: 1 })
-			.exec(function(err, activities) {
-				if (err) throw err;
-				keywords = [];
-				for (i = 0; i < activities.length; i++) {
-					console.log(activities[i].activityName);
-					for (
-						j = 0;
-						j < activities[i].activityKeywords.length;
-						j++
-					) {
-						console.log(activities[i].activityKeywords[j]);
-						if (
-							!keywords.includes(
-								activities[i].activityKeywords[j],
-							)
-						) {
-							keywords.push(activities[i].activityKeywords[j]);
-						}
-					}
-				}
-				return res.render("search", {
-					user: req.user,
-					activities: activities,
-					keywords: keywords,
-					moment: require("moment"),
-				});
-			});
 	}
 });
 
