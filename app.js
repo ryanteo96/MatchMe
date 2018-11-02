@@ -81,12 +81,23 @@ app.get("/index", isLoggedIn, function(req, res) {
 	}
 });
 
+app.post("/index/getActivityDetails", function(req, res) {
+	Activity.findOne(
+		{
+			_id: req.body.id,
+		},
+		function(err, activity) {
+			res.send(activity);
+		},
+	);
+});
+
 app.get("/join", isLoggedIn, function(req, res) {
 	let search = req.query.search;
 	let group = req.query.group;
 	let type = req.query.type;
-	if(search || group || type) {
-		console.log(search,group,type)
+	if (search || group || type) {
+		console.log(search, group, type);
 		Activity.find({})
             .sort({ datentime: 1 })
             .exec(function(err, activities) {
