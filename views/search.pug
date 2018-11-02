@@ -30,7 +30,7 @@ body
                     a.nav-link(href='/logout') Logout
     // BETWEEN NAV AND FOOTER
     .main
-        form(name='filterForm', method='GET', action='/join')
+        form(name='filterForm', method='GET', action='/search')
             .searchBox
                 .row
                     .col-sm-8
@@ -38,12 +38,11 @@ body
                     .col-sm-4 
                         button.btn.waves-effect.waves-light(type='submit') Search
                 .row
-                    .col-sm-2 Group/Activity
+                    .col-sm-2 Sort By
                         br
-                        select(name='group')
-                            option(value='both') Both
-                            option(value='group') Group
-                            option(value='activity') Activity
+                        select(name='sort')
+                            option(value='time') Time
+                            option(value='alphabetical') Alphabetical
                     .col-sm-2 Type 
                         br
                         select(name='type')

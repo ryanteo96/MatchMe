@@ -98,46 +98,121 @@ app.post("/index/getActivityDetails", function(req, res) {
 
 app.get("/search", isLoggedIn, function(req, res) {
 	let search = req.query.search;
-	let group = req.query.group;
+	let sort = req.query.sort;
 	let type = req.query.type;
-	if (search || group || type) {
-		console.log(search, group, type);
-		Activity.find({})
-			.sort({ datentime: 1 })
-			.exec(function(err, activities) {
-				if (err) throw err;
-				keywords = [];
-				for (i = 0; i < activities.length; i++) {
-					console.log(activities[i].activityName);
-					for (
-						j = 0;
-						j < activities[i].activityKeywords.length;
-						j++
-					) {
-						console.log(activities[i].activityKeywords[j]);
-						if (
-							!keywords.includes(
-								activities[i].activityKeywords[j],
-							)
+	if (search || sort || type) {
+		console.log(search, sort, type);
+		if(sort == 'time') {
+			Activity.find({})
+				.sort({ datentime: 1 })
+				.exec(function(err, activities) {
+					if (err) throw err;
+					keywords = [];
+					for (i = 0; i < activities.length; i++) {
+						for (
+							j = 0;
+							j < activities[i].activityKeywords.length;
+							j++
 						) {
-							keywords.push(activities[i].activityKeywords[j]);
+							if (
+								!keywords.includes(
+									activities[i].activityKeywords[j],
+								)
+							) {
+								keywords.push(activities[i].activityKeywords[j]);
+							}
 						}
 					}
-				}
-				activities = activities.filter(word =>
-					word.activityName.includes(search),
-				);
-				activities = activities.filter(word =>
-					word.activityKeywords.includes(type),
-				);
-
-				return res.render("search", {
-					user: req.user,
-					activities: activities,
-					keywords: keywords,
-					moment: require("moment"),
+					activities = activities.filter(word =>
+						word.activityName.includes(search),
+					);
+					if(type != ''){
+						activities = activities.filter(word =>
+							word.activityKeywords.includes(type),
+						);
+					}
+					return res.render("search", {
+						user: req.user,
+						activities: activities,
+						keywords: keywords,
+						moment: require("moment"),
+					});
 				});
-			});
+		}
+		else if(sort == 'alphabetical') {
+			Activity.find({})
+				.sort({ activityName: "" })
+				.exec(function(err, activities) {
+					if (err) throw err;
+					keywords = [];
+					for (i = 0; i < activities.length; i++) {
+						for (
+							j = 0;
+							j < activities[i].activityKeywords.length;
+							j++
+						) {
+							if (
+								!keywords.includes(
+									activities[i].activityKeywords[j],
+								)
+							) {
+								keywords.push(activities[i].activityKeywords[j]);
+							}
+						}
+					}
+					activities = activities.filter(word =>
+						word.activityName.includes(search),
+					);
+					if(type != ''){
+						activities = activities.filter(word =>
+							word.activityKeywords.includes(type),
+						);
+					}
+	
+					return res.render("search", {
+						user: req.user,
+						activities: activities,
+						keywords: keywords,
+						moment: require("moment"),
+					});
+				});
+		}
+		else {
+			Activity.find({})
+				.sort({ location : "" })
+				.exec(function(err, activities) {
+					if (err) throw err;
+					keywords = [];
+					for (i = 0; i < activities.length; i++) {
+						for (
+							j = 0;
+							j < activities[i].activityKeywords.length;
+							j++
+						) {
+							if (
+								!keywords.includes(
+									activities[i].activityKeywords[j],
+								)
+							) {
+								keywords.push(activities[i].activityKeywords[j]);
+							}
+						}
+					}
+					activities = activities.filter(word =>
+						word.activityName.includes(search),
+					);
+					activities = activities.filter(word =>
+						word.activityKeywords.includes(type),
+					);
+	
+					return res.render("search", {
+						user: req.user,
+						activities: activities,
+						keywords: keywords,
+						moment: require("moment"),
+					});
+				});
+		}
 	} else {
 		Activity.find({})
 			.sort({ datentime: 1 })
