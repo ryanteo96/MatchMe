@@ -12,7 +12,7 @@ head
     script(src='javascripts/index.js')
     script(src='javascripts/tagsinput.js')
 body
-    nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
+    nav.navbar.navbar-dark.bg-dark
         a.navbar-brand(href='#') MatchMe
         button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
             span.navbar-toggler-icon
@@ -66,6 +66,9 @@ body
                                     .label.col-sm-3.col-form-label Name
                                     .col-sm-9
                                         input#activtyName.form-control-plaintext(type="text" readonly="readonly")
+                                    .label.col-sm-3.col-form-label Description
+                                    .col-sm-9
+                                        textarea#description.form-control-plaintext(type="text" readonly="readonly")
                                     .label.col-sm-3.col-form-label Date
                                     .col-sm-9
                                         input#date.form-control-plaintext(type="text" readonly="readonly")
@@ -81,9 +84,7 @@ body
                                     .label.col-sm-3.col-form-label Created By
                                     .col-sm-9
                                         input#createdBy.form-control-plaintext(type="text" readonly="readonly")
-                                    .label.col-sm-3.col-form-label Description
-                                    .col-sm-9
-                                        textarea#description.form-control-plaintext(type="text" readonly="readonly")
+                                    
                                     .label.col-sm-3.col-form-label Keywords
                                     .col-sm-9
                                         input#keywords.form-control-plaintext(type="text" readonly="readonly")
