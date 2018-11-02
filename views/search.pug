@@ -7,6 +7,8 @@ head
     title MatchMe - Search
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
+    script(src='javascripts/search.js')
+    script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js')
 body
     nav.navbar.navbar-expand-lg.navbar-light.bg-white.sticky-top
         a.navbar-brand(href='/index') MatchMe
@@ -62,7 +64,45 @@ body
                                 span.badge.badge-secondary.mr-2= moment(activity.datentime).format('hh:mm A')
                                 span.badge.badge-secondary= moment(activity.datentime).format('MMM D, YYYY')
                             .col-sm-2.d-flex.justify-content-end
-                                button.btn.btn-sm.btn-primary Join
+                                button#moreInfoBtn.btn.btn-sm.btn-primary(activityid=activity._id onclick='showMoreInfo(this)') More Info
+        div#confirmModal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true")
+            div.modal-dialog.modal-lg.modal-dialog-centered
+                .modal-content  
+                    .modal-header
+                        h5#confirmModalLabel.modal-title Activity Details
+                        button.close(type="button" data-dismiss="modal" aria-label="Close")
+                            span(aria-hidden="true") &times;
+                    form(role='form', action='/join', method='post')
+                        .modal-body 
+                            .form-group.row
+                                input#activityId(type="hidden" name="id")
+                                .label.col-sm-3.col-form-label Name
+                                .col-sm-9
+                                    input#activtyName.form-control-plaintext(type="text" readonly="readonly")
+                                .label.col-sm-3.col-form-label Date
+                                .col-sm-9
+                                    input#date.form-control-plaintext(type="text" readonly="readonly")
+                                .label.col-sm-3.col-form-label Time
+                                .col-sm-9
+                                    input#time.form-control-plaintext(type="text" readonly="readonly")
+                                .label.col-sm-3.col-form-label Location
+                                .col-sm-9
+                                    input#location.form-control-plaintext(type="text" readonly="readonly")
+                                .label.col-sm-3.col-form-label Number of Members
+                                .col-sm-9
+                                    input#maxMembers.form-control-plaintext(type="text" readonly="readonly")
+                                .label.col-sm-3.col-form-label Created By
+                                .col-sm-9
+                                    input#createdBy.form-control-plaintext(type="text" readonly="readonly")
+                                .label.col-sm-3.col-form-label Description
+                                .col-sm-9
+                                    textarea#description.form-control-plaintext(type="text" readonly="readonly")
+                                .label.col-sm-3.col-form-label Keywords
+                                .col-sm-9
+                                    input#keywords.form-control-plaintext(type="text" readonly="readonly")
+                        .modal-footer
+                            button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+                            button#joinBtn.btn.btn-primary(type='submit') Join
     // BETWEEN NAV AND FOOTER
     footer.footer
         .container
