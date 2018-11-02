@@ -50,7 +50,7 @@ body
                                 .row.pl-3.pr-3.mb-3
                                     each keyword in activity.activityKeywords
                                         span.badge.badge-primary.mr-2= keyword
-                                h6.card-subtitle.mb-2.text-muted #{activity.maxMembers} Members
+                                h6.card-subtitle.mb-2.text-muted #{activity.currentMaxMembers} Slots Left
                                 button#moreInfoBtn.btn.btn-link.p-0(activityid=activity._id onclick='showMoreInfo(this)') More Info
             div#confirmModal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true")
                 div.modal-dialog.modal-lg.modal-dialog-centered
@@ -75,7 +75,7 @@ body
                                     .label.col-sm-3.col-form-label Location
                                     .col-sm-9
                                         input#location.form-control-plaintext(type="text" readonly="readonly")
-                                    .label.col-sm-3.col-form-label Number of Members
+                                    .label.col-sm-3.col-form-label Number of Slots Left
                                     .col-sm-9
                                         input#maxMembers.form-control-plaintext(type="text" readonly="readonly")
                                     .label.col-sm-3.col-form-label Created By

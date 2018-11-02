@@ -15,7 +15,7 @@ function showMoreInfo(item) {
 			);
 			$("#time").val(moment(res.activity.datentime).format("hh:mm A"));
 			$("#location").val(res.activity.location);
-			$("#maxMembers").val(res.activity.maxMembers);
+			$("#maxMembers").val(res.activity.currentMaxMembers);
 			$("#createdBy").val(res.activity.host);
 			$("#description").val(res.activity.activityDescription);
 			$("#keywords").val(res.activity.activityKeywords.join(", "));
@@ -25,8 +25,13 @@ function showMoreInfo(item) {
 				$("#joinBtn").prop("disabled", true);
 				$("#joinBtn").html("Own Activity");
 			} else {
-				$("#joinBtn").prop("disabled", false);
-				$("#joinBtn").html("Join");
+				if (res.activity.currentMaxMembers == 0) {
+					$("#joinBtn").prop("disabled", true);
+					$("#joinBtn").html("Full");
+				} else {
+					$("#joinBtn").prop("disabled", false);
+					$("#joinBtn").html("Join");
+				}
 			}
 
 			if (

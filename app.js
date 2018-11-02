@@ -593,25 +593,48 @@ app.get("/editGroup", isLoggedIn, function(req, res) {
 		res.render("editGroup", {
 			user: req.user,
 			activities: activities,
+			error: req.flash("editGroupErrorWarn"),
 			moment: require("moment"),
 		});
 	});
 });
 
 app.post("/editGroup/edit", function(req, res, next) {
-	Activity.updateOne(
-		{ _id: req.body._id },
+	Activity.findOne(
 		{
-			activityName: req.body.name,
-			activityDescription: req.body.description,
-			maxMembers: req.body.members,
-			activityKeywords: req.body.keywords.split(","),
-			location: req.body.location,
-			datentime: moment(req.body.date + " " + req.body.time),
-			currentMaxMembers: req.body.members,
+			_id: req.body._id,
 		},
-		function(err, user) {
-			res.redirect("/profile");
+		function(err, activity) {
+			if (
+				activity.maxMembers - activity.currentMaxMembers >
+				req.body.members
+			) {
+				req.flash("editGroupErrorWarn", "Invalid number of members.");
+				return res.redirect("/editGroup");
+			}
+
+			console.log(
+				req.body.members -
+					(activity.maxMembers - activity.currentMaxMembers),
+			);
+
+			Activity.updateOne(
+				{ _id: req.body._id },
+				{
+					activityName: req.body.name,
+					activityDescription: req.body.description,
+					maxMembers: req.body.members,
+					currentMaxMembers:
+						req.body.members -
+						(activity.maxMembers - activity.currentMaxMembers),
+					activityKeywords: req.body.keywords.split(","),
+					location: req.body.location,
+					datentime: moment(req.body.date + " " + req.body.time),
+				},
+				function(err, user) {
+					res.redirect("/profile");
+				},
+			);
 		},
 	);
 });
@@ -754,6 +777,7 @@ app.post("/accept", function(req, res, next) {
 							return obj._id != req.body.memberId;
 						}),
 						$push: { memberList: member },
+						currentMaxMembers: activity.currentMaxMembers - 1,
 					},
 					function(err) {
 						if (err) throw err;
