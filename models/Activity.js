@@ -11,6 +11,7 @@ var ActivitySchema = new Schema({
 	location: String,
 	maxMembers: Number,
 	currentMaxMembers: Number,
+	requestList: Array,
 	memberList: Array,
 });
 
