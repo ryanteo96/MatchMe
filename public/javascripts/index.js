@@ -23,8 +23,26 @@ function showMoreInfo(item) {
 
 			if (res.activity.host_id == res.user._id) {
 				$("#joinBtn").prop("disabled", true);
+				$("#joinBtn").html("Own Activity");
 			} else {
 				$("#joinBtn").prop("disabled", false);
+				$("#joinBtn").html("Join");
+			}
+
+			if (
+				res.activity.requestList.filter(e => e["_id"] === res.user._id)
+					.length == 1
+			) {
+				$("#joinBtn").prop("disabled", true);
+				$("#joinBtn").html("Already Requested");
+			}
+
+			if (
+				res.activity.memberList.filter(e => e["_id"] === res.user._id)
+					.length == 1
+			) {
+				$("#joinBtn").prop("disabled", true);
+				$("#joinBtn").html("Already Joined");
 			}
 		},
 	);

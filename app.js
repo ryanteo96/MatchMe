@@ -102,7 +102,7 @@ app.get("/search", isLoggedIn, function(req, res) {
 	let type = req.query.type;
 	if (search || sort || type) {
 		console.log(search, sort, type);
-		if(sort == 'time') {
+		if (sort == "time") {
 			Activity.find({})
 				.sort({ datentime: 1 })
 				.exec(function(err, activities) {
@@ -119,14 +119,16 @@ app.get("/search", isLoggedIn, function(req, res) {
 									activities[i].activityKeywords[j],
 								)
 							) {
-								keywords.push(activities[i].activityKeywords[j]);
+								keywords.push(
+									activities[i].activityKeywords[j],
+								);
 							}
 						}
 					}
 					activities = activities.filter(word =>
 						word.activityName.includes(search),
 					);
-					if(type != ''){
+					if (type != "") {
 						activities = activities.filter(word =>
 							word.activityKeywords.includes(type),
 						);
@@ -138,8 +140,7 @@ app.get("/search", isLoggedIn, function(req, res) {
 						moment: require("moment"),
 					});
 				});
-		}
-		else if(sort == 'alphabetical') {
+		} else if (sort == "alphabetical") {
 			Activity.find({})
 				.sort({ activityName: "" })
 				.exec(function(err, activities) {
@@ -156,19 +157,21 @@ app.get("/search", isLoggedIn, function(req, res) {
 									activities[i].activityKeywords[j],
 								)
 							) {
-								keywords.push(activities[i].activityKeywords[j]);
+								keywords.push(
+									activities[i].activityKeywords[j],
+								);
 							}
 						}
 					}
 					activities = activities.filter(word =>
 						word.activityName.includes(search),
 					);
-					if(type != ''){
+					if (type != "") {
 						activities = activities.filter(word =>
 							word.activityKeywords.includes(type),
 						);
 					}
-	
+
 					return res.render("search", {
 						user: req.user,
 						activities: activities,
@@ -176,10 +179,9 @@ app.get("/search", isLoggedIn, function(req, res) {
 						moment: require("moment"),
 					});
 				});
-		}
-		else {
+		} else {
 			Activity.find({})
-				.sort({ location : "" })
+				.sort({ location: "" })
 				.exec(function(err, activities) {
 					if (err) throw err;
 					keywords = [];
@@ -194,7 +196,9 @@ app.get("/search", isLoggedIn, function(req, res) {
 									activities[i].activityKeywords[j],
 								)
 							) {
-								keywords.push(activities[i].activityKeywords[j]);
+								keywords.push(
+									activities[i].activityKeywords[j],
+								);
 							}
 						}
 					}
@@ -204,7 +208,7 @@ app.get("/search", isLoggedIn, function(req, res) {
 					activities = activities.filter(word =>
 						word.activityKeywords.includes(type),
 					);
-	
+
 					return res.render("search", {
 						user: req.user,
 						activities: activities,
@@ -574,6 +578,16 @@ app.get("/profile", isLoggedIn, function(req, res) {
 	});
 });
 
+app.get("/joined", isLoggedIn, function(req, res) {
+	User.findOne({ _id: req.user._id }, function(err, user) {
+		res.render("joined", {
+			user: req.user,
+			activities: user.joined,
+			moment: require("moment"),
+		});
+	});
+});
+
 app.get("/editGroup", isLoggedIn, function(req, res) {
 	Activity.find({ host_id: req.user._id }, function(err, activities) {
 		res.render("editGroup", {
@@ -615,37 +629,43 @@ app.post("/delete", function(req, res, next) {
 });
 
 app.post("/join", function(req, res, next) {
-	Activity.updateOne(
+	User.findOne(
 		{
-			_id: req.body.id,
+			_id: req.user._id,
 		},
-		{
-			$push: { requestList: req.user },
-		},
-		function(err) {
-			if (err) throw err;
-
-			Activity.findOne({ _id: req.body.id }, function(err, activity) {
-				User.updateOne(
-					{
-						_id: req.user._id,
-					},
-					{
-						$push: { requested: activity },
-					},
-					function(err) {
-						if (err) throw err;
-					},
-				);
-			});
+		function(err, user) {
+			Activity.updateOne(
+				{
+					_id: req.body.id,
+				},
+				{
+					$push: { requestList: user },
+				},
+				function(err) {
+					if (err) throw err;
+				},
+			);
 		},
 	);
+
+	Activity.findOne({ _id: req.body.id }, function(err, activity) {
+		User.updateOne(
+			{
+				_id: req.user._id,
+			},
+			{
+				$push: { requested: activity },
+			},
+			function(err) {
+				if (err) throw err;
+			},
+		);
+	});
+
+	res.redirect("/index");
 });
 
 app.post("/deny", function(req, res, next) {
-	console.log(req.body.memberId);
-	console.log(req.body.activityId);
-
 	User.findOne(
 		{
 			_id: req.body.memberId,
@@ -687,6 +707,63 @@ app.post("/deny", function(req, res, next) {
 			);
 		},
 	);
+
+	res.send("0");
+});
+
+app.post("/accept", function(req, res, next) {
+	User.findOne(
+		{
+			_id: req.body.memberId,
+		},
+		function(err, user) {
+			Activity.findOne({ _id: req.body.activityId }, function(
+				err,
+				activity,
+			) {
+				User.updateOne(
+					{
+						_id: req.body.memberId,
+					},
+					{
+						requested: user.requested.filter(function(obj) {
+							return obj._id != req.body.activityId;
+						}),
+						$push: { joined: activity },
+					},
+					function(err) {
+						if (err) throw err;
+					},
+				);
+			});
+		},
+	);
+
+	Activity.findOne(
+		{
+			_id: req.body.activityId,
+		},
+		function(err, activity) {
+			User.findOne({ _id: req.body.memberId }, function(err, member) {
+				Activity.updateOne(
+					{
+						_id: req.body.activityId,
+					},
+					{
+						requestList: activity.requestList.filter(function(obj) {
+							return obj._id != req.body.memberId;
+						}),
+						$push: { memberList: member },
+					},
+					function(err) {
+						if (err) throw err;
+					},
+				);
+			});
+		},
+	);
+
+	res.send("0");
 });
 
 function isAdmin(req, res, next) {

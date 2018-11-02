@@ -47,6 +47,8 @@ html(lang='en')
                                         li.nav-item.active
                                             a.nav-link(href='/profile') My Activities
                                         li.nav-item
+                                            a.nav-link(href='/joined') Joined Activities
+                                        li.nav-item
                                             a.nav-link(href='/settings') Settings
                             ul.list-group.list-group-flush.p-0.m-0
                                 each activity in activities
@@ -80,13 +82,18 @@ html(lang='en')
                                                 .col
                                                     .row.mb-1
                                                         h6 Members List
-                                                    .row.pl-2.pr-2
-                                                        ul.list-group.list-group-flush.p-0.m-0
+                                                    .row.pl-2.pr-2.mb-1
+                                                        ul.list-group.list-group-flush.w-100
                                                             each member in activity.memberList
-                                                                li.list-group-item
-                                                                    h6.text-muted= member.name
+                                                                li.list-group-item.p-0.border-0
+                                                                    .row.mb-1
+                                                                        .col-sm
+                                                                            h6.text-muted.d-inline= member.name
+                                                                        .col-sm-2.d-flex.justify-content-end
+                                                                            button#removeBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id onclick='deny(this)' disabled="disabled") Remove
+                                                                            //- button#acceptBtn.btn.btn-sm.btn-primary.mr-2(type='button' activityId=activity._id memberId=member._id onclick='accept(this)') Accept
                                                             else
-                                                                p.text-center.mb-3 No one has joined your activity yet.
+                                                                p.mb-3 No one has joined your activity yet.
                                             .row.pl-3
                                                 .col
                                                     .row.mb-1
@@ -94,8 +101,8 @@ html(lang='en')
                                                     .row.pl-2.pr-2.mb-3
                                                         ul.list-group.list-group-flush.w-100
                                                             each member in activity.requestList
-                                                                li.list-group-item.p-0
-                                                                    .row
+                                                                li.list-group-item.p-0.border-0
+                                                                    .row.mb-1
                                                                         .col-sm
                                                                             h6.text-muted.d-inline= member.name
                                                                         .col-sm-2.d-flex.justify-content-end
