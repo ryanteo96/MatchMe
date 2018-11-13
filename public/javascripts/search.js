@@ -2,7 +2,7 @@ function showMoreInfo(item) {
 	$("#confirmModal").modal("show");
 
 	var id = $(item).attr("activityid");
-
+    
 	$.post(
 		"/search/getActivityDetails",
 		{
