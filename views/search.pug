@@ -7,11 +7,11 @@ head
     title MatchMe - Search
     link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
     link(rel='stylesheet', href='/stylesheets/style.css')
-    script(src='javascripts/search.js')
     script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.js')
     link(rel='stylesheet', href='http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.css')
     script(src='http://code.jquery.com/jquery-latest.js')
     script(src='http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js')
+    script(src='javascripts/search.js')
 
 body(onload='initialize()')
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
@@ -112,25 +112,7 @@ body(onload='initialize()')
             copyright @MatchMe
             
     script(type='text/javascript').
-      var map = L.map('map', {doubleClickZoom: false}).locate({setView: true, maxZoom: 12});
-      var geocoder;
       
-      function initialize() {
-          geocoder = new google.maps.Geocoder();
-          var address = "purdue";
-          geocoder.geocode({
-          'address': address
-          }, function(results, status) {
-          if (status == google.maps.GeocoderStatus.OK) {
-          L.marker([results[0].geometry.location.lat(), results[0].geometry.location.lng()]).bindPopup('Mozilla Toronto Office').addTo(map);
-          } else {
-          $('#result').html('Geocode was not successful for the following reason: ' + status);
-          }
-          });
-      }
-      L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      attribution: '&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      }).addTo(map);
 
     script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDtY2DF7HlSuT66X5lL9k3xvEhgQL0iTAY&callback=initMap', async='', defer='')
     script(src='/javascripts/jquery.min.js')
