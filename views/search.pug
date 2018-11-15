@@ -13,7 +13,7 @@ head
     script(src='http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js')
     script(src='javascripts/search.js')
 
-body(onload='initialize()')
+body
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
         a.navbar-brand(href='/search') MatchMe
         button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
@@ -53,10 +53,12 @@ body(onload='initialize()')
                             option(value='') Any
                             each keyword in keywords
                                 option(value=keyword selected = query.type == keyword) #{keyword}
-        #map
+        
         div
-            h5.p-3 All Activities
+            
             ul.list-group.ml-3.mr-3.mb-3
+                #map
+                h5.p-3 All Activities
                 each activity in activities
                     li.list-group-item
                         input(type="hidden" id="activityId" name="id" value= activity._id)
