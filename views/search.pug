@@ -12,8 +12,11 @@ head
     script(src='http://code.jquery.com/jquery-latest.js')
     script(src='http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js')
     script(src='javascripts/search.js')
+    link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+
 
 body
+    
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
         a.navbar-brand(href='/search') MatchMe
         button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
@@ -34,28 +37,27 @@ body
                     a.nav-link(href='/logout') Logout
     // BETWEEN NAV AND FOOTER
     .main
-        form(name='filterForm', method='GET', action='/search')
-            .searchBox
-                .row
-                    .col-sm-8
-                        input.searchField(name='search', placeholder='Search', value = query.search)
-                    .col-sm-4 
-                        button.btn.waves-effect.waves-light(type='submit') Search
-                .row
-                    .col-sm-2 Sort By
-                        br
-                        select(name='sort')
-                            option(value='time' selected = query.sort == 'time' ) Time
-                            option(value='alphabetical' selected = query.sort == 'alphabetical') Alphabetical
-                    .col-sm-2 Tag 
-                        br
-                        select(name='type')
-                            option(value='') Any
-                            each keyword in keywords
-                                option(value=keyword selected = query.type == keyword) #{keyword}
+        form.example(name='filterForm', method='GET', action='/search')
+          .col-lg-12
+            .d-flex.justify-content-center.align-items-center(style='height:100px;')
+              input(type='text', placeholder='Search..', name='search', value = query.search)
+              button(type='submit')
+                i.fa.fa-search
+          .form-group
+            .col-lg-12 Sort By
+              select.form-control(name='sort')
+                option(value='time' selected = query.sort == 'time' ) Time
+                option(value='alphabetical' selected = query.sort == 'alphabetical') Alphabetical
+          
+          .form-group
+            .col-lg-12 Tag
+              select.form-control(name='type')
+                option(value='') Any
+                each keyword in keywords
+                      option(value=keyword selected = query.type == keyword) #{keyword}
+          
         
         div
-            
             ul.list-group.ml-3.mr-3.mb-3
                 #map
                 h5.p-3 All Activities
