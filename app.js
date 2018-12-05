@@ -244,6 +244,7 @@ app.post("/register", function (req, res) {
             verified: false,
             admin: false,
             status: 1,
+            messages: [],
         }),
         req.body.password,
         function (err, user) {
@@ -497,6 +498,23 @@ app.post("/admin/resetAllPw", function (req, res, next) {
     });
 });
 
+app.post("/admin/message", function (req, res, next) {
+	var msg = req.body.msg_txt;
+	console.log(msg);
+	console.log(req.body.msg_txt);
+	console.log(req.body.username);
+	var username = req.body.username;
+	User.updateOne(
+	{
+		username: username
+	},
+	function(err, user)
+	{
+		res.redirect("/admin");
+	}
+	);
+});
+
 app.get("/create", isLoggedIn, function (req, res) {
     res.render("create", {
         user: req.user,
@@ -558,6 +576,17 @@ app.get("/joined", isLoggedIn, function (req, res) {
         res.render("joined", {
             user: req.user,
             activities: user.joined,
+            moment: require("moment"),
+        });
+    });
+});
+
+app.get("/messages", isLoggedIn, function (req, res) {
+    User.findOne({
+        _id: req.user._id
+    }, function (err, user) {
+        res.render("messages", {
+            user: req.user,
             moment: require("moment"),
         });
     });

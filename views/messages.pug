@@ -1,0 +1,50 @@
+html(lang='en')
+    head
+        meta(charset='utf-8')
+        meta(http-equiv='X-UA-Compatible', content='IE=edge')
+        meta(name='viewport', content='width=device-width, initial-scale=1')
+        meta(name='description', content='')
+        meta(name='author', content='')
+        title MatchMe - Profile
+        link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+        link(rel='stylesheet', href='/stylesheets/profile.css')
+        script(src='javascripts/jquery.min.js')
+        script(src='javascripts/settings.js')
+    body
+        nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
+            a.navbar-brand(href='/search') MatchMe
+            button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+                span.navbar-toggler-icon
+            #navbarSupportedContent.collapse.navbar-collapse
+                ul.navbar-nav.mr-auto
+                    li.nav-item
+                        a.nav-link(href='/search') Home
+                    li.nav-item
+                        a.nav-link(href='/create') Create
+                    li.nav-item
+                        a.nav-link(href='/profile') Profile
+                    if(user.admin)
+                        li.nav-item
+                            a.nav-link(href='/admin') Admin
+                    li.nav-item
+                        a.nav-link(href='/logout') Logout
+        .container-fluid
+            .row.justify-content-center
+                .col.p-2
+                    .card
+                        .card-header 
+                            nav.navbar.navbar-expand-sm.navbar-light.p-0
+                                ul.navbar-nav
+                                    li.nav-item
+                                        a.nav-link(href='/profile') My Activities
+                                    li.nav-item
+                                        a.nav-link(href='/joined') Joined Activities
+                                    li.nav-item
+                                        a.nav-link(href='/settings') Settings
+                                    li.nav-item.active
+                                        a.nav-link(href='/messages') Messages
+        footer.footer
+            .container
+                copyright @MatchMe
+        script(src='/javascripts/jquery.min.js')
+        script(src='/javascripts/bootstrap.min.js')
