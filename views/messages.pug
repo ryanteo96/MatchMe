@@ -45,7 +45,9 @@ html(lang='en')
                                     li.nav-item.active
                                         a.nav-link(href='/messages') Notifications
                         ul.list-group.list-group-flush.p-0.m-0
-                            h5.m-0= user.admin_messages              
+                            ul
+                                each val in user.admin_messages
+                                    h5.m-0.li= val             
         footer.footer
             .container
                 copyright @MatchMe
