@@ -1,14 +1,22 @@
-var mongoose = require("mongoose");
-var Schema = mongoose.Schema;
+const mongoose = require('mongoose'),
+  Schema = mongoose.Schema;
 
-var MessageScheme = new Schema({
-    Message_ID: Number,
-    Message_Name: String,
-    Messages: Array,
-    Message_Sender: Array,
-    Message_Members: Array,
-    Message_Time: Array,
-    Activity_ID: String,
-});
+const MessageSchema = new Schema({
+  conversationId: {
+    type: Schema.Types.ObjectId,
+    required: true
+  },
+  body: {
+    type: String,
+    required: true
+  },
+  author: {
+    type: Schema.Types.ObjectId,
+    ref: 'User'
+  }
+},
+  {
+    timestamps: true
+  });
 
-module.exports = mongoose.model("Message", MessageScheme);
+module.exports = mongoose.model('Message', MessageSchema);
