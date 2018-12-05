@@ -519,6 +519,8 @@ app.post("/admin/message", function (req, res, next) {
                 },
             },
         );
+        console.log(username);
+        console.log(username.admin_messages);
 		res.redirect("/admin");
 	}
 	);
