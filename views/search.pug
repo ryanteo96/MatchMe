@@ -13,10 +13,7 @@ head
     script(src='http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js')
     script(src='javascripts/search.js')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
-
-
 body
-    
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
         a.navbar-brand(href='/search') MatchMe
         button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
@@ -28,11 +25,10 @@ body
                 li.nav-item
                     a.nav-link(href='/create') Create
                 li.nav-item
-                    a.nav-link(href='/profile') Profile
+                    a.nav-link(href='/profile/' + user._id) Profile
                 if(user.admin)
                     li.nav-item
                         a.nav-link(href='/admin') Admin
-
                 li.nav-item
                     a.nav-link(href='/logout') Logout
     // BETWEEN NAV AND FOOTER

@@ -8,9 +8,9 @@ html(lang='en')
         title MatchMe - Profile
         link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
         link(rel='stylesheet', href='/stylesheets/profile.css')
-        script(src='javascripts/jquery.min.js')
-        script(src='javascripts/profile.js')
-        script(src='javascripts/delete.js')
+        script(src='../javascripts/jquery.min.js')
+        script(src='../javascripts/profile.js')
+        script(src='../javascripts/delete.js')
     body
         nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
             a.navbar-brand(href='/search') MatchMe
@@ -23,7 +23,7 @@ html(lang='en')
                     li.nav-item
                         a.nav-link(href='/create') Create
                     li.nav-item
-                        a.nav-link(href='/profile') Profile
+                        a.nav-link(href='/profile/' + currUser._id) Profile
                     if(user.admin)
                         li.nav-item
                             a.nav-link(href='/admin') Admin
@@ -31,6 +31,12 @@ html(lang='en')
                         a.nav-link(href='/logout') Logout
         .main
             .container-fluid
+                .row.justify-content-center
+                    img.rounded-circle.mt-3.mb-2(src='../images/profile.png' width='80' height='80') 
+                .row.justify-content-center
+                    h5= user.name
+                .row.justify-content-center
+                    h6.text-muted= user.username
                 .row.justify-content-center
                     .col.p-2
                         //- -if(error.length)
