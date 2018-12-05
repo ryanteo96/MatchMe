@@ -915,6 +915,58 @@ function getConversations(req, res, next) {
 		});
 }
 
+app.get("/chat", isLoggedIn, function(req, res, next) {
+	res.render("chat", {
+		user: req.user,
+	});
+});
+
+// Retrieve single conversation
+app.get("/char/:conversationId", isLoggedIn, getConversation, function(
+	req,
+	res,
+	next,
+) {});
+
+// Send reply in conversation
+app.post("/chat/:conversationId", isLoggedIn, sendReply);
+
+// Start new conversation
+app.post("/chat/new/:recipient", isLoggedIn, newConversation);
+
+function getConversations(req, res, next) {
+	Conversation.find({ participants: req.user._id })
+		.select("_id")
+		.exec((err, conversations) => {
+			if (err) {
+				res.send({ error: err });
+				return next(err);
+			}
+			const fullConversations = [];
+			conversations.forEach(conversation => {
+				Message.find({ conversationId: conversation._id })
+					.sort("-createdAt")
+					.limit(1)
+					.populate({
+						path: "author",
+						select: "profile.firstName profile.lastName",
+					})
+					.exec((err, message) => {
+						if (err) {
+							res.send({ error: err });
+							return next(err);
+						}
+						fullConversations.push(message);
+						if (fullConversations.length === conversations.length) {
+							return res
+								.status(200)
+								.json({ conversations: fullConversations });
+						}
+					});
+			});
+		});
+}
+
 function getConversation(req, res, next) {
 	Message.find({ conversationId: req.params.conversationId })
 		.select("createdAt body author")
@@ -968,10 +1020,12 @@ function newConversation(req, res, next) {
 				return next(err);
 			}
 
-			return res.status(200).json({
-				message: "Conversation started!",
-				conversationId: conversation._id,
-			});
+			return res
+				.status(200)
+				.json({
+					message: "Conversation started!",
+					conversationId: conversation._id,
+				});
 		});
 	});
 }
