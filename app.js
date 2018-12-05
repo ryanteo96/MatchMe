@@ -244,7 +244,7 @@ app.post("/register", function (req, res) {
             verified: false,
             admin: false,
             status: 1,
-            messages: [],
+            admin_messages: [],
         }),
         req.body.password,
         function (err, user) {
@@ -504,12 +504,21 @@ app.post("/admin/message", function (req, res, next) {
 	console.log(req.body.msg_txt);
 	console.log(req.body.username);
 	var username = req.body.username;
-	User.updateOne(
+	User.findOne(
 	{
 		username: username
 	},
 	function(err, user)
 	{
+		User.updateOne
+        ({
+            username: req.body.username,
+            }, {
+                $push: {
+                    admin_messages: msg
+                },
+            },
+        );
 		res.redirect("/admin");
 	}
 	);
@@ -679,7 +688,8 @@ app.post("/join", function (req, res, next) {
     Activity.findOne({
         _id: req.body.id
     }, function (err, activity) {
-        User.updateOne({
+        User.updateOne
+        ({
                 _id: req.user._id,
             }, {
                 $push: {

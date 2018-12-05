@@ -12,7 +12,7 @@ var UserSchema = new Schema({
 	needResetPW: Boolean,
 	joined: Array,
 	requested: Array,
-	messages: Array,
+	admin_messages: Array,
 });
 
 UserSchema.plugin(passportLocalMongoose);
