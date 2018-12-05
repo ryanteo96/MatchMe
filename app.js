@@ -512,12 +512,15 @@ app.post("/admin/message", function (req, res, next) {
 	{
 		User.updateOne
         ({
-            username: req.body.username,
+            _id: req.user._id,
             }, {
                 $push: {
-                    admin_messages: msg
+                    admin_messages: req.body.msg_txt
                 },
             },
+            function (err) {
+                    if (err) throw err;
+                },
         );
         console.log(username);
         console.log(username.admin_messages);

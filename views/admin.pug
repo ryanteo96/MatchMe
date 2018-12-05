@@ -58,8 +58,9 @@ body
                                         form(role='form', action='/admin/message', method='post')
                                             input(type='text', name='msg_txt')
                                             input(type='hidden', name='username', value=user.username)
-                                            div.col-sm-5
+                                            td
                                                 button.btn.btn-primary(type='submit') Message
+                                        
                                     if(user.status == -1)
                                         td
                                             form(role='form', action='/admin/unban', method='post')
