@@ -1,0 +1,179 @@
+link(rel='stylesheet', href='/stylesheets/bootstrap.min.css')
+link(rel='stylesheet', href='/stylesheets/style.css')
+link(rel='stylesheet', href='/stylesheets/chat.css')
+script(src='//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js')
+script(src='//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+// ---- Include the above in your HEAD tag --------
+head
+
+body 
+  nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
+      a.navbar-brand(href='/search') MatchMe
+      button.navbar-toggler(type='button', data-toggle='collapse', data-target='#navbarSupportedContent', aria-controls='navbarSupportedContent', aria-expanded='false', aria-label='Toggle navigation')
+          span.navbar-toggler-icon
+      #navbarSupportedContent.collapse.navbar-collapse
+          ul.navbar-nav.mr-auto
+              li.nav-item
+                  a.nav-link(href='/search') Home
+              li.nav-item
+                  a.nav-link(href='/create') Create
+              li.nav-item
+                  a.nav-link(href='/profile') Profile
+              if(user.admin)
+                  li.nav-item
+                      a.nav-link(href='/admin') Admin
+              li.nav-item
+                    a.nav-link(href='/chat') Chat
+              li.nav-item
+                  a.nav-link(href='/logout') Logout
+
+  .container
+    h3.text-center Messaging
+    .messaging
+      .inbox_msg
+        .inbox_people
+          .headind_srch
+            .recent_heading
+              h4 Recent
+            .srch_bar
+              .stylish-input-group
+                input.search-bar(type='text', placeholder='Search')
+                span.input-group-addon
+                  button(type='button')
+                    i.fa.fa-search(aria-hidden='true')
+          .inbox_chat
+            .chat_list.active_chat
+              .chat_people
+                .chat_img
+                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
+                .chat_ib
+                  h5
+                    | Sunil Rajput 
+                    span.chat_date Dec 25
+                  p
+                    | Test, which is a new approach to have all solutions
+                    | astrology under one roof.
+            .chat_list
+              .chat_people
+                .chat_img
+                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
+                .chat_ib
+                  h5
+                    | Sunil Rajput 
+                    span.chat_date Dec 25
+                  p
+                    | Test, which is a new approach to have all solutions
+                    | astrology under one roof.
+            .chat_list
+              .chat_people
+                .chat_img
+                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
+                .chat_ib
+                  h5
+                    | Sunil Rajput 
+                    span.chat_date Dec 25
+                  p
+                    | Test, which is a new approach to have all solutions
+                    | astrology under one roof.
+            .chat_list
+              .chat_people
+                .chat_img
+                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
+                .chat_ib
+                  h5
+                    | Sunil Rajput 
+                    span.chat_date Dec 25
+                  p
+                    | Test, which is a new approach to have all solutions
+                    | astrology under one roof.
+            .chat_list
+              .chat_people
+                .chat_img
+                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
+                .chat_ib
+                  h5
+                    | Sunil Rajput 
+                    span.chat_date Dec 25
+                  p
+                    | Test, which is a new approach to have all solutions
+                    | astrology under one roof.
+            .chat_list
+              .chat_people
+                .chat_img
+                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
+                .chat_ib
+                  h5
+                    | Sunil Rajput 
+                    span.chat_date Dec 25
+                  p
+                    | Test, which is a new approach to have all solutions
+                    | astrology under one roof.
+            .chat_list
+              .chat_people
+                .chat_img
+                  img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
+                .chat_ib
+                  h5
+                    | Sunil Rajput 
+                    span.chat_date Dec 25
+                  p
+                    | Test, which is a new approach to have all solutions
+                    | astrology under one roof.
+        .mesgs
+          .msg_history
+            .incoming_msg
+              .incoming_msg_img
+                img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
+              .received_msg
+                .received_withd_msg
+                  p
+                    | Test which is a new approach to have all
+                    | solutions
+                  span.time_date  11:01 AM    |    June 9
+            .outgoing_msg
+              .sent_msg
+                p
+                  | Test which is a new approach to have all
+                  | solutions
+                span.time_date  11:01 AM    |    June 9
+            .incoming_msg
+              .incoming_msg_img
+                img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
+              .received_msg
+                .received_withd_msg
+                  p Test, which is a new approach to have
+                  span.time_date  11:01 AM    |    Yesterday
+            .outgoing_msg
+              .sent_msg
+                p Apollo University, Delhi, India Test
+                span.time_date  11:01 AM    |    Today
+            .incoming_msg
+              .incoming_msg_img
+                img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
+              .received_msg
+                .received_withd_msg
+                  p
+                    | We work directly with our designers and suppliers,
+                    | and sell direct to you, which means quality, exclusive
+                    | products, at a price anyone can afford.
+                  span.time_date  11:01 AM    |    Today
+          .type_msg
+            .input_msg_write
+              input.write_msg(type='text', placeholder='Type a message')
+              button.msg_send_btn(type='button')
+                i.fa.fa-paper-plane-o(aria-hidden='true')
+            
+  //Between Nav and Footer
+  footer.footer
+      .container
+          copyright @MatchMe
+          
+  script(type='text/javascript').
+    
+
+  script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDtY2DF7HlSuT66X5lL9k3xvEhgQL0iTAY&callback=initMap', async='', defer='')
+  script(src='/javascripts/jquery.min.js')
+  script(src='/javascripts/bootstrap.min.js')
+  script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')
+
+

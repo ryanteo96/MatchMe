@@ -783,9 +783,25 @@ function isLoggedIn(req, res, next) {
 }
 
 
+app.get('/chat', isLoggedIn, function(req, res, next){
+    res.render("chat", {
+        user: req.user,
+    });
+});
+
+  // Retrieve single conversation
+  app.get('/char/:conversationId', isLoggedIn, getConversation, function(req, res, next){
+
+  });
+
+  // Send reply in conversation
+  app.post('/chat/:conversationId', isLoggedIn, sendReply);
+
+  // Start new conversation
+  app.post('/chat/new/:recipient', isLoggedIn, newConversation);
+
 
 function getConversations(req, res, next) {
-    // Only return one message from each conversation to display as snippet
     Conversation.find({ participants: req.user._id })
       .select('_id')
       .exec((err, conversations) => {
@@ -793,8 +809,6 @@ function getConversations(req, res, next) {
           res.send({ error: err });
           return next(err);
         }
-  
-        // Set up empty array to hold conversations + most recent message
         const fullConversations = [];
         conversations.forEach((conversation) => {
           Message.find({ conversationId: conversation._id })
