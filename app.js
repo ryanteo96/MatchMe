@@ -372,17 +372,19 @@ app.get("/settings", isLoggedIn, function(req, res) {
 	});
 });
 
-app.get("/messages", isLoggedIn, function (req, res) {
-    User.findOne({
-        _id: req.user._id
-    }, function (err, user) {
-        res.render("messages", {
-            user: req.user,
-            moment: require("moment"),
-        });
-    });
+app.get("/messages", isLoggedIn, function(req, res) {
+	User.findOne(
+		{
+			_id: req.user._id,
+		},
+		function(err, user) {
+			res.render("messages", {
+				user: req.user,
+				moment: require("moment"),
+			});
+		},
+	);
 });
-
 
 app.post("/settings/update", function(req, res, next) {
 	if (!req.body.name) {
@@ -559,37 +561,36 @@ app.post("/admin/resetAllPw", function(req, res, next) {
 	});
 });
 
-app.post("/admin/message", function (req, res, next) {
+app.post("/admin/message", function(req, res, next) {
 	var msg = req.body.msg_txt;
 	console.log(msg);
 	console.log(req.body.msg_txt);
 	console.log(req.body.username);
 	var username = req.body.username;
 	User.findOne(
-	{
-		username: username
-	},
-	function(err, user)
-	{
-		User.updateOne
-        ({
-            _id: req.user._id,
-            }, {
-                $push: {
-                    admin_messages: req.body.msg_txt
-                },
-            },
-            function (err) {
-                    if (err) throw err;
-                },
-        );
-        console.log(username);
-        console.log(username.admin_messages);
-		res.redirect("/admin");
-	}
+		{
+			username: username,
+		},
+		function(err, user) {
+			User.updateOne(
+				{
+					_id: req.user._id,
+				},
+				{
+					$push: {
+						admin_messages: req.body.msg_txt,
+					},
+				},
+				function(err) {
+					if (err) throw err;
+				},
+			);
+			console.log(username);
+			console.log(username.admin_messages);
+			res.redirect("/admin");
+		},
 	);
 });
-
 
 app.get("/create", isLoggedIn, function(req, res) {
 	res.render("create", {
@@ -952,6 +953,7 @@ app.post("/remove", function(req, res, next) {
 					memberList: activity.memberList.filter(function(obj) {
 						return obj._id != req.body.memberId;
 					}),
+					currentMaxMembers: activity.currentMaxMembers + 1,
 				},
 				function(err) {
 					if (err) throw err;

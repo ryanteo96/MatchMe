@@ -102,7 +102,7 @@ html(lang='en')
                                                                             h6.text-muted.d-inline
                                                                                 a(href='/profile/' + member._id)= member.name
                                                                         .col-sm-2.d-flex.justify-content-end
-                                                                            button#removeBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id onclick='deny(this)' disabled="disabled") Remove
+                                                                            button#removeBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id userId=user._id onclick='remove(this)') Remove
                                                                             //- button#acceptBtn.btn.btn-sm.btn-primary.mr-2(type='button' activityId=activity._id memberId=member._id onclick='accept(this)') Accept
                                                             else
                                                                 p.mb-3 No one has joined your activity yet.
@@ -119,8 +119,8 @@ html(lang='en')
                                                                             h6.text-muted.d-inline
                                                                                 a(href='/profile/' + member._id)= member.name
                                                                         .col-sm-2.d-flex.justify-content-end
-                                                                            button#denyBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id onclick='deny(this)') Deny
-                                                                            button#acceptBtn.btn.btn-sm.btn-primary.mr-2(type='button' activityId=activity._id memberId=member._id onclick='accept(this)') Accept
+                                                                            button#denyBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id userId=user._id onclick='deny(this)') Deny
+                                                                            button#acceptBtn.btn.btn-sm.btn-primary.mr-2(type='button' activityId=activity._id memberId=member._id userId=user._id onclick='accept(this)') Accept
                                                             else
                                                                 p.mb-3 No one has requested to join your activity yet.
                                             .row
