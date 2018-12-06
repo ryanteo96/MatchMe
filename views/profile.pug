@@ -54,7 +54,7 @@ html(lang='en')
                                 nav.navbar.navbar-expand-sm.navbar-light.p-0
                                     ul.navbar-nav
                                         li.nav-item.active
-                                            a.nav-link(href='/profile') My Activities
+                                            a.nav-link(href='/profile/' + currUser._id) My Activities
                                         li.nav-item
                                             a.nav-link(href='/joined') Joined Activities
                                         li.nav-item
@@ -99,7 +99,8 @@ html(lang='en')
                                                                 li.list-group-item.p-0.border-0
                                                                     .row.mb-1
                                                                         .col-sm
-                                                                            h6.text-muted.d-inline= member.name
+                                                                            h6.text-muted.d-inline
+                                                                                a(href='/profile/' + member._id)= member.name
                                                                         .col-sm-2.d-flex.justify-content-end
                                                                             button#removeBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id onclick='deny(this)' disabled="disabled") Remove
                                                                             //- button#acceptBtn.btn.btn-sm.btn-primary.mr-2(type='button' activityId=activity._id memberId=member._id onclick='accept(this)') Accept
@@ -115,7 +116,8 @@ html(lang='en')
                                                                 li.list-group-item.p-0.border-0
                                                                     .row.mb-1
                                                                         .col-sm
-                                                                            h6.text-muted.d-inline= member.name
+                                                                            h6.text-muted.d-inline
+                                                                                a(href='/profile/' + member._id)= member.name
                                                                         .col-sm-2.d-flex.justify-content-end
                                                                             button#denyBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id onclick='deny(this)') Deny
                                                                             button#acceptBtn.btn.btn-sm.btn-primary.mr-2(type='button' activityId=activity._id memberId=member._id onclick='accept(this)') Accept
