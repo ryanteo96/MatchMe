@@ -39,91 +39,92 @@ html(lang='en')
                     h5= user.name
                 .row.justify-content-center
                     h6.text-muted= user.username
-                .row.justify-content-center
-                    .col.p-2
-                        //- -if(error.length)
-                        //-     .alert.alert-danger
-                        //-         div#note #{error}
-                        //- -if(success.length)
-                        //-     .alert.alert-success
-                        //-         div#note #{success}
-                        .card
-                            .card-header
-                                nav.navbar.navbar-expand-sm.navbar-light.p-0
-                                    ul.navbar-nav
-                                        li.nav-item.active
-                                            a.nav-link(href='/profile') My Activities
-                                        li.nav-item
-                                            a.nav-link(href='/joined') Joined Activities
-                                        li.nav-item
-                                            a.nav-link(href='/settings') Settings
-                            ul.list-group.list-group-flush.p-0.m-0
-                                each activity in activities
-                                    li.list-group-item
-                                        form.m-0(role='form', action='/delete', method='post')
-                                            input(type="hidden" id="activityId" name="id" value= activity._id)
-                                            .row
-                                                .col-sm.mb-3
-                                                    h5.m-0= activity.activityName
-                                                .col-sm.text-sm-right.mb-3
-                                                    span.badge.badge-secondary.mr-2= moment(activity.datentime).format('hh:mm A')
-                                                    span.badge.badge-secondary= moment(activity.datentime).format('MMM D, YYYY')
-                                            .row.pl-4.pr-4
-                                                .col-sm.mb-3.p-0
-                                                    p.m-0.card-subtitle.mb-2.d-inline Location: 
-                                                    h6.card-subtitle.mb-2.text-muted.d-inline= activity.location
-                                                .col-sm.text-sm-right.mb-3.p-0
-                                                    p.m-0.card-subtitle.mb-2.d-inline Number of Slots Left: 
-                                                    h6.card-subtitle.mb-2.text-muted.d-inline= activity.currentMaxMembers
-                                            .row.pl-4.pr-4.mb-3
-                                                .col-sm-auto.p-0
-                                                    p.m-0.card-subtitle.m-0.d-inline Keywords: 
-                                                .col-sm-auto.align-self-center.pl-1
-                                                    each keyword in activity.activityKeywords
-                                                        span.badge.badge-primary.mr-2= keyword
-                                            .row.pl-4.pr-4.mb-3
-                                                .col-sm.p-0
-                                                    p.m-0.card-subtitle.mb-2.d-inline Description: 
-                                                    h6.card-subtitle.mb-2.text-muted.d-inline= activity.activityDescription
-                                            .row.pl-3
-                                                .col
-                                                    .row.mb-1
-                                                        h6 Members List
-                                                    .row.pl-2.pr-2.mb-1
-                                                        ul.list-group.list-group-flush.w-100
-                                                            each member in activity.memberList
-                                                                li.list-group-item.p-0.border-0
-                                                                    .row.mb-1
-                                                                        .col-sm
-                                                                            h6.text-muted.d-inline= member.name
-                                                                        .col-sm-2.d-flex.justify-content-end
-                                                                            button#removeBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id onclick='deny(this)' disabled="disabled") Remove
-                                                                            //- button#acceptBtn.btn.btn-sm.btn-primary.mr-2(type='button' activityId=activity._id memberId=member._id onclick='accept(this)') Accept
-                                                            else
-                                                                p.mb-3 No one has joined your activity yet.
-                                            .row.pl-3
-                                                .col
-                                                    .row.mb-1
-                                                        h6 Request List
-                                                    .row.pl-2.pr-2.mb-3
-                                                        ul.list-group.list-group-flush.w-100
-                                                            each member in activity.requestList
-                                                                li.list-group-item.p-0.border-0
-                                                                    .row.mb-1
-                                                                        .col-sm
-                                                                            h6.text-muted.d-inline= member.name
-                                                                        .col-sm-2.d-flex.justify-content-end
-                                                                            button#denyBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id onclick='deny(this)') Deny
-                                                                            button#acceptBtn.btn.btn-sm.btn-primary.mr-2(type='button' activityId=activity._id memberId=member._id onclick='accept(this)') Accept
-                                                            else
-                                                                p.mb-3 No one has requested to join your activity yet.
-                                            .row
-                                                div.col.d-flex.justify-content-end
-                                                    //- button.btn.btn-sm.btn-danger.mr-2(type='submit') Delete
-                                                    button.btn.btn-sm.btn-danger.mr-2(type="button" activityid=activity._id onclick='deleteConfirmation(this)') Delete
-                                                    a.btn.btn-sm.btn-primary(role='button' href='/editGroup') Edit
-                                else
-                                    p.text-center.mb-0.p-4 There are no activities. Create one today!
+                if curr
+                    .row.justify-content-center
+                        .col.p-2
+                            //- -if(error.length)
+                            //-     .alert.alert-danger
+                            //-         div#note #{error}
+                            //- -if(success.length)
+                            //-     .alert.alert-success
+                            //-         div#note #{success}
+                            .card
+                                .card-header
+                                    nav.navbar.navbar-expand-sm.navbar-light.p-0
+                                        ul.navbar-nav
+                                            li.nav-item.active
+                                                a.nav-link(href='/profile/' + currUser._id) My Activities
+                                            li.nav-item
+                                                a.nav-link(href='/joined') Joined Activities
+                                            li.nav-item
+                                                a.nav-link(href='/settings') Settings
+                                ul.list-group.list-group-flush.p-0.m-0
+                                    each activity in activities
+                                        li.list-group-item
+                                            form.m-0(role='form', action='/delete', method='post')
+                                                input(type="hidden" id="activityId" name="id" value= activity._id)
+                                                .row
+                                                    .col-sm.mb-3
+                                                        h5.m-0= activity.activityName
+                                                    .col-sm.text-sm-right.mb-3
+                                                        span.badge.badge-secondary.mr-2= moment(activity.datentime).format('hh:mm A')
+                                                        span.badge.badge-secondary= moment(activity.datentime).format('MMM D, YYYY')
+                                                .row.pl-4.pr-4
+                                                    .col-sm.mb-3.p-0
+                                                        p.m-0.card-subtitle.mb-2.d-inline Location: 
+                                                        h6.card-subtitle.mb-2.text-muted.d-inline= activity.location
+                                                    .col-sm.text-sm-right.mb-3.p-0
+                                                        p.m-0.card-subtitle.mb-2.d-inline Number of Slots Left: 
+                                                        h6.card-subtitle.mb-2.text-muted.d-inline= activity.currentMaxMembers
+                                                .row.pl-4.pr-4.mb-3
+                                                    .col-sm-auto.p-0
+                                                        p.m-0.card-subtitle.m-0.d-inline Keywords: 
+                                                    .col-sm-auto.align-self-center.pl-1
+                                                        each keyword in activity.activityKeywords
+                                                            span.badge.badge-primary.mr-2= keyword
+                                                .row.pl-4.pr-4.mb-3
+                                                    .col-sm.p-0
+                                                        p.m-0.card-subtitle.mb-2.d-inline Description: 
+                                                        h6.card-subtitle.mb-2.text-muted.d-inline= activity.activityDescription
+                                                .row.pl-3
+                                                    .col
+                                                        .row.mb-1
+                                                            h6 Members List
+                                                        .row.pl-2.pr-2.mb-1
+                                                            ul.list-group.list-group-flush.w-100
+                                                                each member in activity.memberList
+                                                                    li.list-group-item.p-0.border-0
+                                                                        .row.mb-1
+                                                                            .col-sm
+                                                                                h6.text-muted.d-inline= member.name
+                                                                            .col-sm-2.d-flex.justify-content-end
+                                                                                button#removeBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id userId=user._id onclick='remove(this)') Remove
+                                                                                //- button#acceptBtn.btn.btn-sm.btn-primary.mr-2(type='button' activityId=activity._id memberId=member._id onclick='accept(this)') Accept
+                                                                else
+                                                                    p.mb-3 No one has joined your activity yet.
+                                                .row.pl-3
+                                                    .col
+                                                        .row.mb-1
+                                                            h6 Request List
+                                                        .row.pl-2.pr-2.mb-3
+                                                            ul.list-group.list-group-flush.w-100
+                                                                each member in activity.requestList
+                                                                    li.list-group-item.p-0.border-0
+                                                                        .row.mb-1
+                                                                            .col-sm
+                                                                                h6.text-muted.d-inline= member.name
+                                                                            .col-sm-2.d-flex.justify-content-end
+                                                                                button#denyBtn.btn.btn-sm.btn-danger.mr-2(type='button' activityId=activity._id memberId=member._id userId=user._id onclick='deny(this)') Deny
+                                                                                button#acceptBtn.btn.btn-sm.btn-primary.mr-2(type='button' activityId=activity._id memberId=member._id userId=user._id onclick='accept(this)') Accept
+                                                                else
+                                                                    p.mb-3 No one has requested to join your activity yet.
+                                                .row
+                                                    div.col.d-flex.justify-content-end
+                                                        //- button.btn.btn-sm.btn-danger.mr-2(type='submit') Delete
+                                                        button.btn.btn-sm.btn-danger.mr-2(type="button" activityid=activity._id onclick='deleteConfirmation(this)') Delete
+                                                        a.btn.btn-sm.btn-primary(role='button' href='/editGroup') Edit
+                                    else
+                                        p.text-center.mb-0.p-4 There are no activities. Create one today!
         div#confirmModal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true")
             div.modal-dialog
                 .modal-content  

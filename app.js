@@ -601,13 +601,23 @@ app.get("/profile/:id", isLoggedIn, function(req, res) {
 					host_id: req.params.id,
 				},
 				function(err, activities) {
-					// console.log(req.params.id);
-					res.render("profile", {
-						user: user,
-						currUser: req.user,
-						activities: activities,
-						moment: require("moment"),
-					});
+					if (req.params.id == req.user._id) {
+						res.render("profile", {
+							user: user,
+							currUser: req.user,
+							curr: true,
+							activities: activities,
+							moment: require("moment"),
+						});
+					} else {
+						res.render("profile", {
+							user: user,
+							currUser: req.user,
+							curr: false,
+							activities: activities,
+							moment: require("moment"),
+						});
+					}
 				},
 			);
 		},
@@ -863,6 +873,52 @@ app.post("/accept", function(req, res, next) {
 	res.send("0");
 });
 
+app.post("/remove", function(req, res, next) {
+	User.findOne(
+		{
+			_id: req.body.memberId,
+		},
+		function(err, user) {
+			User.updateOne(
+				{
+					_id: req.body.memberId,
+				},
+				{
+					joined: user.joined.filter(function(obj) {
+						return obj._id != req.body.activityId;
+					}),
+				},
+				function(err) {
+					if (err) throw err;
+				},
+			);
+		},
+	);
+
+	Activity.findOne(
+		{
+			_id: req.body.activityId,
+		},
+		function(err, activity) {
+			Activity.updateOne(
+				{
+					_id: req.body.activityId,
+				},
+				{
+					memberList: activity.memberList.filter(function(obj) {
+						return obj._id != req.body.memberId;
+					}),
+				},
+				function(err) {
+					if (err) throw err;
+				},
+			);
+		},
+	);
+
+	res.send("0");
+});
+
 function isAdmin(req, res, next) {
 	if (req.isAuthenticated()) {
 		if (req.user.admin) {
@@ -1020,12 +1076,10 @@ function newConversation(req, res, next) {
 				return next(err);
 			}
 
-			return res
-				.status(200)
-				.json({
-					message: "Conversation started!",
-					conversationId: conversation._id,
-				});
+			return res.status(200).json({
+				message: "Conversation started!",
+				conversationId: conversation._id,
+			});
 		});
 	});
 }
