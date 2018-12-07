@@ -372,17 +372,19 @@ app.get("/settings", isLoggedIn, function(req, res) {
 	});
 });
 
-app.get("/messages", isLoggedIn, function (req, res) {
-    User.findOne({
-        _id: req.user._id
-    }, function (err, user) {
-        res.render("messages", {
-            user: req.user,
-            moment: require("moment"),
-        });
-    });
+app.get("/messages", isLoggedIn, function(req, res) {
+	User.findOne(
+		{
+			_id: req.user._id,
+		},
+		function(err, user) {
+			res.render("messages", {
+				user: req.user,
+				moment: require("moment"),
+			});
+		},
+	);
 });
-
 
 app.post("/settings/update", function(req, res, next) {
 	if (!req.body.name) {
@@ -559,7 +561,7 @@ app.post("/admin/resetAllPw", function(req, res, next) {
 	});
 });
 
-app.post("/admin/message", function (req, res, next) {
+app.post("/admin/message", function(req, res, next) {
 	var msg = req.body.msg_txt;
 	console.log(msg);
 	console.log(req.body.msg_txt);
@@ -589,7 +591,6 @@ app.post("/admin/message", function (req, res, next) {
 	}
 	);
 });
-
 
 app.get("/create", isLoggedIn, function(req, res) {
 	res.render("create", {
@@ -952,6 +953,7 @@ app.post("/remove", function(req, res, next) {
 					memberList: activity.memberList.filter(function(obj) {
 						return obj._id != req.body.memberId;
 					}),
+					currentMaxMembers: activity.currentMaxMembers + 1,
 				},
 				function(err) {
 					if (err) throw err;
