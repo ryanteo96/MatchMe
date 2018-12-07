@@ -57,6 +57,8 @@ html(lang='en')
                                             a.nav-link(href='/joined') Joined Activities
                                         li.nav-item
                                             a.nav-link(href='/settings') Settings
+                                        li.nav-item
+                                            a.nav-link(href='/messages') Notifications
                             ul.list-group.list-group-flush.p-0.m-0
                                 each activity in activities
                                     li.list-group-item
@@ -72,9 +74,9 @@ html(lang='en')
                                                 .col-sm.mb-3.p-0
                                                     p.m-0.card-subtitle.mb-2.d-inline Location: 
                                                     h6.card-subtitle.mb-2.text-muted.d-inline= activity.location
-                                                .col-sm.text-sm-right.mb-3.p-0
-                                                    p.m-0.card-subtitle.mb-2.d-inline Number of Slots Left: 
-                                                    h6.card-subtitle.mb-2.text-muted.d-inline= activity.currentMaxMembers
+                                                //- .col-sm.text-sm-right.mb-3.p-0
+                                                //-     p.m-0.card-subtitle.mb-2.d-inline Number of Slots Left: 
+                                                //-     h6.card-subtitle.mb-2.text-muted.d-inline= activity.currentMaxMembers
                                             .row.pl-4.pr-4.mb-3
                                                 .col-sm-auto.p-0
                                                     p.m-0.card-subtitle.m-0.d-inline Keywords: 

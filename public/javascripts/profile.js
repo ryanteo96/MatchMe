@@ -41,9 +41,6 @@ function remove(item) {
 	var activityId = $(item).attr("activityId");
 	var userId = $(item).attr("userId");
 
-	console.log(memberId);
-	console.log(activityId);
-
 	$.post(
 		"/remove",
 		{

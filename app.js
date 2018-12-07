@@ -9,8 +9,7 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
-var Conversation = require("./models/conversation");
-var Message = require("./models/message");
+var Message = require('./models/message');
 var Activity = require("./models/Activity");
 var authEmail = require("./public/javascripts/authEmail");
 var resetPwEmail = require("./public/javascripts/resetPwEmail");
@@ -1159,6 +1158,21 @@ app.get("/settings", isLoggedIn, function(req, res) {
 	});
 });
 
+app.get("/messages", isLoggedIn, function(req, res) {
+	User.findOne(
+		{
+			_id: req.user._id,
+		},
+		function(err, user) {
+			res.render("messages", {
+				user: req.user,
+				moment: require("moment"),
+			});
+		},
+	);
+});
+
+
 app.post("/settings/update", function(req, res, next) {
 	if (!req.body.name) {
 		req.body.name = req.user.name;
@@ -1334,6 +1348,63 @@ app.post("/admin/resetAllPw", function(req, res, next) {
 	});
 });
 
+app.post("/admin/message", function(req, res, next) {
+	var msg = req.body.msg_txt;
+	console.log(msg);
+	console.log(req.body.msg_txt);
+	console.log(req.body.username);
+	var username = req.body.username;
+	User.findOne(
+		{
+			username: req.body.username,
+		},
+		function(err, user) {
+			User.updateOne(
+				{
+					username: req.body.username,
+				},
+				{
+					$push: {
+						admin_messages: req.body.msg_txt,
+					},
+				},
+				function(err) {
+					if (err) throw err;
+				},
+			);
+			console.log(username);
+			console.log(username.admin_messages);
+			res.redirect("/admin");
+		},
+	);
+});
+
+app.post("/messages/delete", isLoggedIn, function(req, res, next) {
+	var msg = req.body.msg;
+	console.log(msg);
+	console.log(req.body.username);
+	var username = req.body.username;
+	User.findOne(
+	{
+		username: req.body.username,
+	},
+	function(err, user) {
+		User.updateOne(
+		{
+			username: req.body.username,
+		},
+		{
+			$pull: {
+				admin_messages: req.body.msg,
+			},
+		},
+		function(err) {
+			if(err) throw err;
+		},
+	);
+	res.redirect("/messages");	
+	})
+});
 app.get("/create", isLoggedIn, function(req, res) {
 	res.render("create", {
 		user: req.user,
@@ -1354,7 +1425,7 @@ app.post("/create", function(req, res, next) {
 
 	Activity.create(
 		{
-			host: req.user.username,
+			host: req.user.name,
 			host_id: req.user._id,
 			activityName: req.body.name,
 			activityDescription: req.body.description,
@@ -1497,21 +1568,23 @@ app.post("/delete", function(req, res, next) {
 });
 
 app.post("/join", function(req, res, next) {
-	console.log(req.user._id);
-	console.log(req.body.id);
-
 	User.findOne(
 		{
 			_id: req.user._id,
 		},
 		function(err, user) {
+			join = {
+				_id: user._id,
+				username: user.username,
+				name: user.name,
+			};
 			Activity.updateOne(
 				{
 					_id: req.body.id,
 				},
 				{
 					$push: {
-						requestList: user,
+						requestList: join,
 					},
 				},
 				function(err) {
@@ -1526,13 +1599,23 @@ app.post("/join", function(req, res, next) {
 			_id: req.body.id,
 		},
 		function(err, activity) {
+			join = {
+				_id: activity._id,
+				host: activity.host,
+				host_id: activity.host_id,
+				activityName: activity.activityName,
+				activityDescription: activity.activityDescription,
+				activityKeywords: activity.activityKeywords,
+				datentime: activity.datentime,
+				location: activity.location,
+			};
 			User.updateOne(
 				{
 					_id: req.user._id,
 				},
 				{
 					$push: {
-						requested: activity,
+						requested: join,
 					},
 				},
 				function(err) {
@@ -1602,6 +1685,17 @@ app.post("/accept", function(req, res, next) {
 					_id: req.body.activityId,
 				},
 				function(err, activity) {
+					accept = {
+						_id: activity._id,
+						host: activity.host,
+						host_id: activity.host_id,
+						activityName: activity.activityName,
+						activityDescription: activity.activityDescription,
+						activityKeywords: activity.activityKeywords,
+						datentime: activity.datentime,
+						location: activity.location,
+					};
+
 					User.updateOne(
 						{
 							_id: req.body.memberId,
@@ -1611,7 +1705,8 @@ app.post("/accept", function(req, res, next) {
 								return obj._id != req.body.activityId;
 							}),
 							$push: {
-								joined: activity,
+								// joined: activity,
+								joined: accept,
 							},
 						},
 						function(err) {
@@ -1633,6 +1728,12 @@ app.post("/accept", function(req, res, next) {
 					_id: req.body.memberId,
 				},
 				function(err, member) {
+					accept = {
+						_id: member._id,
+						username: member.username,
+						name: member.name,
+					};
+
 					Activity.updateOne(
 						{
 							_id: req.body.activityId,
@@ -1644,7 +1745,8 @@ app.post("/accept", function(req, res, next) {
 								return obj._id != req.body.memberId;
 							}),
 							$push: {
-								memberList: member,
+								// memberList: member,
+								memberList: accept,
 							},
 							currentMaxMembers: activity.currentMaxMembers - 1,
 						},
@@ -1695,6 +1797,7 @@ app.post("/remove", function(req, res, next) {
 					memberList: activity.memberList.filter(function(obj) {
 						return obj._id != req.body.memberId;
 					}),
+					currentMaxMembers: activity.currentMaxMembers + 1,
 				},
 				function(err) {
 					if (err) throw err;
@@ -1759,24 +1862,64 @@ function getConversations(req, res, next) {
 		});
 }
 
-app.get("/chat", isLoggedIn, function(req, res, next) {
-	res.render("chat", {
-		user: req.user,
-	});
+const server = app.listen(3050, () => {
+    console.log(`App running on port 3050`)
+  })
+  const io = require('socket.io').listen(server)
+
+app.get('/chat', isLoggedIn, function(req, res, next){
+    Activity.find({
+        host_id: req.user._id
+    }, function (err, activities) {
+		Message.find({"ActivityID" : { id: {$in : activities[0]._id}}}, function(err, messages){
+			console.log("hello");
+			console.log(messages);
+			if(!messages)
+			messages = [];
+			res.render("chat", {
+				user: req.user,
+				activities: activities,
+				messages: messages,
+				moment: require("moment"),
+			});
+		});
+    });
 });
 
-// Retrieve single conversation
-app.get("/char/:conversationId", isLoggedIn, getConversation, function(
-	req,
-	res,
-	next,
-) {});
-
-// Send reply in conversation
-app.post("/chat/:conversationId", isLoggedIn, sendReply);
-
-// Start new conversation
-app.post("/chat/new/:recipient", isLoggedIn, newConversation);
+io.on('connection', function(socket) {
+    socket.on('chatter', function(message) {
+        console.log('message : ' + message);
+    });
+  });
+  
+function socketEvents(io) {  
+    // Set socket.io listeners.
+    io.on('connection', (socket) => {
+      //console.log('a user connected');
+  
+      // On conversation entry, join broadcast channel
+      socket.on('enter conversation', (conversation) => {
+        socket.join(conversation);
+        // console.log('joined ' + conversation);
+      });
+  
+      socket.on('leave conversation', (conversation) => {
+        socket.leave(conversation);
+        // console.log('left ' + conversation);
+      })
+  
+      socket.on('new message', (conversation) => {
+		console.log('messaged : ' + conversation);
+		Message
+        io.sockets.in(conversation).emit('refresh messages', conversation);
+        });
+  
+      socket.on('disconnect', () => {
+        //console.log('user disconnected');
+      });
+    });
+  }
+  socketEvents(io);
 
 function getConversations(req, res, next) {
 	Conversation.find({ participants: req.user._id })
@@ -1827,49 +1970,6 @@ function getConversation(req, res, next) {
 
 			return res.status(200).json({ conversation: messages });
 		});
-}
-
-function newConversation(req, res, next) {
-	if (!req.params.recipient) {
-		res.status(422).send({
-			error: "Please choose a valid recipient for your message.",
-		});
-		return next();
-	}
-
-	if (!req.body.composedMessage) {
-		res.status(422).send({ error: "Please enter a message." });
-		return next();
-	}
-
-	const conversation = new Conversation({
-		participants: [req.user._id, req.params.recipient],
-	});
-
-	conversation.save((err, newConversation) => {
-		if (err) {
-			res.send({ error: err });
-			return next(err);
-		}
-
-		const message = new Message({
-			conversationId: newConversation._id,
-			body: req.body.composedMessage,
-			author: req.user._id,
-		});
-
-		message.save((err, newMessage) => {
-			if (err) {
-				res.send({ error: err });
-				return next(err);
-			}
-
-			return res.status(200).json({
-				message: "Conversation started!",
-				conversationId: conversation._id,
-			});
-		});
-	});
 }
 
 function sendReply(req, res, next) {
