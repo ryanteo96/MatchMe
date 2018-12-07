@@ -66,7 +66,9 @@ app.get("/search", isLoggedIn, function(req, res) {
 	let search = req.query.search;
 	let sort = req.query.sort;
 	let type = req.query.type;
-	if (search || sort || type) {
+	let dis = req.query.distance;
+	console.log(req.query);
+	if (search || sort || type || dis) {
 		//console.log(search, sort, type);
 		if (sort == "time") {
 			Activity.find({})
@@ -109,6 +111,24 @@ app.get("/search", isLoggedIn, function(req, res) {
 								.includes(type),
 						);
 					}
+					if (dis != "") {
+						if (dis == "close") {
+							activities = activities.filter(
+								word => word.distance < 0.5,
+							);
+						} else if (dis == "mid") {
+							activities = activities.filter(
+								word =>
+									word.distance >= 0.5 &&
+									word.distance <= 2.0,
+							);
+						} else if (dis == "far") {
+							activities = activities.filter(
+								word => word.distance > 2.0,
+							);
+						}
+					}
+
 					return res.render("search", {
 						user: req.user,
 						activities: activities,
@@ -157,6 +177,89 @@ app.get("/search", isLoggedIn, function(req, res) {
 								.map(e => e.toLowerCase())
 								.includes(type),
 						);
+					}
+					if (dis != "") {
+						if (dis == "close") {
+							activities = activities.filter(
+								word => word.distance < 0.5,
+							);
+						} else if (dis == "mid") {
+							activities = activities.filter(
+								word =>
+									word.distance >= 0.5 &&
+									word.distance <= 2.0,
+							);
+						} else if (dis == "far") {
+							activities = activities.filter(
+								word => word.distance > 2.0,
+							);
+						}
+					}
+					return res.render("search", {
+						user: req.user,
+						activities: activities,
+						keywords: keywords,
+						query: req.query,
+						moment: require("moment"),
+					});
+				});
+		} else if (sort == "distance") {
+			Activity.find({})
+				.sort({
+					distance: 1,
+				})
+				.exec(function(err, activities) {
+					if (err) throw err;
+					keywords = [];
+					for (i = 0; i < activities.length; i++) {
+						for (
+							j = 0;
+							j < activities[i].activityKeywords.length;
+							j++
+						) {
+							if (
+								!keywords.includes(
+									activities[i].activityKeywords[
+										j
+									].toLowerCase(),
+								)
+							) {
+								keywords.push(
+									activities[i].activityKeywords[
+										j
+									].toLowerCase(),
+								);
+							}
+						}
+					}
+					activities = activities.filter(word =>
+						word.activityName
+							.toUpperCase()
+							.includes(search.toUpperCase()),
+					);
+					if (type != "") {
+						activities = activities.filter(word =>
+							word.activityKeywords
+								.map(e => e.toLowerCase())
+								.includes(type),
+						);
+					}
+					if (dis != "") {
+						if (dis == "close") {
+							activities = activities.filter(
+								word => word.distance < 0.5,
+							);
+						} else if (dis == "mid") {
+							activities = activities.filter(
+								word =>
+									word.distance >= 0.5 &&
+									word.distance <= 2.0,
+							);
+						} else if (dis == "far") {
+							activities = activities.filter(
+								word => word.distance > 2.0,
+							);
+						}
 					}
 					return res.render("search", {
 						user: req.user,
@@ -371,20 +474,6 @@ app.get("/settings", isLoggedIn, function(req, res) {
 	});
 });
 
-app.get("/messages", isLoggedIn, function(req, res) {
-	User.findOne(
-		{
-			_id: req.user._id,
-		},
-		function(err, user) {
-			res.render("messages", {
-				user: req.user,
-				moment: require("moment"),
-			});
-		},
-	);
-});
-
 app.post("/settings/update", function(req, res, next) {
 	if (!req.body.name) {
 		req.body.name = req.user.name;
@@ -445,7 +534,6 @@ app.get("/admin", isAdmin, function(req, res) {
 		console.log(users);
 		res.render("admin", {
 			users: users,
-			user: req.user,
 		});
 	});
 });
@@ -560,37 +648,6 @@ app.post("/admin/resetAllPw", function(req, res, next) {
 	});
 });
 
-app.post("/admin/message", function(req, res, next) {
-	var msg = req.body.msg_txt;
-	console.log(msg);
-	console.log(req.body.msg_txt);
-	console.log(req.body.username);
-	var username = req.body.username;
-	User.findOne(
-		{
-			username: req.body.username,
-		},
-		function(err, user) {
-			User.updateOne(
-				{
-					username: req.body.username,
-				},
-				{
-					$push: {
-						admin_messages: req.body.msg_txt,
-					},
-				},
-				function(err) {
-					if (err) throw err;
-				},
-			);
-			console.log(username);
-			console.log(username.admin_messages);
-			res.redirect("/admin");
-		},
-	);
-});
-
 app.get("/create", isLoggedIn, function(req, res) {
 	res.render("create", {
 		user: req.user,
@@ -611,7 +668,7 @@ app.post("/create", function(req, res, next) {
 
 	Activity.create(
 		{
-			host: req.user.name,
+			host: req.user.username,
 			host_id: req.user._id,
 			activityName: req.body.name,
 			activityDescription: req.body.description,

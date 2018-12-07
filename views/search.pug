@@ -46,6 +46,7 @@ body
               select.form-control(name='sort')
                 option(value='time' selected = query.sort == 'time' ) Time
                 option(value='alphabetical' selected = query.sort == 'alphabetical') Alphabetical
+                option(value='distance' selected = query.sort == 'distance') Distance (Nearest to Farthest)
           
           .form-group
             .col-lg-12 Tag
@@ -53,7 +54,14 @@ body
                 option(value='') Any
                 each keyword in keywords
                       option(value=keyword selected = query.type == keyword) #{keyword}
-          
+
+          .form-group
+            .col-lg-12 Tag
+              select.form-control(name='distance')
+                option(value='') Any Distance
+                option(value='close' selected = query.distance == 'close') < 500m
+                option(value='mid' selected = query.distance == 'mid') 500m - 2 km
+                option(value='far' selected = query.distance == 'far') > 2 km
         
         div
             ul.list-group.ml-3.mr-3.mb-3
@@ -103,6 +111,9 @@ body
                                 .label.col-sm-3.col-form-label Description
                                 .col-sm-9
                                     textarea#description.form-control-plaintext(type="text" readonly="readonly")
+                                .label.col-sm-3.col-form-label Distance
+                                .col-sm-9
+                                    textarea#distance.form-control-plaintext(type="text" readonly="readonly")
                                 .label.col-sm-3.col-form-label Keywords
                                 .col-sm-9
                                     input#keywords.form-control-plaintext(type="text" readonly="readonly")
@@ -117,7 +128,8 @@ body
     script(type='text/javascript').
       
 
-    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyDtY2DF7HlSuT66X5lL9k3xvEhgQL0iTAY&callback=initMap', async='', defer='')
+    script(src='https://maps.googleapis.com/maps/api/js?key=AIzaSyAeakJgK9z6P57xlyuCGkOfNWIyb7fwbMA&callback=initMap', async='', defer='')
+    // OLD KEY: AIzaSyDtY2DF7HlSuT66X5lL9k3xvEhgQL0iTAY 
     script(src='/javascripts/jquery.min.js')
     script(src='/javascripts/bootstrap.min.js')
     script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')
