@@ -124,7 +124,7 @@ body
       $('#message').val('');
       return false;
     });
-    socket.on('refresh messages', function(message) {
+    socket.on('refresh', function(message) {
       location.reload();
       console.log('Message : ' + message.message);
     });

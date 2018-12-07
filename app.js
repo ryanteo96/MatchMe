@@ -1212,8 +1212,8 @@ function socketEvents(io) {
 				timestamp: require("moment"),
 			},function(err) {
 				if (err) throw err;
-				socket.broadcast.emit('refresh messages', conversation);
-				socket.emit('refresh messages', conversation);
+				io.emit('refresh', conversation);
+				socket.emit('refresh', conversation);
 			});
         });
     });
