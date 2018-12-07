@@ -23,10 +23,12 @@ html(lang='en')
                     li.nav-item
                         a.nav-link(href='/create') Create
                     li.nav-item
-                        a.nav-link(href='/profile') Profile
+                        a.nav-link(href='/profile/' + user._id) Profile
                     if(user.admin)
                         li.nav-item
                             a.nav-link(href='/admin') Admin
+                    li.nav-item
+                        a.nav-link(href='/chat') Chat
                     li.nav-item
                         a.nav-link(href='/logout') Logout
         .container-fluid
