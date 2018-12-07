@@ -33,6 +33,12 @@ html(lang='en')
                         a.nav-link(href='/logout') Logout
         .container-fluid
             .row.justify-content-center
+                img.rounded-circle.mt-3.mb-2(src='../images/profile.png' width='80' height='80') 
+            .row.justify-content-center
+                h5= user.name
+            .row.justify-content-center
+                h6.text-muted= user.username
+            .row.justify-content-center
                 .col.p-2
                     if(error.length)
                         .alert.alert-danger
@@ -45,7 +51,7 @@ html(lang='en')
                             nav.navbar.navbar-expand-sm.navbar-light.p-0
                                 ul.navbar-nav
                                     li.nav-item
-                                        a.nav-link(href='/profile/'  + user._id) My Activities
+                                        a.nav-link(href='/profile/' + user._id) My Activities
                                     li.nav-item
                                         a.nav-link(href='/joined') Joined Activities
                                     li.nav-item
