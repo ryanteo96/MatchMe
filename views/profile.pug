@@ -125,7 +125,7 @@ html(lang='en')
                                                 .row
                                                     div.col.d-flex.justify-content-end
                                                         //- button.btn.btn-sm.btn-danger.mr-2(type='submit') Delete
-                                                        button.btn.btn-sm.btn-danger.mr-2(type="button" activityid=activity._id onclick='deleteConfirmation(this)') Delete
+                                                        button.btn.btn-sm.btn-danger.mr-2(type="button" activityid=activity._id userid=user._id onclick='deleteConfirmation(this)') Delete
                                                         a.btn.btn-sm.btn-primary(role='button' href='/editGroup') Edit
                                     else
                                         p.text-center.mb-0.p-4 There are no activities. Create one today!

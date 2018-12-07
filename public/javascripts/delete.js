@@ -3,6 +3,7 @@ function deleteConfirmation(item) {
 	$("#confirmModal").modal("show");
 
 	var id = $(item).attr("activityid");
+	var userId = $(item).attr("userid");
 
 	$("#deleteYesBtn").click(function() {
 		$.post(
@@ -12,7 +13,7 @@ function deleteConfirmation(item) {
 			},
 			function(res) {
 				if (res == "0") {
-					window.location.href = "/profile";
+					window.location.href = "/profile/" + userId;
 				}
 			},
 		);
