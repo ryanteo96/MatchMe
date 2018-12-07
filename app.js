@@ -9,7 +9,7 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
-var Message = require('./models/message');
+var Message = require('./models/Message');
 var Activity = require("./models/Activity");
 var authEmail = require("./public/javascripts/authEmail");
 var resetPwEmail = require("./public/javascripts/resetPwEmail");
@@ -1011,78 +1011,44 @@ function isLoggedIn(req, res, next) {
 	res.redirect("/login");
 }
 
-function getConversations(req, res, next) {
-	// Only return one message from each conversation to display as snippet
-	Conversation.find({ participants: req.user._id })
-		.select("_id")
-		.exec((err, conversations) => {
-			if (err) {
-				res.send({ error: err });
-				return next(err);
-			}
-
-			// Set up empty array to hold conversations + most recent message
-			const fullConversations = [];
-			conversations.forEach(conversation => {
-				Message.find({ conversationId: conversation._id })
-					.sort("-createdAt")
-					.limit(1)
-					.populate({
-						path: "author",
-						select: "profile.firstName profile.lastName",
-					})
-					.exec((err, message) => {
-						if (err) {
-							res.send({ error: err });
-							return next(err);
-						}
-						fullConversations.push(message);
-						if (fullConversations.length === conversations.length) {
-							return res
-								.status(200)
-								.json({ conversations: fullConversations });
-						}
-					});
-			});
-		});
-}
-
 const server = app.listen(3050, () => {
     console.log(`App running on port 3050`)
   })
   const io = require('socket.io').listen(server)
 
 app.get('/chat', isLoggedIn, function(req, res, next){
-    Activity.find({
-        host_id: req.user._id
+    Activity.find({$or:
+		[{host_id : req.user._id},
+		{memberList: {$in : req.user.joined}}]
     }, function (err, activities) {
-		Message.find({"ActivityID" : { id: {$in : activities[0]._id}}}, function(err, messages){
-			console.log("hello");
-			console.log(messages);
-			if(!messages)
-			messages = [];
-			res.render("chat", {
-				user: req.user,
-				activities: activities,
-				messages: messages,
-				moment: require("moment"),
+		if(activities[0]){
+			Message.find({"ActivityID" : activities[0]._id}, function(err, messages){
+				console.log("helloed");
+				console.log(activities[0]._id);
+				console.log(req.user._id)
+				if(!messages){
+					messages = [];
+				}
+				console.log(messages)
+				res.render("chat", {
+					user: req.user,
+					activities: activities,
+					messages: messages,
+					currentChat: activities[0]._id,
+					moment: require("moment"),
+				});
 			});
-		});
+		}
+		else{
+			res.redirect("/search")
+		}
     });
 });
 
-io.on('connection', function(socket) {
-    socket.on('chatter', function(message) {
-        console.log('message : ' + message);
-    });
-  });
-  
 function socketEvents(io) {  
-    // Set socket.io listeners.
     io.on('connection', (socket) => {
-      //console.log('a user connected');
-  
-      // On conversation entry, join broadcast channel
+	  //console.log('a user connected');
+	  
       socket.on('enter conversation', (conversation) => {
         socket.join(conversation);
         // console.log('joined ' + conversation);
@@ -1094,9 +1060,21 @@ function socketEvents(io) {
       })
   
       socket.on('new message', (conversation) => {
-		console.log('messaged : ' + conversation);
-		Message
-        io.sockets.in(conversation).emit('refresh messages', conversation);
+		console.log('id : ' + conversation.id);
+		console.log('message : ' + conversation.message);
+		console.log('uid : ' + conversation.uid);
+		Message.create({
+			ActivityID: conversation.id,
+			body: conversation.message,
+			author: conversation.uid,
+			name: conversation.name,
+			timestamp: require("moment"),
+		},function(err) {
+			if (err) throw err;
+			// socket.emit('refresh messages', conversation);
+			app.get('/chat');
+		});
+        //io.socket(conversation).emit('refresh messages', conversation);
         });
   
       socket.on('disconnect', () => {
@@ -1105,73 +1083,5 @@ function socketEvents(io) {
     });
   }
   socketEvents(io);
-
-function getConversations(req, res, next) {
-	Conversation.find({ participants: req.user._id })
-		.select("_id")
-		.exec((err, conversations) => {
-			if (err) {
-				res.send({ error: err });
-				return next(err);
-			}
-			const fullConversations = [];
-			conversations.forEach(conversation => {
-				Message.find({ conversationId: conversation._id })
-					.sort("-createdAt")
-					.limit(1)
-					.populate({
-						path: "author",
-						select: "profile.firstName profile.lastName",
-					})
-					.exec((err, message) => {
-						if (err) {
-							res.send({ error: err });
-							return next(err);
-						}
-						fullConversations.push(message);
-						if (fullConversations.length === conversations.length) {
-							return res
-								.status(200)
-								.json({ conversations: fullConversations });
-						}
-					});
-			});
-		});
-}
-
-function getConversation(req, res, next) {
-	Message.find({ conversationId: req.params.conversationId })
-		.select("createdAt body author")
-		.sort("-createdAt")
-		.populate({
-			path: "author",
-			select: "profile.firstName profile.lastName",
-		})
-		.exec((err, messages) => {
-			if (err) {
-				res.send({ error: err });
-				return next(err);
-			}
-
-			return res.status(200).json({ conversation: messages });
-		});
-}
-
-function sendReply(req, res, next) {
-	const reply = new Message({
-		conversationId: req.params.conversationId,
-		body: req.body.composedMessage,
-		author: req.user._id,
-	});
-
-	reply.save((err, sentReply) => {
-		if (err) {
-			res.send({ error: err });
-			return next(err);
-		}
-
-		return res.status(200).json({ message: "Reply successfully sent!" });
-	});
-}
 
 module.exports = app;
