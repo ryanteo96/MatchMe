@@ -26,6 +26,7 @@
 		"passport-local-mongoose": "^5.0.1",
 		"passport-mongoose": "0.0.1",
 		"password-generator": "^2.2.0",
-		"pug": "^2.0.3"
+		"pug": "^2.0.3",
+		"socket.io": "^2.2.0"
 	}
 }
