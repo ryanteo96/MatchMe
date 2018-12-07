@@ -534,6 +534,7 @@ app.get("/admin", isAdmin, function(req, res) {
 		console.log(users);
 		res.render("admin", {
 			users: users,
+			user: req.user,
 		});
 	});
 });
@@ -1059,6 +1060,86 @@ app.post("/remove", function(req, res, next) {
 	);
 
 	res.send("0");
+});
+
+app.get("/messages", isLoggedIn, function(req, res) {
+	User.findOne(
+		{
+			_id: req.user._id,
+		},
+		function(err, user) {
+			res.render("messages", {
+				user: req.user,
+				moment: require("moment"),
+			});
+		},
+	);
+});
+
+
+app.post("/admin/message", function(req, res, next) {
+	var msg = req.body.msg_txt;
+	console.log(msg);
+	console.log(req.body.msg_txt);
+	console.log(req.body.username);
+	var username = req.body.username;
+	User.findOne(
+		{
+			username: req.body.username,
+		},
+		function(err, user) {
+			User.updateOne(
+				{
+					username: req.body.username,
+				},
+				{
+					$push: {
+						admin_messages: req.body.msg_txt,
+					},
+				},
+				function(err) {
+					if (err) throw err;
+				},
+			);
+			console.log(username);
+			console.log(username.admin_messages);
+			res.redirect("/admin");
+		},
+	);
+});
+
+app.post("/messages/delete", isLoggedIn, function(req, res, next) {
+	var msg = req.body.msg;
+	console.log(msg);
+	console.log(req.body.username);
+	var username = req.body.username;
+	User.findOne(
+	{
+		username: req.body.username,
+	},
+	function(err, user) {
+		User.updateOne(
+		{
+			username: req.body.username,
+		},
+		{
+			$pull: {
+				admin_messages: req.body.msg,
+			},
+		},
+		function(err) {
+			if(err) throw err;
+		},
+	);
+	res.redirect("/messages");	
+	})
+});
+app.get("/create", isLoggedIn, function(req, res) {
+	res.render("create", {
+		user: req.user,
+		success: req.flash("createActivitySuccessWarn"),
+		error: req.flash("createActivityErrorWarn"),
+	});
 });
 
 function isAdmin(req, res, next) {
