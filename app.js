@@ -9,7 +9,7 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
-var Message = require('./models/Message');
+var Message = require("./models/Message");
 var Activity = require("./models/Activity");
 var authEmail = require("./public/javascripts/authEmail");
 var resetPwEmail = require("./public/javascripts/resetPwEmail");
@@ -799,6 +799,15 @@ app.post("/editGroup/edit", function(req, res, next) {
 });
 
 app.post("/delete", function(req, res, next) {
+	Message.deleteMany(
+		{
+			ActivityID: req.body.id,
+		},
+		function(err) {
+			if (err) return handleError(err);
+		},
+	);
+
 	Activity.deleteOne(
 		{
 			_id: req.body.id,
@@ -1099,11 +1108,11 @@ app.get('/chat', isLoggedIn, function(req, res, next){
 					moment: require("moment"),
 				});
 			});
-		}
-		else{
-			res.redirect("/search")
-		}
-    });
+		} else {
+				res.redirect("/search");
+			}
+		},
+	);
 });
 
 function socketEvents(io) {  

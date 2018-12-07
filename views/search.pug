@@ -12,6 +12,7 @@ head
     script(src='http://code.jquery.com/jquery-latest.js')
     script(src='http://cdn.leafletjs.com/leaflet-0.7.3/leaflet.js')
     script(src='javascripts/search.js')
+    script(src='javascripts/delete.js')
     link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
 body
     nav.navbar.navbar-expand-lg.navbar-dark.bg-dark.sticky-top
@@ -56,7 +57,7 @@ body
                       option(value=keyword selected = query.type == keyword) #{keyword}
 
           .form-group
-            .col-lg-12 Tag
+            .col-lg-12 Distance
               select.form-control(name='distance')
                 option(value='') Any Distance
                 option(value='close' selected = query.distance == 'close') < 500m
@@ -119,6 +120,7 @@ body
                                     input#keywords.form-control-plaintext(type="text" readonly="readonly")
                         .modal-footer
                             button.btn.btn-secondary(type="button" data-dismiss="modal") Close
+                            button#deleteBtn.btn.btn-danger(type="button" activityid='') Delete
                             button#joinBtn.btn.btn-primary(type='submit') Join
     // BETWEEN NAV AND FOOTER
     footer.footer
