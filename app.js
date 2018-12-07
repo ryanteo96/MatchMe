@@ -9,7 +9,6 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
-var Conversation = require('./models/conversation');
 var Message = require('./models/message');
 var Activity = require("./models/Activity");
 var authEmail = require("./public/javascripts/authEmail");
@@ -783,12 +782,58 @@ function isLoggedIn(req, res, next) {
 }
 
 
+const server = app.listen(3050, () => {
+    console.log(`App running on port 3050`)
+  })
+  const io = require('socket.io').listen(server)
+
 app.get('/chat', isLoggedIn, function(req, res, next){
-    res.render("chat", {
-        user: req.user,
+    Activity.find({
+        host_id: req.user._id
+    }, function (err, activities) {
+        messages = Message.find({"ActivityID" : { id: {$in : activities[0]._id}}})
+        res.render("chat", {
+            user: req.user,
+            activities: activities,
+            messages: messages,
+            moment: require("moment"),
+        });
     });
 });
 
+io.on('connection', function(socket) {
+    socket.on('chatter', function(message) {
+        console.log('message : ' + message);
+    });
+  });
+  
+function socketEvents(io) {  
+    // Set socket.io listeners.
+    io.on('connection', (socket) => {
+      //console.log('a user connected');
+  
+      // On conversation entry, join broadcast channel
+      socket.on('enter conversation', (conversation) => {
+        socket.join(conversation);
+        // console.log('joined ' + conversation);
+      });
+  
+      socket.on('leave conversation', (conversation) => {
+        socket.leave(conversation);
+        // console.log('left ' + conversation);
+      })
+  
+      socket.on('new message', (conversation) => {
+        console.log('message : ' + conversation);
+        io.sockets.in(conversation).emit('refresh messages', conversation);
+        });
+  
+      socket.on('disconnect', () => {
+        //console.log('user disconnected');
+      });
+    });
+  }
+  socketEvents(io);
   // Retrieve single conversation
   app.get('/char/:conversationId', isLoggedIn, getConversation, function(req, res, next){
 
