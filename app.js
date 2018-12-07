@@ -376,7 +376,7 @@ app.post("/register", function(req, res) {
 			}
 			passport.authenticate("local")(req, res, function() {
 				authEmail(user.username, user._id);
-				res.redirect("/search");
+				res.redirect("/login");
 			});
 		},
 	);
@@ -1212,7 +1212,7 @@ function socketEvents(io) {
 				timestamp: require("moment"),
 			},function(err) {
 				if (err) throw err;
-				io.emit('refresh', conversation);
+				socket.broadcast.emit('refresh', conversation);
 				socket.emit('refresh', conversation);
 			});
         });
