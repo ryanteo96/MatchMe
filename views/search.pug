@@ -42,31 +42,31 @@ body
               input(type='text', placeholder='Search..', name='search', value = query.search)
               button(type='submit')
                 i.fa.fa-search
-          .form-group
-            .col-lg-12 Sort By
-              select.form-control(name='sort')
-                option(value='time' selected = query.sort == 'time' ) Time
-                option(value='alphabetical' selected = query.sort == 'alphabetical') Alphabetical
-                option(value='distance' selected = query.sort == 'distance') Distance (Nearest to Farthest)
-          
-          .form-group
-            .col-lg-12 Tag
-              select.form-control(name='type')
-                option(value='') Any
-                each keyword in keywords
-                      option(value=keyword selected = query.type == keyword) #{keyword}
+            .row
+              .form-group
+                .col-lg-12 Sort By
+                  select.form-control(name='sort')
+                    option(value='time' selected = query.sort == 'time' ) Time
+                    option(value='alphabetical' selected = query.sort == 'alphabetical') Alphabetical
+                    option(value='distance' selected = query.sort == 'distance') Distance (Nearest to Farthest)
 
-          .form-group
-            .col-lg-12 Distance
-              select.form-control(name='distance')
-                option(value='') Any Distance
-                option(value='close' selected = query.distance == 'close') < 500m
-                option(value='mid' selected = query.distance == 'mid') 500m - 2 km
-                option(value='far' selected = query.distance == 'far') > 2 km
+              .form-group
+                .col-lg-12 Tag
+                  select.form-control(name='type')
+                    option(value='') Any
+                    each keyword in keywords
+                          option(value=keyword selected = query.type == keyword) #{keyword}
+
+              .form-group
+                .col-lg-12 Distance
+                  select.form-control(name='distance')
+                    option(value='') Any Distance
+                    option(value='close' selected = query.distance == 'close') < 500m
+                    option(value='mid' selected = query.distance == 'mid') 500m - 2 km
+                    option(value='far' selected = query.distance == 'far') > 2 km
         
         div
             ul.list-group.ml-3.mr-3.mb-3
-                #map
                 h5.p-3 All Activities
                 each activity in activities
                     li.list-group-item
@@ -79,6 +79,8 @@ body
                                 span.badge.badge-secondary= moment(activity.datentime).format('MMM D, YYYY')
                             .col-sm-2.d-flex.justify-content-end
                                 button#moreInfoBtn.btn.btn-sm.btn-primary(activityid=activity._id onclick='showMoreInfo(this)') More Info
+                #map
+                
         div#confirmModal.modal.fade(tabindex="-1" role="dialog" aria-labelledby="confirmModalLabel" aria-hidden="true")
             div.modal-dialog.modal-lg.modal-dialog-centered
                 .modal-content  
