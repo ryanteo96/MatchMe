@@ -36,18 +36,46 @@ body
             .recent_heading
               h4 Groups
           .inbox_chat
+            - var num = -1;
             each activity in activities
-              .chat_list
-                .chat_people
-                  .chat_ib
-                    h5= activity.activityName
-                    //- - var list = user.name 
-                    //- if(activity.memberList && activity.memberList[0])
-                    //-   each member in activity.memberList
-                    //-     - list = `${list}` + ' ' + member.name
-                    //- p= list
+              - num += 1;
+              if(query)
+                if(num != query.chat)
+                  .chat_list
+                    .chat_people
+                      .chat_ib
+                        h5= activity.activityName
+                        a(href=`http://localhost:3050/chat?chat=${num}`)
+                          button(type="button") Open Chat
+                        //- - var list = user.name 
+                        //- if(activity.memberList && activity.memberList[0])
+                        //-   each member in activity.memberList
+                        //-     - list = `${list}` + ' ' + member.name
+                        //- p= list
+                else
+                  .chat_list.active_chat
+                    .chat_people
+                      .chat_ib
+                        h5= activity.activityName
+                        a(href=`http://localhost:3050/chat?chat=${num}`)
+                          button(type="button") Open Chat
+              else
+                if(num == 0 )
+                  .chat_list.active_chat
+                    .chat_people
+                      .chat_ib
+                        h5= activity.activityName
+                        a(href=`http://localhost:3050/chat?chat=${num}`)
+                          button(type="button") Open Chat
+                else
+                  .chat_list
+                    .chat_people
+                      .chat_ib
+                        h5= activity.activityName
+                        a(href=`http://localhost:3050/chat?chat=${num}`)
+                          button(type="button") Open Chat
         .mesgs
-          .msg_history#chat
+          .msg_history
             each message in messages
               if(message && message.body)
                 - var one = message.author.toString();
@@ -64,7 +92,7 @@ body
                       .received_withd_msg
                         p #{cc.body}
                         span.time_date #{cc.name}  #{cc.createdAt}
-          form
+          form#enter
             .type_msg
               .input_msg_write
                 input.write_msg(type='text', placeholder='Type a message', id='message')
@@ -86,7 +114,7 @@ body
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js')
   script.
     const socket = io();
-    $('form').submit(function() {
+    $('#enter').submit(function() {
       const currentChat = $('#currentChat').val();
       const message = $('#message').val();
       const userID = $('#userID').val();

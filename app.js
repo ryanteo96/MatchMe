@@ -1159,84 +1159,65 @@ function isLoggedIn(req, res, next) {
 }
 
 const server = app.listen(3050, () => {
-	console.log(`App running on port 3050`);
-});
-const io = require("socket.io").listen(server);
+    console.log(`App running on port 3050`)
+  })
+  const io = require('socket.io').listen(server)
 
-app.get("/chat", isLoggedIn, function(req, res, next) {
-	Activity.find(
-		{
-			host_id: req.user._id,
-		},
-		function(err, activities) {
-			let groups = activities.concat(req.user.joined);
-			if (groups[0]) {
-				Message.find({ ActivityID: groups[0]._id }, function(
-					err,
-					messages,
-				) {
-					console.log("helloed");
-					console.log(groups);
-					console.log(req.user._id);
-					if (!messages) {
-						messages = [];
-					}
-					console.log(messages);
-					res.render("chat", {
-						user: req.user,
-						activities: groups,
-						messages: messages,
-						currentChat: groups[0]._id,
-						moment: require("moment"),
-					});
+app.get('/chat', isLoggedIn, function(req, res, next){
+	let num = 0;
+	if(req.query.chat)
+		num = req.query.chat;
+    Activity.find({
+		host_id : req.user._id
+    }, function (err, activities) {
+		let groups = activities.concat(req.user.joined);
+		if(groups[num]){
+			Message.find({"ActivityID" : groups[num]._id}, function(err, messages){
+				console.log("helloed");
+				console.log(groups);
+				console.log(req.user._id)
+				if(!messages){
+					messages = [];
+				}
+				console.log(messages)
+				res.render("chat", {
+					user: req.user,
+					activities: groups,
+					messages: messages,
+					currentChat: groups[num]._id,
+					query: req.query,
+					moment: require("moment"),
 				});
-			} else {
+			});
+		} else {
 				res.redirect("/search");
 			}
 		},
 	);
 });
 
-function socketEvents(io) {
-	io.on("connection", socket => {
-		//console.log('a user connected');
-
-		socket.on("enter conversation", conversation => {
-			socket.join(conversation);
-			// console.log('joined ' + conversation);
-		});
-
-		socket.on("leave conversation", conversation => {
-			socket.leave(conversation);
-			// console.log('left ' + conversation);
-		});
-
-		socket.on("new message", conversation => {
+function socketEvents(io) {  
+    io.on('connection', (socket) => {
+	  //console.log('a user connected');
+  
+      socket.on('new message', (conversation) => {
 			// console.log('id : ' + conversation.id);
 			// console.log('message : ' + conversation.message);
 			// console.log('uid : ' + conversation.uid);
-			Message.create(
-				{
-					ActivityID: conversation.id,
-					body: conversation.message,
-					author: conversation.uid,
-					name: conversation.name,
-					timestamp: require("moment"),
-				},
-				function(err) {
-					if (err) throw err;
-					socket.broadcast.emit("refresh messages", conversation);
-					socket.emit("refresh messages", conversation);
-				},
-			);
-			//io.socket(conversation).emit('refresh messages', conversation);
-		});
-
-		socket.on("disconnect", () => {
-			//console.log('user disconnected');
-		});
-	});
-}
-socketEvents(io);
+			Message.create({
+				ActivityID: conversation.id,
+				body: conversation.message,
+				author: conversation.uid,
+				name: conversation.name,
+				timestamp: require("moment"),
+			},function(err) {
+				if (err) throw err;
+				socket.broadcast.emit('refresh messages', conversation);
+				socket.emit('refresh messages', conversation);
+			});
+        });
+    });
+  }
+  socketEvents(io);
 
 module.exports = app;
