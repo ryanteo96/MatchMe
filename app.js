@@ -385,6 +385,7 @@ app.get("/messages", isLoggedIn, function(req, res) {
 	);
 });
 
+
 app.post("/settings/update", function(req, res, next) {
 	if (!req.body.name) {
 		req.body.name = req.user.name;
@@ -591,6 +592,32 @@ app.post("/admin/message", function(req, res, next) {
 	);
 });
 
+app.post("/messages/delete", isLoggedIn, function(req, res, next) {
+	var msg = req.body.msg;
+	console.log(msg);
+	console.log(req.body.username);
+	var username = req.body.username;
+	User.findOne(
+	{
+		username: req.body.username,
+	},
+	function(err, user) {
+		User.updateOne(
+		{
+			username: req.body.username,
+		},
+		{
+			$pull: {
+				admin_messages: req.body.msg,
+			},
+		},
+		function(err) {
+			if(err) throw err;
+		},
+	);
+	res.redirect("/messages");	
+	})
+});
 app.get("/create", isLoggedIn, function(req, res) {
 	res.render("create", {
 		user: req.user,
