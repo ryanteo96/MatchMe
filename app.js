@@ -567,13 +567,13 @@ app.post("/admin/message", function (req, res, next) {
 	var username = req.body.username;
 	User.findOne(
 	{
-		username: username
+		username: req.body.username
 	},
 	function(err, user)
 	{
 		User.updateOne
         ({
-            _id: req.user._id,
+            username: req.body.username,
             }, {
                 $push: {
                     admin_messages: req.body.msg_txt
