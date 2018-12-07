@@ -56,12 +56,15 @@ html(lang='en')
                             ul.list-group.list-group-flush.p-0.m-0
                                 ul
                                     each val in user.admin_messages
-                                        h5.m-0.li= val
                                         form(role='form', action='/messages/delete', method='post')
-                                            input(type='hidden', name='msg',value=val)
-                                            input(type='hidden', name='username', value=user.username)
-                                            div.col-sm-5
-                                                button.btn.btn-primary(type='submit') X           
+                                        div.col
+                                            .row
+                                                label.col-sm-2.col-form-label Admin Message:
+                                                label.col-sm-2.col-form-label= val
+                                                input(type='hidden', name='msg',value=val)
+                                                input(type='hidden', name='username', value=user.username)
+                                                button.btn.btn-danger(type='submit') Delete Message 
+                                            hr
         footer.footer
             .container
                 copyright @MatchMe
