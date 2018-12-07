@@ -1,4 +1,5 @@
 function deleteConfirmation(item) {
+	console.log("here");
 	$("#confirmModal").modal("show");
 
 	var id = $(item).attr("activityid");

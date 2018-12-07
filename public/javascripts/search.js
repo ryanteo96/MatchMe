@@ -124,6 +124,20 @@ function showMoreInfo(item) {
 
 	var id = $(item).attr("activityid");
 
+	$("#deleteBtn").click(function() {
+		$.post(
+			"/delete",
+			{
+				id: $("#deleteBtn").attr("activityid"),
+			},
+			function(res) {
+				if (res == "0") {
+					window.location.href = "/search";
+				}
+			},
+		);
+	});
+
 	$.post(
 		"/search/getActivityDetails",
 		{
@@ -155,6 +169,8 @@ function showMoreInfo(item) {
 					$("#joinBtn").html("Join");
 				}
 			}
+
+			$("#deleteBtn").attr("activityid", res.activity._id);
 
 			if (
 				res.activity.requestList.filter(e => e["_id"] === res.user._id)
