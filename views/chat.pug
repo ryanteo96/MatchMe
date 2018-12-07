@@ -113,7 +113,7 @@ body
   script(src='https://npmcdn.com/js-alert/dist/jsalert.min.js')
   script(src='https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js')
   script.
-    const socket = io();
+    const socket = io.connect();
     $('#enter').submit(function() {
       const currentChat = $('#currentChat').val();
       const message = $('#message').val();
