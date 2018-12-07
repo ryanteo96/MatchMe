@@ -9,7 +9,7 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
-var Message = require("./models/Message");
+var Message = require('./models/Message');
 var Activity = require("./models/Activity");
 var authEmail = require("./public/javascripts/authEmail");
 var resetPwEmail = require("./public/javascripts/resetPwEmail");
@@ -534,7 +534,6 @@ app.get("/admin", isAdmin, function(req, res) {
 		console.log(users);
 		res.render("admin", {
 			users: users,
-			user: req.user,
 		});
 	});
 });
@@ -1053,79 +1052,6 @@ app.post("/remove", function(req, res, next) {
 	res.send("0");
 });
 
-app.get("/messages", isLoggedIn, function(req, res) {
-	User.findOne(
-		{
-			_id: req.user._id,
-		},
-		function(err, user) {
-			res.render("messages", {
-				user: req.user,
-				moment: require("moment"),
-			});
-		},
-	);
-});
-
-
-app.post("/admin/message", function(req, res, next) {
-	var msg = req.body.msg_txt;
-	console.log(msg);
-	console.log(req.body.msg_txt);
-	console.log(req.body.username);
-	var username = req.body.username;
-	User.findOne(
-		{
-			username: req.body.username,
-		},
-		function(err, user) {
-			User.updateOne(
-				{
-					username: req.body.username,
-				},
-				{
-					$push: {
-						admin_messages: req.body.msg_txt,
-					},
-				},
-				function(err) {
-					if (err) throw err;
-				},
-			);
-			console.log(username);
-			console.log(username.admin_messages);
-			res.redirect("/admin");
-		},
-	);
-});
-
-app.post("/messages/delete", isLoggedIn, function(req, res, next) {
-	var msg = req.body.msg;
-	console.log(msg);
-	console.log(req.body.username);
-	var username = req.body.username;
-	User.findOne(
-	{
-		username: req.body.username,
-	},
-	function(err, user) {
-		User.updateOne(
-		{
-			username: req.body.username,
-		},
-		{
-			$pull: {
-				admin_messages: req.body.msg,
-			},
-		},
-		function(err) {
-			if(err) throw err;
-		},
-	);
-	res.redirect("/messages");	
-	})
-});
-
 function isAdmin(req, res, next) {
 	if (req.isAuthenticated()) {
 		if (req.user.admin) {
@@ -1143,86 +1069,76 @@ function isLoggedIn(req, res, next) {
 }
 
 const server = app.listen(3050, () => {
-	console.log(`App running on port 3050`);
-});
-const io = require("socket.io").listen(server);
+    console.log(`App running on port 3050`)
+  })
+  const io = require('socket.io').listen(server)
 
-app.get("/chat", isLoggedIn, function(req, res, next) {
-	Activity.find(
-		{
-			$or: [
-				{ host_id: req.user._id },
-				{ memberList: { $in: req.user.joined } },
-			],
-		},
-		function(err, activities) {
-			if (activities[0]) {
-				Message.find({ ActivityID: activities[0]._id }, function(
-					err,
-					messages,
-				) {
-					console.log("helloed");
-					console.log(activities[0]._id);
-					console.log(req.user._id);
-					if (!messages) {
-						messages = [];
-					}
-					console.log(messages);
-					res.render("chat", {
-						user: req.user,
-						activities: activities,
-						messages: messages,
-						currentChat: activities[0]._id,
-						moment: require("moment"),
-					});
+app.get('/chat', isLoggedIn, function(req, res, next){
+    Activity.find({
+		host_id : req.user._id
+    }, function (err, activities) {
+		let groups = activities.concat(req.user.joined);
+		if(groups[0]){
+			Message.find({"ActivityID" : groups[0]._id}, function(err, messages){
+				console.log("helloed");
+				console.log(groups);
+				console.log(req.user._id)
+				if(!messages){
+					messages = [];
+				}
+				console.log(messages)
+				res.render("chat", {
+					user: req.user,
+					activities: groups,
+					messages: messages,
+					currentChat: groups[0]._id,
+					moment: require("moment"),
 				});
-			} else {
-				res.redirect("/search");
-			}
-		},
-	);
+			});
+		}
+		else{
+			res.redirect("/search")
+		}
+    });
 });
 
-function socketEvents(io) {
-	io.on("connection", socket => {
-		//console.log('a user connected');
-
-		socket.on("enter conversation", conversation => {
-			socket.join(conversation);
-			// console.log('joined ' + conversation);
+function socketEvents(io) {  
+    io.on('connection', (socket) => {
+	  //console.log('a user connected');
+	  
+      socket.on('enter conversation', (conversation) => {
+        socket.join(conversation);
+        // console.log('joined ' + conversation);
+      });
+  
+      socket.on('leave conversation', (conversation) => {
+        socket.leave(conversation);
+        // console.log('left ' + conversation);
+      })
+  
+      socket.on('new message', (conversation) => {
+		// console.log('id : ' + conversation.id);
+		// console.log('message : ' + conversation.message);
+		// console.log('uid : ' + conversation.uid);
+		Message.create({
+			ActivityID: conversation.id,
+			body: conversation.message,
+			author: conversation.uid,
+			name: conversation.name,
+			timestamp: require("moment"),
+		},function(err) {
+			if (err) throw err;
+			socket.broadcast.emit('refresh messages', conversation);
+			socket.emit('refresh messages', conversation);
 		});
-
-		socket.on("leave conversation", conversation => {
-			socket.leave(conversation);
-			// console.log('left ' + conversation);
-		});
-
-		socket.on("new message", conversation => {
-			console.log("id : " + conversation.id);
-			console.log("message : " + conversation.message);
-			console.log("uid : " + conversation.uid);
-			Message.create(
-				{
-					ActivityID: conversation.id,
-					body: conversation.message,
-					author: conversation.uid,
-					name: conversation.name,
-					timestamp: require("moment"),
-				},
-				function(err) {
-					if (err) throw err;
-					// socket.emit('refresh messages', conversation);
-					app.get("/chat");
-				},
-			);
-			//io.socket(conversation).emit('refresh messages', conversation);
-		});
-
-		socket.on("disconnect", () => {
-			//console.log('user disconnected');
-		});
-	});
-}
-socketEvents(io);
+        //io.socket(conversation).emit('refresh messages', conversation);
+        });
+  
+      socket.on('disconnect', () => {
+        //console.log('user disconnected');
+      });
+    });
+  }
+  socketEvents(io);
 
 module.exports = app;
