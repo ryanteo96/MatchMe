@@ -1056,13 +1056,18 @@ app.get('/chat', isLoggedIn, function(req, res, next){
     Activity.find({
         host_id: req.user._id
     }, function (err, activities) {
-        messages = Message.find({"ActivityID" : { id: {$in : activities[0]._id}}})
-        res.render("chat", {
-            user: req.user,
-            activities: activities,
-            messages: messages,
-            moment: require("moment"),
-        });
+		Message.find({"ActivityID" : { id: {$in : activities[0]._id}}}, function(err, messages){
+			console.log("hello");
+			console.log(messages);
+			if(!messages)
+			messages = [];
+			res.render("chat", {
+				user: req.user,
+				activities: activities,
+				messages: messages,
+				moment: require("moment"),
+			});
+		});
     });
 });
 
@@ -1089,7 +1094,8 @@ function socketEvents(io) {
       })
   
       socket.on('new message', (conversation) => {
-        console.log('message : ' + conversation);
+		console.log('messaged : ' + conversation);
+		Message
         io.sockets.in(conversation).emit('refresh messages', conversation);
         });
   
@@ -1099,14 +1105,6 @@ function socketEvents(io) {
     });
   }
   socketEvents(io);
-  // Retrieve single conversation
-  app.get('/char/:conversationId', isLoggedIn, getConversation, function(req, res, next){
-
-// Send reply in conversation
-app.post("/chat/:conversationId", isLoggedIn, sendReply);
-
-// Start new conversation
-app.post("/chat/new/:recipient", isLoggedIn, newConversation);
 
 function getConversations(req, res, next) {
 	Conversation.find({ participants: req.user._id })
@@ -1157,49 +1155,6 @@ function getConversation(req, res, next) {
 
 			return res.status(200).json({ conversation: messages });
 		});
-}
-
-function newConversation(req, res, next) {
-	if (!req.params.recipient) {
-		res.status(422).send({
-			error: "Please choose a valid recipient for your message.",
-		});
-		return next();
-	}
-
-	if (!req.body.composedMessage) {
-		res.status(422).send({ error: "Please enter a message." });
-		return next();
-	}
-
-	const conversation = new Conversation({
-		participants: [req.user._id, req.params.recipient],
-	});
-
-	conversation.save((err, newConversation) => {
-		if (err) {
-			res.send({ error: err });
-			return next(err);
-		}
-
-		const message = new Message({
-			conversationId: newConversation._id,
-			body: req.body.composedMessage,
-			author: req.user._id,
-		});
-
-		message.save((err, newMessage) => {
-			if (err) {
-				res.send({ error: err });
-				return next(err);
-			}
-
-			return res.status(200).json({
-				message: "Conversation started!",
-				conversationId: conversation._id,
-			});
-		});
-	});
 }
 
 function sendReply(req, res, next) {

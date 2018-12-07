@@ -41,10 +41,10 @@ body
                 .chat_people
                   .chat_ib
                     h5= activity.activityName
-                    - var list = user.name
-                    if( activity.userList)
-                      each users in activities
-                        #{list} = #{list} + "hello"
+                    - var list = user.name 
+                    if(activity.memberList[0])
+                      each member in activity.memberList
+                        - list = `${list}` + ' ' + member.name
                     p= list
             //- .chat_list.active_chat
             //-   .chat_people
@@ -60,22 +60,22 @@ body
         .mesgs
           .msg_history
             each message in messages
-            if()
-            .incoming_msg
-              .incoming_msg_img
-                img(src='https://ptetutorials.com/images/user-profile.png', alt='sunil')
-              .received_msg
-                .received_withd_msg
-                  p
-                    | Test which is a new approach to have all
-                    | solutions
-                  span.time_date  11:01 AM    |    June 9
-            .outgoing_msg
-              .sent_msg
-                p
-                  | Test which is a new approach to have all
-                  | solutions
-                span.time_date  11:01 AM    |    June 9
+              if(message)
+                if(message.author == user._id)
+                  .outgoing_msg
+                  .sent_msg
+                    p
+                      | Test which is a new approach to have all
+                      | solutions
+                    span.time_date  11:01 AM    |    June 9
+                else
+                  .incoming_msg
+                    .received_msg
+                      .received_withd_msg
+                        p
+                          | Test which is a new approach to have all
+                          | solutions
+                        span.time_date Sender    11:01 AM    |    June 9
           form
             .type_msg
               .input_msg_write
@@ -97,7 +97,7 @@ body
     const socket = io();
     $('form').submit(function() {
       const message = $('#message').val();
-    socket.emit('new message', `${message}`);
+    socket.emit('new message', `${message}`,);
       $('#message').val('');
       return false;
     });
