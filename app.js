@@ -760,13 +760,18 @@ app.post("/join", function(req, res, next) {
 			_id: req.user._id,
 		},
 		function(err, user) {
+			join = {
+				_id: user._id,
+				username: user.username,
+				name: user.name,
+			};
 			Activity.updateOne(
 				{
 					_id: req.body.id,
 				},
 				{
 					$push: {
-						requestList: user,
+						requestList: join,
 					},
 				},
 				function(err) {
@@ -781,13 +786,23 @@ app.post("/join", function(req, res, next) {
 			_id: req.body.id,
 		},
 		function(err, activity) {
+			join = {
+				_id: activity._id,
+				host: activity.host,
+				host_id: activity.host_id,
+				activityName: activity.activityName,
+				activityDescription: activity.activityDescription,
+				activityKeywords: activity.activityKeywords,
+				datentime: activity.datentime,
+				location: activity.location,
+			};
 			User.updateOne(
 				{
 					_id: req.user._id,
 				},
 				{
 					$push: {
-						requested: activity,
+						requested: join,
 					},
 				},
 				function(err) {
@@ -857,6 +872,17 @@ app.post("/accept", function(req, res, next) {
 					_id: req.body.activityId,
 				},
 				function(err, activity) {
+					accept = {
+						_id: activity._id,
+						host: activity.host,
+						host_id: activity.host_id,
+						activityName: activity.activityName,
+						activityDescription: activity.activityDescription,
+						activityKeywords: activity.activityKeywords,
+						datentime: activity.datentime,
+						location: activity.location,
+					};
+
 					User.updateOne(
 						{
 							_id: req.body.memberId,
@@ -866,7 +892,8 @@ app.post("/accept", function(req, res, next) {
 								return obj._id != req.body.activityId;
 							}),
 							$push: {
-								joined: activity,
+								// joined: activity,
+								joined: accept,
 							},
 						},
 						function(err) {
@@ -888,6 +915,12 @@ app.post("/accept", function(req, res, next) {
 					_id: req.body.memberId,
 				},
 				function(err, member) {
+					accept = {
+						_id: member._id,
+						username: member.username,
+						name: member.name,
+					};
+
 					Activity.updateOne(
 						{
 							_id: req.body.activityId,
@@ -899,7 +932,8 @@ app.post("/accept", function(req, res, next) {
 								return obj._id != req.body.memberId;
 							}),
 							$push: {
-								memberList: member,
+								// memberList: member,
+								memberList: accept,
 							},
 							currentMaxMembers: activity.currentMaxMembers - 1,
 						},
