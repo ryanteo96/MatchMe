@@ -156,6 +156,9 @@ function showMoreInfo(item) {
 			$("#description").val(res.activity.activityDescription);
 			$("#keywords").val(res.activity.activityKeywords.join(", "));
 			$("#activityId2").val(res.activity._id);
+			$("#distance").val(
+				Math.round(res.activity.distance * 1000) / 1000 + " km",
+			);
 
 			if (res.activity.host_id == res.user._id) {
 				$("#joinBtn").prop("disabled", true);
