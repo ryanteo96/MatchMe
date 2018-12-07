@@ -1173,13 +1173,13 @@ app.get('/chat', isLoggedIn, function(req, res, next){
 		let groups = activities.concat(req.user.joined);
 		if(groups[num]){
 			Message.find({"ActivityID" : groups[num]._id}, function(err, messages){
-				console.log("helloed");
-				console.log(groups);
-				console.log(req.user._id)
+				// console.log("helloed");
+				// console.log(groups);
+				// console.log(req.user._id)
 				if(!messages){
 					messages = [];
 				}
-				console.log(messages)
+				// console.log(messages)
 				res.render("chat", {
 					user: req.user,
 					activities: groups,
