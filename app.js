@@ -1198,7 +1198,7 @@ app.get('/chat', isLoggedIn, function(req, res, next){
 
 function socketEvents(io) {  
     io.on('connection', (socket) => {
-	  //console.log('a user connected');
+	  console.log(`${socket} user connected`);
   
       socket.on('new message', (conversation) => {
 			// console.log('id : ' + conversation.id);
