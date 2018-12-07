@@ -68,6 +68,11 @@ app.get("/search", isLoggedIn, function(req, res) {
 	let type = req.query.type;
 	let dis = req.query.distance;
 	console.log(req.query);
+	if(!req.user.verified){
+		res.redirect('/needVerification');
+	} else if(req.user.needResetPW){
+		//redirect to reset password page
+	} else {
 	if (search || sort || type || dis) {
 		//console.log(search, sort, type);
 		if (sort == "time") {
@@ -303,7 +308,7 @@ app.get("/search", isLoggedIn, function(req, res) {
 					moment: require("moment"),
 				});
 			});
-	}
+	}}
 });
 
 app.post("/search/getActivityDetails", function(req, res) {
