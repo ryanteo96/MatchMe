@@ -1074,14 +1074,14 @@ const server = app.listen(3050, () => {
   const io = require('socket.io').listen(server)
 
 app.get('/chat', isLoggedIn, function(req, res, next){
-    Activity.find({$or:
-		[{host_id : req.user._id},
-		{memberList: {$in : req.user.joined}}]
+    Activity.find({
+		host_id : req.user._id
     }, function (err, activities) {
-		if(activities[0]){
-			Message.find({"ActivityID" : activities[0]._id}, function(err, messages){
+		let groups = activities.concat(req.user.joined);
+		if(groups[0]){
+			Message.find({"ActivityID" : groups[0]._id}, function(err, messages){
 				console.log("helloed");
-				console.log(activities[0]._id);
+				console.log(groups);
 				console.log(req.user._id)
 				if(!messages){
 					messages = [];
@@ -1089,9 +1089,9 @@ app.get('/chat', isLoggedIn, function(req, res, next){
 				console.log(messages)
 				res.render("chat", {
 					user: req.user,
-					activities: activities,
+					activities: groups,
 					messages: messages,
-					currentChat: activities[0]._id,
+					currentChat: groups[0]._id,
 					moment: require("moment"),
 				});
 			});
@@ -1117,9 +1117,9 @@ function socketEvents(io) {
       })
   
       socket.on('new message', (conversation) => {
-		console.log('id : ' + conversation.id);
-		console.log('message : ' + conversation.message);
-		console.log('uid : ' + conversation.uid);
+		// console.log('id : ' + conversation.id);
+		// console.log('message : ' + conversation.message);
+		// console.log('uid : ' + conversation.uid);
 		Message.create({
 			ActivityID: conversation.id,
 			body: conversation.message,
@@ -1128,8 +1128,8 @@ function socketEvents(io) {
 			timestamp: require("moment"),
 		},function(err) {
 			if (err) throw err;
-			// socket.emit('refresh messages', conversation);
-			app.get('/chat');
+			socket.broadcast.emit('refresh messages', conversation);
+			socket.emit('refresh messages', conversation);
 		});
         //io.socket(conversation).emit('refresh messages', conversation);
         });
