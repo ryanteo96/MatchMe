@@ -54,7 +54,6 @@ passport.deserializeUser(User.deserializeUser());
 
 app.use(express.static(path.join(__dirname, "public")));
 
-<<<<<<< HEAD
 app.get("/", function (req, res) {
     if (!req.user) {
         res.render("login");
@@ -840,7 +839,6 @@ app.post("/accept", function (req, res, next) {
     );
 
     res.send("0");
-=======
 app.get("/", function(req, res) {
 	if (!req.user) {
 		res.render("login");
@@ -1807,7 +1805,6 @@ app.post("/remove", function(req, res, next) {
 	);
 
 	res.send("0");
->>>>>>> master
 });
 
 function isAdmin(req, res, next) {
@@ -1990,3 +1987,5 @@ function sendReply(req, res, next) {
 }
 
 module.exports = app;
+
+
