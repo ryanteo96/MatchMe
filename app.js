@@ -68,6 +68,11 @@ app.get("/search", isLoggedIn, function(req, res) {
 	let type = req.query.type;
 	let dis = req.query.distance;
 	console.log(req.query);
+	if(!req.user.verified){
+		res.redirect('/needVerification');
+	} else if(req.user.needResetPW){
+		//redirect to reset password page
+	} else {
 	if (search || sort || type || dis) {
 		//console.log(search, sort, type);
 		if (sort == "time") {
@@ -303,7 +308,7 @@ app.get("/search", isLoggedIn, function(req, res) {
 					moment: require("moment"),
 				});
 			});
-	}
+	}}
 });
 
 app.post("/search/getActivityDetails", function(req, res) {
@@ -792,7 +797,7 @@ app.post("/editGroup/edit", function(req, res, next) {
 					datentime: moment(req.body.date + " " + req.body.time),
 				},
 				function(err, user) {
-					res.redirect("/profile");
+					res.redirect("/profile/" + req.user._id);
 				},
 			);
 		},
@@ -1076,7 +1081,6 @@ app.get("/messages", isLoggedIn, function(req, res) {
 	);
 });
 
-
 app.post("/admin/message", function(req, res, next) {
 	var msg = req.body.msg_txt;
 	console.log(msg);
@@ -1114,25 +1118,26 @@ app.post("/messages/delete", isLoggedIn, function(req, res, next) {
 	console.log(req.body.username);
 	var username = req.body.username;
 	User.findOne(
-	{
-		username: req.body.username,
-	},
-	function(err, user) {
-		User.updateOne(
 		{
 			username: req.body.username,
 		},
-		{
-			$pull: {
-				admin_messages: req.body.msg,
-			},
-		},
-		function(err) {
-			if(err) throw err;
+		function(err, user) {
+			User.updateOne(
+				{
+					username: req.body.username,
+				},
+				{
+					$pull: {
+						admin_messages: req.body.msg,
+					},
+				},
+				function(err) {
+					if (err) throw err;
+				},
+			);
+			res.redirect("/messages");
 		},
 	);
-	res.redirect("/messages");	
-	})
 });
 app.get("/create", isLoggedIn, function(req, res) {
 	res.render("create", {
@@ -1159,48 +1164,52 @@ function isLoggedIn(req, res, next) {
 }
 
 const server = app.listen(3050, () => {
-    console.log(`App running on port 3050`)
-  })
-  const io = require('socket.io').listen(server)
+	console.log(`App running on port 3050`);
+});
+const io = require("socket.io").listen(server);
 
-app.get('/chat', isLoggedIn, function(req, res, next){
+app.get("/chat", isLoggedIn, function(req, res, next) {
 	let num = 0;
-	if(req.query.chat)
-		num = req.query.chat;
-    Activity.find({
-		host_id : req.user._id
-    }, function (err, activities) {
-		let groups = activities.concat(req.user.joined);
-		if(groups[num]){
-			Message.find({"ActivityID" : groups[num]._id}, function(err, messages){
-				// console.log("helloed");
-				// console.log(groups);
-				// console.log(req.user._id)
-				if(!messages){
-					messages = [];
-				}
-				// console.log(messages)
-				res.render("chat", {
-					user: req.user,
-					activities: groups,
-					messages: messages,
-					currentChat: groups[num]._id,
-					query: req.query,
-					moment: require("moment"),
+	if (req.query.chat) num = req.query.chat;
+	Activity.find(
+		{
+			host_id: req.user._id,
+		},
+		function(err, activities) {
+			let groups = activities.concat(req.user.joined);
+			if (groups[num]) {
+				Message.find({ ActivityID: groups[num]._id }, function(
+					err,
+					messages,
+				) {
+					// console.log("helloed");
+					// console.log(groups);
+					// console.log(req.user._id)
+					if (!messages) {
+						messages = [];
+					}
+					// console.log(messages)
+					res.render("chat", {
+						user: req.user,
+						activities: groups,
+						messages: messages,
+						currentChat: groups[num]._id,
+						query: req.query,
+						moment: require("moment"),
+					});
 				});
-			});
-		} else {
+			} else {
 				res.redirect("/search");
 			}
 		},
 	);
 });
 
-function socketEvents(io) {  
-    io.on('connection', (socket) => {
-	  console.log(`${socket} user connected`);
-  
-      socket.on('new message', (conversation) => {
+function socketEvents(io) {
+	io.on("connection", socket => {
+		console.log(`${socket} user connected`);
+
+		socket.on("new message", conversation => {
 			// console.log('id : ' + conversation.id);
 			// console.log('message : ' + conversation.message);
 			// console.log('uid : ' + conversation.uid);
