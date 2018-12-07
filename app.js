@@ -64,7 +64,9 @@ app.get("/search", isLoggedIn, function (req, res) {
     let search = req.query.search;
     let sort = req.query.sort;
     let type = req.query.type;
-    if (search || sort || type) {
+    let dis = req.query.distance;
+    console.log(req.query);
+    if (search || sort || type || dis) {
         //console.log(search, sort, type);
         if (sort == "time") {
             Activity.find({})
@@ -103,6 +105,16 @@ app.get("/search", isLoggedIn, function (req, res) {
                             .includes(type),
                         );
                     }
+                    if(dis != ""){
+                       if(dis == 'close'){
+                            activities = activities.filter(word => word.distance < 0.5);
+                       } else if(dis == 'mid'){
+                            activities = activities.filter(word => word.distance >= 0.5 && word.distance <= 2.0);
+                       } else if(dis == 'far'){
+                            activities = activities.filter(word => word.distance > 2.0);
+                       }
+                    }
+
                     return res.render("search", {
                         user: req.user,
                         activities: activities,
@@ -147,6 +159,69 @@ app.get("/search", isLoggedIn, function (req, res) {
                             .map(e => e.toLowerCase())
                             .includes(type),
                         );
+                    }
+                    if(dis != ""){
+                       if(dis == 'close'){
+                            activities = activities.filter(word => word.distance < 0.5);
+                       } else if(dis == 'mid'){
+                            activities = activities.filter(word => word.distance >= 0.5 && word.distance <= 2.0);
+                       } else if(dis == 'far'){
+                            activities = activities.filter(word => word.distance > 2.0);
+                       }
+                    }
+                    return res.render("search", {
+                        user: req.user,
+                        activities: activities,
+                        keywords: keywords,
+                        query: req.query,
+                        moment: require("moment"),
+                    });
+                });
+        } else if (sort == "distance") {
+            Activity.find({})
+                .sort({
+                    distance: 1
+                })
+                .exec(function (err, activities) {
+                    if (err) throw err;
+                    keywords = [];
+                    for (i = 0; i < activities.length; i++) {
+                        for (
+                            j = 0; j < activities[i].activityKeywords.length; j++
+                        ) {
+                            if (!keywords.includes(
+                                    activities[i].activityKeywords[
+                                        j
+                                        ].toLowerCase(),
+                                )) {
+                                keywords.push(
+                                    activities[i].activityKeywords[
+                                        j
+                                        ].toLowerCase(),
+                                );
+                            }
+                        }
+                    }
+                    activities = activities.filter(word =>
+                        word.activityName
+                        .toUpperCase()
+                        .includes(search.toUpperCase()),
+                    );
+                    if (type != "") {
+                        activities = activities.filter(word =>
+                            word.activityKeywords
+                            .map(e => e.toLowerCase())
+                            .includes(type),
+                        );
+                    }
+                    if(dis != ""){
+                       if(dis == 'close'){
+                            activities = activities.filter(word => word.distance < 0.5);
+                       } else if(dis == 'mid'){
+                            activities = activities.filter(word => word.distance >= 0.5 && word.distance <= 2.0);
+                       } else if(dis == 'far'){
+                            activities = activities.filter(word => word.distance > 2.0);
+                       }
                     }
                     return res.render("search", {
                         user: req.user,

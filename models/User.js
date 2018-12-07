@@ -11,7 +11,7 @@ var UserSchema = new Schema({
 	verified: Boolean,
 	needResetPW: Boolean,
 	joined: Array,
-	requested: Array,
+	requested: Array
 });
 
 UserSchema.plugin(passportLocalMongoose);

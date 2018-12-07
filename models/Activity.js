@@ -13,6 +13,7 @@ var ActivitySchema = new Schema({
 	currentMaxMembers: Number,
 	requestList: Array,
 	memberList: Array,
+	distance: Number
 });
 
 module.exports = mongoose.model("Activity", ActivitySchema);
