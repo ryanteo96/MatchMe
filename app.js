@@ -9,7 +9,7 @@ var passport = require("passport");
 var LocalStrategy = require("passport-local").Strategy;
 var flash = require("connect-flash");
 var User = require("./models/User");
-var Message = require('./models/Message');
+var Message = require("./models/Message");
 var Activity = require("./models/Activity");
 var authEmail = require("./public/javascripts/authEmail");
 var resetPwEmail = require("./public/javascripts/resetPwEmail");
@@ -534,6 +534,7 @@ app.get("/admin", isAdmin, function(req, res) {
 		console.log(users);
 		res.render("admin", {
 			users: users,
+			user: req.user,
 		});
 	});
 });
@@ -1069,76 +1070,86 @@ function isLoggedIn(req, res, next) {
 }
 
 const server = app.listen(3050, () => {
-    console.log(`App running on port 3050`)
-  })
-  const io = require('socket.io').listen(server)
+	console.log(`App running on port 3050`);
+});
+const io = require("socket.io").listen(server);
 
-app.get('/chat', isLoggedIn, function(req, res, next){
-    Activity.find({$or:
-		[{host_id : req.user._id},
-		{memberList: {$in : req.user.joined}}]
-    }, function (err, activities) {
-		if(activities[0]){
-			Message.find({"ActivityID" : activities[0]._id}, function(err, messages){
-				console.log("helloed");
-				console.log(activities[0]._id);
-				console.log(req.user._id)
-				if(!messages){
-					messages = [];
-				}
-				console.log(messages)
-				res.render("chat", {
-					user: req.user,
-					activities: activities,
-					messages: messages,
-					currentChat: activities[0]._id,
-					moment: require("moment"),
+app.get("/chat", isLoggedIn, function(req, res, next) {
+	Activity.find(
+		{
+			$or: [
+				{ host_id: req.user._id },
+				{ memberList: { $in: req.user.joined } },
+			],
+		},
+		function(err, activities) {
+			if (activities[0]) {
+				Message.find({ ActivityID: activities[0]._id }, function(
+					err,
+					messages,
+				) {
+					console.log("helloed");
+					console.log(activities[0]._id);
+					console.log(req.user._id);
+					if (!messages) {
+						messages = [];
+					}
+					console.log(messages);
+					res.render("chat", {
+						user: req.user,
+						activities: activities,
+						messages: messages,
+						currentChat: activities[0]._id,
+						moment: require("moment"),
+					});
 				});
-			});
-		}
-		else{
-			res.redirect("/search")
-		}
-    });
+			} else {
+				res.redirect("/search");
+			}
+		},
+	);
 });
 
-function socketEvents(io) {  
-    io.on('connection', (socket) => {
-	  //console.log('a user connected');
-	  
-      socket.on('enter conversation', (conversation) => {
-        socket.join(conversation);
-        // console.log('joined ' + conversation);
-      });
-  
-      socket.on('leave conversation', (conversation) => {
-        socket.leave(conversation);
-        // console.log('left ' + conversation);
-      })
-  
-      socket.on('new message', (conversation) => {
-		console.log('id : ' + conversation.id);
-		console.log('message : ' + conversation.message);
-		console.log('uid : ' + conversation.uid);
-		Message.create({
-			ActivityID: conversation.id,
-			body: conversation.message,
-			author: conversation.uid,
-			name: conversation.name,
-			timestamp: require("moment"),
-		},function(err) {
-			if (err) throw err;
-			// socket.emit('refresh messages', conversation);
-			app.get('/chat');
+function socketEvents(io) {
+	io.on("connection", socket => {
+		//console.log('a user connected');
+
+		socket.on("enter conversation", conversation => {
+			socket.join(conversation);
+			// console.log('joined ' + conversation);
 		});
-        //io.socket(conversation).emit('refresh messages', conversation);
-        });
-  
-      socket.on('disconnect', () => {
-        //console.log('user disconnected');
-      });
-    });
-  }
-  socketEvents(io);
+
+		socket.on("leave conversation", conversation => {
+			socket.leave(conversation);
+			// console.log('left ' + conversation);
+		});
+
+		socket.on("new message", conversation => {
+			console.log("id : " + conversation.id);
+			console.log("message : " + conversation.message);
+			console.log("uid : " + conversation.uid);
+			Message.create(
+				{
+					ActivityID: conversation.id,
+					body: conversation.message,
+					author: conversation.uid,
+					name: conversation.name,
+					timestamp: require("moment"),
+				},
+				function(err) {
+					if (err) throw err;
+					// socket.emit('refresh messages', conversation);
+					app.get("/chat");
+				},
+			);
+			//io.socket(conversation).emit('refresh messages', conversation);
+		});
+
+		socket.on("disconnect", () => {
+			//console.log('user disconnected');
+		});
+	});
+}
+socketEvents(io);
 
 module.exports = app;
