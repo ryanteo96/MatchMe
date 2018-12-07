@@ -568,27 +568,27 @@ app.post("/admin/message", function(req, res, next) {
 	console.log(req.body.username);
 	var username = req.body.username;
 	User.findOne(
-	{
-		username: req.body.username
-	},
-	function(err, user)
-	{
-		User.updateOne
-        ({
-            username: req.body.username,
-            }, {
-                $push: {
-                    admin_messages: req.body.msg_txt
-                },
-            },
-            function (err) {
-                    if (err) throw err;
-                },
-        );
-        console.log(username);
-        console.log(username.admin_messages);
-		res.redirect("/admin");
-	}
+		{
+			username: req.body.username,
+		},
+		function(err, user) {
+			User.updateOne(
+				{
+					username: req.body.username,
+				},
+				{
+					$push: {
+						admin_messages: req.body.msg_txt,
+					},
+				},
+				function(err) {
+					if (err) throw err;
+				},
+			);
+			console.log(username);
+			console.log(username.admin_messages);
+			res.redirect("/admin");
+		},
 	);
 });
 
@@ -612,7 +612,7 @@ app.post("/create", function(req, res, next) {
 
 	Activity.create(
 		{
-			host: req.user.username,
+			host: req.user.name,
 			host_id: req.user._id,
 			activityName: req.body.name,
 			activityDescription: req.body.description,
@@ -755,9 +755,6 @@ app.post("/delete", function(req, res, next) {
 });
 
 app.post("/join", function(req, res, next) {
-	console.log(req.user._id);
-	console.log(req.body.id);
-
 	User.findOne(
 		{
 			_id: req.user._id,
