@@ -23,7 +23,7 @@ html(lang='en')
                         a.nav-link(href='/create') Create
             
                     li.nav-item
-                        a.nav-link(href='/profile') Profile
+                        a.nav-link(href='/profile/' + user._id) Profile
                     if(user.admin)
                         li.nav-item
                             a.nav-link(href='/admin') Admin
@@ -33,6 +33,12 @@ html(lang='en')
                         a.nav-link(href='/logout') Logout
         .main
             .container-fluid
+                .row.justify-content-center
+                    img.rounded-circle.mt-3.mb-2(src='../images/profile.png' width='80' height='80') 
+                .row.justify-content-center
+                    h5= user.name
+                .row.justify-content-center
+                    h6.text-muted= user.username
                 .row.justify-content-center
                     .col.p-2
                         //- -if(error.length)
@@ -46,11 +52,13 @@ html(lang='en')
                                 nav.navbar.navbar-expand-sm.navbar-light.p-0
                                     ul.navbar-nav
                                         li.nav-item
-                                            a.nav-link(href='/profile') My Activities
+                                            a.nav-link(href='/profile/' + user._id) My Activities
                                         li.nav-item.active
                                             a.nav-link(href='/joined') Joined Activities
                                         li.nav-item
                                             a.nav-link(href='/settings') Settings
+                                        li.nav-item
+                                            a.nav-link(href='/messages') Notifications
                             ul.list-group.list-group-flush.p-0.m-0
                                 each activity in activities
                                     li.list-group-item
@@ -66,9 +74,9 @@ html(lang='en')
                                                 .col-sm.mb-3.p-0
                                                     p.m-0.card-subtitle.mb-2.d-inline Location: 
                                                     h6.card-subtitle.mb-2.text-muted.d-inline= activity.location
-                                                .col-sm.text-sm-right.mb-3.p-0
-                                                    p.m-0.card-subtitle.mb-2.d-inline Number of Slots Left: 
-                                                    h6.card-subtitle.mb-2.text-muted.d-inline= activity.currentMaxMembers
+                                                //- .col-sm.text-sm-right.mb-3.p-0
+                                                //-     p.m-0.card-subtitle.mb-2.d-inline Number of Slots Left: 
+                                                //-     h6.card-subtitle.mb-2.text-muted.d-inline= activity.currentMaxMembers
                                             .row.pl-4.pr-4.mb-3
                                                 .col-sm-auto.p-0
                                                     p.m-0.card-subtitle.m-0.d-inline Keywords: 
